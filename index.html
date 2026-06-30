@@ -9,7 +9,7 @@
 <meta name="description" content="Gwind Skill Module adalah asisten Copilot untuk developer Vue 3 — membangun antarmuka dengan komponen CLI, token gwind-v2, dan CSS isolation 5-layer. 100% sesuai standar Gwind Design System PT Pegadaian.">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#06090A">
-<meta name="author" content="PT Pegadaian — Gwind Design System">
+<meta name="author" content="Pegadaian Design — F.Imam.A.A">
 
 <!-- Open Graph -->
 <meta property="og:title" content="Gwind Skill Module — Bangun Tampilan Web Lebih Cepat & Seragam">
@@ -52,6 +52,7 @@
     scroll-snap-type:y mandatory;
     scroll-behavior:smooth;
     overscroll-behavior-y:none;
+    scroll-padding-top:60px;
   }
   body{
     background:var(--bg);
@@ -616,6 +617,7 @@
     .wrap{padding:0 24px;}
     section, header.hero{padding:72px 0 48px;}
     footer .wrap{flex-direction:column;gap:8px;text-align:center;}
+    .footer-credit{align-items:center !important;}
   }
 
   /* -- Tablet / small laptop -- */
@@ -1189,52 +1191,82 @@
 <footer>
   <div class="wrap">
     <div class="brand mono"><span class="dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-right:8px;"></span>gwind-skill-module</div>
-    <p>// gwind-system-ui + gwind-v2 — design system internal PT Pegadaian</p>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;" class="footer-credit">
+      <p>// gwind-system-ui + gwind-v2 — design system internal PT Pegadaian</p>
+      <p style="font-size:11px;color:var(--ink-soft);">by <span style="color:var(--acc);">Pegadaian Design</span> — F.Imam.A.A</p>
+    </div>
   </div>
 </footer>
 
 <script>
   (function(){
-    const sections = document.querySelectorAll('section, header.hero');
-    const railLinks = document.querySelectorAll('.rail a');
-    const navProgress = document.getElementById('navProgress');
+    var sections = document.querySelectorAll('section, header.hero');
+    var railLinks = document.querySelectorAll('.rail a');
+    var navProgress = document.getElementById('navProgress');
+    var isSnap = window.matchMedia('(min-width:901px)').matches;
+
+    // Detect if scroll-snap is active (desktop)
+    window.matchMedia('(min-width:901px)').addEventListener('change', function(e){
+      isSnap = e.matches;
+    });
+
+    // Smooth scroll helper — works with or without scroll-snap
+    function scrollToSection(id){
+      var target = document.getElementById(id);
+      if(!target) return;
+      if(isSnap){
+        // With scroll-snap: use native scrollIntoView which respects snap points
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }else{
+        // Without scroll-snap (mobile): use scrollTo with offset for fixed nav
+        var top = target.getBoundingClientRect().top + window.pageYOffset - 60;
+        window.scrollTo({top:top, behavior:'smooth'});
+      }
+    }
 
     // Intersection Observer — update rail dots
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
         if(entry.isIntersecting){
-          const id = entry.target.id;
-          railLinks.forEach(l=>l.classList.toggle('active', l.dataset.target === id));
+          var id = entry.target.id;
+          railLinks.forEach(function(l){
+            l.classList.toggle('active', l.dataset.target === id);
+          });
         }
       });
     }, {threshold:0.5});
 
-    sections.forEach(s=>observer.observe(s));
+    sections.forEach(function(s){ observer.observe(s); });
 
     // Scroll progress bar
-    window.addEventListener('scroll', ()=>{
-      const h = document.documentElement;
-      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-      navProgress.style.width = scrolled + '%';
+    window.addEventListener('scroll', function(){
+      var h = document.documentElement;
+      var pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+      navProgress.style.width = Math.min(pct, 100) + '%';
     }, {passive:true});
 
     // Smooth-scroll nav links & rail dots
-    document.querySelectorAll('nav a[href^="#"], .rail a[href^="#"]').forEach(link=>{
+    document.querySelectorAll('nav a[href^="#"], .rail a[href^="#"]').forEach(function(link){
       link.addEventListener('click', function(e){
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if(target){
-          target.scrollIntoView({behavior:'smooth'});
-        }
+        var id = this.getAttribute('href').slice(1);
+        scrollToSection(id);
       });
     });
 
-    // Auto-close rail on hash navigation
-    window.addEventListener('hashchange', ()=>{
-      const id = location.hash.slice(1);
-      const target = document.getElementById(id);
-      if(target) target.scrollIntoView({behavior:'smooth'});
+    // Handle hash navigation (direct URL access)
+    window.addEventListener('hashchange', function(){
+      var id = location.hash.slice(1);
+      if(id) scrollToSection(id);
     });
+
+    // Handle initial hash on page load
+    if(location.hash){
+      setTimeout(function(){
+        var id = location.hash.slice(1);
+        if(id) scrollToSection(id);
+      }, 100);
+    }
   })();
 </script>
 
