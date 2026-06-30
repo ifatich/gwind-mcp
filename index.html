@@ -53,6 +53,7 @@
     scroll-behavior:smooth;
     overscroll-behavior-y:none;
     scroll-padding-top:60px;
+    scroll-padding-bottom:56px;
   }
   body{
     background:var(--bg);
@@ -1227,16 +1228,26 @@
       isSnap = e.matches;
     });
 
+    // Measure fixed bars height once
+    var navH = 60;
+    function footerH(){
+      var f = document.querySelector('footer');
+      return f ? f.offsetHeight : 56;
+    }
+
     // Smooth scroll helper — works with or without scroll-snap
     function scrollToSection(id){
       var target = document.getElementById(id);
       if(!target) return;
       if(isSnap){
-        // With scroll-snap: use native scrollIntoView which respects snap points
+        // With scroll-snap: scroll-padding handles nav + footer clearance
         target.scrollIntoView({behavior:'smooth', block:'start'});
       }else{
-        // Without scroll-snap (mobile): use scrollTo with offset for fixed nav
-        var top = target.getBoundingClientRect().top + window.pageYOffset - 60;
+        // Without scroll-snap (mobile): manual offset for nav + footer
+        var top = target.getBoundingClientRect().top + window.pageYOffset - navH;
+        // If scrolled near bottom, ensure footer clearance
+        var maxTop = document.body.scrollHeight - window.innerHeight + footerH();
+        if(top > maxTop) top = maxTop;
         window.scrollTo({top:top, behavior:'smooth'});
       }
     }
