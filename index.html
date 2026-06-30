@@ -467,20 +467,29 @@
     }
 
     /* ---------- SHARED ANIMATIONS ---------- */
-    @keyframes terminal-line-in {
-      0% {
+    @keyframes terminal-loop {
+
+      0%,
+      5% {
         opacity: 0;
         transform: translateX(-8px);
       }
 
-      100% {
+      10%,
+      85% {
         opacity: 1;
         transform: translateX(0);
+      }
+
+      95%,
+      100% {
+        opacity: 0;
+        transform: translateX(8px);
       }
     }
 
     .term-line {
-      animation: terminal-line-in .35s ease-out both;
+      animation: terminal-loop 8s cubic-bezier(0.4, 0, 0.2, 1) infinite both;
     }
 
     .term-line:nth-child(1) {
@@ -1421,6 +1430,91 @@
       height: auto;
     }
 
+    @keyframes iso-spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes iso-spin-rev {
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+
+    @keyframes iso-pulse {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 2px var(--acc));
+        transform: scale(1);
+      }
+
+      50% {
+        filter: drop-shadow(0 0 12px var(--acc));
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes iso-attack {
+      100% {
+        stroke-dashoffset: -24;
+      }
+    }
+
+    @keyframes iso-x-strike {
+
+      0%,
+      20% {
+        stroke-dashoffset: 20;
+        opacity: 0;
+      }
+
+      30%,
+      70% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        filter: drop-shadow(0 0 6px #F2715E);
+      }
+
+      80%,
+      100% {
+        stroke-dashoffset: -20;
+        opacity: 0;
+        filter: none;
+      }
+    }
+
+    .iso-ring-1 {
+      transform-origin: 160px 160px;
+      animation: iso-spin 40s linear infinite;
+    }
+
+    .iso-ring-2 {
+      transform-origin: 160px 160px;
+      animation: iso-spin-rev 30s linear infinite;
+    }
+
+    .iso-ring-3 {
+      transform-origin: 160px 160px;
+      animation: iso-spin 20s linear infinite;
+    }
+
+    .iso-center {
+      transform-origin: 160px 160px;
+      animation: iso-pulse 3s ease-in-out infinite;
+    }
+
+    .attack-line {
+      animation: iso-attack 1s linear infinite;
+    }
+
+    .x-strike-anim {
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      animation: iso-x-strike 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
     /* ---------- SLIDE 5: TOKENS ---------- */
     .token-grid {
       display: grid;
@@ -1494,8 +1588,19 @@
     .spacing-row {
       display: flex;
       align-items: flex-end;
-      gap: 12px;
+      justify-content: space-between;
+      width: 100%;
       margin-top: 6px;
+    }
+
+    .spacing-row:hover .space-item {
+      opacity: 0.4;
+      filter: saturate(0.5);
+    }
+
+    .spacing-row .space-item:hover {
+      opacity: 1;
+      filter: saturate(1.2);
     }
 
     .space-item {
@@ -1503,18 +1608,88 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .space-item:hover {
+      transform: translateY(-6px);
+    }
+
+    .space-item:hover .bar {
+      box-shadow: 0 4px 16px rgba(61, 242, 168, 0.5);
+      filter: brightness(1.2);
     }
 
     .space-item .bar {
-      width: 12px;
-      background: linear-gradient(var(--acc), var(--acc-dim));
-      border-radius: 2px;
+      width: 14px;
+      background: linear-gradient(to top, var(--acc-dim), var(--acc));
+      border-radius: 3px 3px 1px 1px;
+      transform-origin: bottom;
+      animation: bar-grow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+      transition: all 0.3s ease;
+    }
+
+    /* Sequential delay for the 9 bars */
+    .space-item:nth-child(1) .bar {
+      animation-delay: 0.00s;
+    }
+
+    .space-item:nth-child(2) .bar {
+      animation-delay: 0.15s;
+    }
+
+    .space-item:nth-child(3) .bar {
+      animation-delay: 0.30s;
+    }
+
+    .space-item:nth-child(4) .bar {
+      animation-delay: 0.45s;
+    }
+
+    .space-item:nth-child(5) .bar {
+      animation-delay: 0.60s;
+    }
+
+    .space-item:nth-child(6) .bar {
+      animation-delay: 0.75s;
+    }
+
+    .space-item:nth-child(7) .bar {
+      animation-delay: 0.90s;
+    }
+
+    .space-item:nth-child(8) .bar {
+      animation-delay: 1.05s;
+    }
+
+    .space-item:nth-child(9) .bar {
+      animation-delay: 1.20s;
+    }
+
+    @keyframes bar-grow {
+      0% {
+        transform: scaleY(0.4);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: scaleY(1.1);
+        opacity: 1;
+        filter: brightness(1.2) drop-shadow(0 0 6px rgba(61, 242, 168, 0.4));
+      }
     }
 
     .space-item .lab {
       font-family: var(--mono);
       font-size: 9.5px;
       color: var(--ink-dim);
+      transition: color 0.3s ease;
+    }
+
+    .space-item:hover .lab {
+      color: var(--acc);
+      font-weight: 700;
     }
 
     /* ---------- SLIDE 6: COMPONENTS ---------- */
@@ -1782,12 +1957,109 @@
       }
     }
 
-    /* ---------- SLIDE: INSTALASI ---------- */
+    .alur-grid {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: nowrap;
+    }
+
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px 28px;
+    }
+
+    .flow-box {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: center;
+      min-width: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 54px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .flow-box:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: var(--acc);
+      box-shadow: 0 8px 24px rgba(61, 242, 168, 0.15), inset 0 0 12px rgba(61, 242, 168, 0.05);
+      z-index: 2;
+    }
+
+    .flow-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(61, 242, 168, 0.15), transparent);
+      transform: skewX(-20deg);
+      transition: none;
+    }
+
+    .flow-box:hover::after {
+      left: 200%;
+      transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .arrow-lightning {
+      stroke-dasharray: 8 20;
+      stroke-dashoffset: 28;
+      animation: lightning-strike 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      filter: drop-shadow(0 0 6px var(--acc)) drop-shadow(0 0 2px #fff);
+    }
+
+    @keyframes lightning-strike {
+      0% {
+        stroke-dashoffset: 28;
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      85% {
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: -12;
+        opacity: 0;
+      }
+    }
+
+    .flow-arrow svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--acc);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
     .install-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
       align-items: start;
+    }
+
+    .install-grid>* {
+      min-width: 0;
     }
 
     .install-step-list {
@@ -1798,8 +2070,9 @@
 
     .install-step {
       display: flex;
-      gap: 20px;
-      padding: 20px 0;
+      flex-direction: column;
+      gap: 16px;
+      padding: 24px 0;
       border-top: 1px solid var(--line-soft);
       position: relative;
     }
@@ -1822,6 +2095,10 @@
       font-size: 12px;
       font-weight: 700;
       color: var(--acc);
+    }
+
+    .install-step .step-content {
+      min-width: 0;
     }
 
     .install-step .step-content h4 {
@@ -1853,6 +2130,7 @@
       line-height: 1.9;
       color: var(--ink-soft);
       overflow-x: auto;
+      white-space: nowrap;
     }
 
     .code-block .cmd {
@@ -1893,7 +2171,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 14px 20px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--line-soft);
       background: var(--surface-2);
     }
@@ -1935,7 +2213,7 @@
     }
 
     .usage-card-body {
-      padding: 14px 20px;
+      padding: 16px 20px;
     }
 
     .usage-card-body .code-block {
@@ -2174,7 +2452,9 @@
 
     .sc-body {
       min-width: 0;
-    } /* Prevent grid blowout */
+    }
+
+    /* Prevent grid blowout */
 
     .audit-table {
       width: 100%;
@@ -2279,6 +2559,24 @@
       font-family: var(--mono);
       font-size: 11px;
       line-height: 1.9;
+    }
+
+    /* Common Card Utility for inline cards */
+    .step-card {
+      flex: 1;
+      min-width: 140px;
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .step-card.primary {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+    }
+
+    .step-card.accent {
+      background: rgba(61, 242, 168, 0.04);
+      border: 1px solid rgba(61, 242, 168, 0.25);
     }
 
     .gap-card .gc-title {
@@ -2600,7 +2898,7 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 10px 14px;
+        padding: 12px 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
         text-align: right;
         gap: 12px;
@@ -2643,17 +2941,42 @@
       .audit-table td:nth-child(6)::before {
         content: "Aksi";
       }
+
+      .alur-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .alur-grid .arrow-cell {
+        display: none;
+      }
     }
 
     /* -- Phone -- */
     @media(max-width:480px) {
+      .flow-diagram {
+        flex-direction: column;
+        padding: 12px 14px;
+        gap: 12px;
+      }
+
+      .flow-box {
+        width: 100%;
+      }
+
+      .alur-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
       .wrap {
         padding: 0 14px;
       }
 
       section,
       header.hero {
-        padding: 44px 0 32px;
+        padding: 72px 0 32px;
       }
 
       section:last-of-type {
@@ -2667,6 +2990,23 @@
       .hero-tags span {
         font-size: 10.5px;
         padding: 5px 10px;
+      }
+
+      /* Responsive Card Padding */
+      .usage-card-head,
+      .usage-card-body,
+      .term-body {
+        padding: 12px 14px;
+      }
+
+      .step-card {
+        padding: 10px 14px;
+      }
+
+      .gap-card,
+      .flow-box,
+      .audit-table td {
+        padding: 10px 12px;
       }
 
       .hero-art .term {
@@ -2932,85 +3272,270 @@
         height: 28px;
       }
     }
+
     /* --- Advanced SVG Micro-Animations --- */
     /* Pillar 1: Scanner Beam */
     @keyframes scanner-sweep {
-      0% { transform: translateY(-4px); opacity: 0; }
-      20% { opacity: 0.5; }
-      80% { opacity: 0.5; }
-      100% { transform: translateY(18px); opacity: 0; }
+      0% {
+        transform: translateY(-4px);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.5;
+      }
+
+      80% {
+        opacity: 0.5;
+      }
+
+      100% {
+        transform: translateY(18px);
+        opacity: 0;
+      }
     }
-    .scanner-beam { animation: scanner-sweep 2.5s ease-in-out infinite; }
+
+    .scanner-beam {
+      animation: scanner-sweep 2.5s ease-in-out infinite;
+    }
+
     @keyframes dot-pulse-fast {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      50% { transform: scale(1.5); opacity: 1; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
     }
-    .dot-pulse { animation: dot-pulse-fast 1.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    .dot-pulse {
+      animation: dot-pulse-fast 1.5s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
     @keyframes draw-check {
-      0% { stroke-dashoffset: 20; opacity: 0; }
-      20% { opacity: 1; }
-      50%, 100% { stroke-dashoffset: 0; opacity: 1; }
+      0% {
+        stroke-dashoffset: 20;
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      50%,
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
     }
-    .draw-check { stroke-dasharray: 20; stroke-dashoffset: 20; animation: draw-check 3s ease-out infinite; }
+
+    .draw-check {
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      animation: draw-check 3s ease-out infinite;
+    }
 
     /* Pillar 2: Flow and Nodes */
     @keyframes dash-flow {
-      0% { stroke-dashoffset: 10; }
-      100% { stroke-dashoffset: 0; }
+      0% {
+        stroke-dashoffset: 10;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+      }
     }
-    .dash-flow { animation: dash-flow 1s linear infinite; }
+
+    .dash-flow {
+      animation: dash-flow 1s linear infinite;
+    }
+
     @keyframes arrow-bob-h {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(3px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(3px);
+      }
     }
-    .arrow-bob { animation: arrow-bob-h 1.5s ease-in-out infinite; }
+
+    .arrow-bob {
+      animation: arrow-bob-h 1.5s ease-in-out infinite;
+    }
+
     @keyframes token-glow-pop {
-      0%, 100% { transform: scale(1); filter: brightness(1); }
-      50% { transform: scale(1.3); filter: brightness(1.5); }
+
+      0%,
+      100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+
+      50% {
+        transform: scale(1.3);
+        filter: brightness(1.5);
+      }
     }
-    .token-glow { animation: token-glow-pop 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    .token-glow {
+      animation: token-glow-pop 2s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
 
     /* Pillar 3: Vue Generator */
     @keyframes draw-vue {
-      0% { stroke-dashoffset: 100; fill-opacity: 0; }
-      40% { stroke-dashoffset: 0; fill-opacity: 0; }
-      60%, 100% { stroke-dashoffset: 0; fill-opacity: 0.05; }
+      0% {
+        stroke-dashoffset: 100;
+        fill-opacity: 0;
+      }
+
+      40% {
+        stroke-dashoffset: 0;
+        fill-opacity: 0;
+      }
+
+      60%,
+      100% {
+        stroke-dashoffset: 0;
+        fill-opacity: 0.05;
+      }
     }
-    .draw-vue { stroke-dasharray: 100; stroke-dashoffset: 100; animation: draw-vue 4s ease-in-out infinite; }
+
+    .draw-vue {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: draw-vue 4s ease-in-out infinite;
+    }
+
     @keyframes pulse-vue-inner {
-      0%, 100% { transform: scale(1); fill-opacity: 0.2; }
-      50% { transform: scale(1.1); fill-opacity: 0.4; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        fill-opacity: 0.2;
+      }
+
+      50% {
+        transform: scale(1.1);
+        fill-opacity: 0.4;
+      }
     }
-    .pulse-vue-inner { animation: pulse-vue-inner 2s ease-in-out infinite; transform-origin: 24px 28px; }
+
+    .pulse-vue-inner {
+      animation: pulse-vue-inner 2s ease-in-out infinite;
+      transform-origin: 24px 28px;
+    }
+
     @keyframes brackets-pulse {
-      0%, 100% { transform: scaleX(1); opacity: 0.4; }
-      50% { transform: scaleX(1.1); opacity: 0.8; }
+
+      0%,
+      100% {
+        transform: scaleX(1);
+        opacity: 0.4;
+      }
+
+      50% {
+        transform: scaleX(1.1);
+        opacity: 0.8;
+      }
     }
-    .brackets-pulse { animation: brackets-pulse 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    .brackets-pulse {
+      animation: brackets-pulse 2s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
 
     /* Pillar 4: Shield Layers */
     @keyframes shield-outer-pulse {
-      0%, 100% { stroke-opacity: 0.4; filter: drop-shadow(0 0 0px transparent); }
-      50% { stroke-opacity: 0.8; filter: drop-shadow(0 0 6px rgba(61,242,168,0.3)); }
+
+      0%,
+      100% {
+        stroke-opacity: 0.4;
+        filter: drop-shadow(0 0 0px transparent);
+      }
+
+      50% {
+        stroke-opacity: 0.8;
+        filter: drop-shadow(0 0 6px rgba(61, 242, 168, 0.3));
+      }
     }
-    .shield-outer { animation: shield-outer-pulse 3s ease-in-out infinite; }
+
+    .shield-outer {
+      animation: shield-outer-pulse 3s ease-in-out infinite;
+    }
+
     @keyframes shield-mid-rotate {
-      0%, 100% { transform: scale(1); fill-opacity: 0.05; }
-      50% { transform: scale(1.03); fill-opacity: 0.1; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        fill-opacity: 0.05;
+      }
+
+      50% {
+        transform: scale(1.03);
+        fill-opacity: 0.1;
+      }
     }
-    .shield-mid { animation: shield-mid-rotate 2.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    .shield-mid {
+      animation: shield-mid-rotate 2.5s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
     @keyframes shield-inner-glow {
-      0%, 100% { fill-opacity: 0.15; filter: drop-shadow(0 0 2px transparent); }
-      50% { fill-opacity: 0.3; filter: drop-shadow(0 0 8px #3DF2A8); }
+
+      0%,
+      100% {
+        fill-opacity: 0.15;
+        filter: drop-shadow(0 0 2px transparent);
+      }
+
+      50% {
+        fill-opacity: 0.3;
+        filter: drop-shadow(0 0 8px #3DF2A8);
+      }
     }
-    .shield-inner { animation: shield-inner-glow 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    .shield-inner {
+      animation: shield-inner-glow 2s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
 
     /* Usage Cards SVGs */
-    .usage-card:hover .u-icon svg { animation: usage-icon-shake 0.5s ease-in-out; color: #7CF7C9; }
+    .usage-card:hover .u-icon svg {
+      animation: usage-icon-shake 0.5s ease-in-out;
+      color: #7CF7C9;
+    }
+
     @keyframes usage-icon-shake {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(-10deg) scale(1.1); }
-      75% { transform: rotate(10deg) scale(1.1); }
+
+      0%,
+      100% {
+        transform: rotate(0deg) scale(1);
+      }
+
+      25% {
+        transform: rotate(-10deg) scale(1.1);
+      }
+
+      75% {
+        transform: rotate(10deg) scale(1.1);
+      }
     }
   </style>
 </head>
@@ -3024,10 +3549,10 @@
       <div class="brand"><span class="dot"></span>gwind-skill-module</div>
       <div class="links">
         <a href="#pilar"><span>01</span>Pilar</a>
-        <a href="#greenfield"><span>02</span>Greenfield</a>
-        <a href="#audit"><span>03</span>Audit</a>
-        <a href="#instalasi"><span>04</span>Instalasi</a>
-        <a href="#penggunaan"><span>05</span>Penggunaan</a>
+        <a href="#instalasi"><span>02</span>Instalasi</a>
+        <a href="#penggunaan"><span>03</span>Penggunaan</a>
+        <a href="#greenfield"><span>04</span>Greenfield</a>
+        <a href="#audit"><span>05</span>Audit</a>
         <a href="#isolasi"><span>06</span>Isolasi</a>
         <a href="#token"><span>07</span>Tokens</a>
         <a href="#komponen"><span>08</span>Komponen</a>
@@ -3040,10 +3565,10 @@
   <div class="rail" id="rail">
     <a href="#top" class="active" data-target="top"></a>
     <a href="#pilar" data-target="pilar"></a>
-    <a href="#greenfield" data-target="greenfield"></a>
-    <a href="#audit" data-target="audit"></a>
     <a href="#instalasi" data-target="instalasi"></a>
     <a href="#penggunaan" data-target="penggunaan"></a>
+    <a href="#greenfield" data-target="greenfield"></a>
+    <a href="#audit" data-target="audit"></a>
     <a href="#isolasi" data-target="isolasi"></a>
     <a href="#token" data-target="token"></a>
     <a href="#komponen" data-target="komponen"></a>
@@ -3058,7 +3583,8 @@
         <h1>Jembatan pintar antara <span class="grad">Figma</span> &amp; Vue.</h1>
         <p class="lede">Gwind Skill Module mengubah asisten AI Anda menjadi ahli ekosistem Gwind. Ia membaca desain via
           <strong style="color:var(--acc)">Figma MCP</strong>, lalu secara otomatis mengorkestrasi token
-          <code>gwind-v2</code>, CLI, dan komponen Vue 3 dalam satu alur kerja yang mulus.</p>
+          <code>gwind-v2</code>, CLI, dan komponen Vue 3 dalam satu alur kerja yang mulus.
+        </p>
         <div class="hero-tags">
           <span><b>$</b> Figma Inspection</span>
           <span><b>$</b> Env Readiness Check</span>
@@ -3084,7 +3610,7 @@
           </div>
         </div>
         <!-- Floating decorative badges -->
-        <svg style="position:absolute;top:-18px;right:-22px;width:70px;height:70px;pointer-events:none;"
+        <svg style="position:absolute;top:50px;right:16px;width:70px;height:70px;pointer-events:none;"
           viewBox="0 0 70 70" fill="none">
           <circle class="orbit-ring" cx="35" cy="35" r="32" stroke="rgba(61,242,168,0.15)" stroke-width="1"
             stroke-dasharray="4 6" />
@@ -3119,24 +3645,30 @@
             <circle cx="12" cy="11" r="2" fill="#F2715E" class="dot-pulse" style="animation-delay:0s;" />
             <circle cx="18" cy="11" r="2" fill="#F2B84B" class="dot-pulse" style="animation-delay:0.2s;" />
             <circle cx="24" cy="11" r="2" fill="#3DF2A8" class="dot-pulse" style="animation-delay:0.4s;" />
-            <path d="M12 24l3 3 6-6" stroke="#3DF2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="draw-check" />
+            <path d="M12 24l3 3 6-6" stroke="#3DF2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="draw-check" />
             <path d="M26 24h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
-            <path d="M12 34l3 3 6-6" stroke="#3DF2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="draw-check" style="animation-delay:0.4s;" />
+            <path d="M12 34l3 3 6-6" stroke="#3DF2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="draw-check" style="animation-delay:0.4s;" />
             <path d="M26 34h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
           </svg>
           <div class="label">// 01 PENGECEKAN</div>
           <h3>Environment Readiness Check</h3>
           <p>Sebelum satu baris kode pun ditulis, skill menjalankan 9 langkah pengecekan krusial: memverifikasi
             instalasi <code>gwind.json</code>, eksistensi token <code>gwind-v2</code>, utilitas
-            <code>gwindTwMerge</code>, hingga pengaturan PostCSS.</p>
+            <code>gwindTwMerge</code>, hingga pengaturan PostCSS.
+          </p>
         </div>
         <div class="pillar">
           <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
             <rect x="4" y="10" width="18" height="28" rx="2" stroke="currentColor" stroke-width="1.5" opacity="0.4" />
-            <rect x="8" y="15" width="10" height="10" rx="1" fill="currentColor" opacity="0.1" class="pulse-vue-inner" />
+            <rect x="8" y="15" width="10" height="10" rx="1" fill="currentColor" opacity="0.1"
+              class="pulse-vue-inner" />
             <circle cx="13" cy="30" r="3" fill="#F2715E" class="dot-pulse" />
-            <path d="M24 24h6" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.6" class="dash-flow" />
-            <path d="M28 21l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" class="arrow-bob" />
+            <path d="M24 24h6" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.6"
+              class="dash-flow" />
+            <path d="M28 21l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" opacity="0.6" class="arrow-bob" />
             <rect x="34" y="8" width="10" height="32" rx="5" stroke="#3DF2A8" stroke-width="1.5" />
             <circle cx="39" cy="14" r="2" fill="#3DF2A8" class="token-glow" style="animation-delay:0s;" />
             <circle cx="39" cy="24" r="2" fill="#3DF2A8" class="token-glow" style="animation-delay:0.3s;" />
@@ -3150,9 +3682,12 @@
         </div>
         <div class="pillar">
           <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
-            <path d="M12 16L4 24l8 8M36 16l8 8-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4" class="brackets-pulse" />
-            <path d="M24 38L10 14h8l6 10 6-10h8L24 38z" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="draw-vue" />
-            <path d="M24 28l-5-8.5h10L24 28z" fill="#3DF2A8" fill-opacity="0.2" stroke="#3DF2A8" stroke-width="1.5" stroke-linejoin="round" class="pulse-vue-inner" />
+            <path d="M12 16L4 24l8 8M36 16l8 8-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" opacity="0.4" class="brackets-pulse" />
+            <path d="M24 38L10 14h8l6 10 6-10h8L24 38z" fill="currentColor" fill-opacity="0.05" stroke="currentColor"
+              stroke-width="1.5" stroke-linejoin="round" class="draw-vue" />
+            <path d="M24 28l-5-8.5h10L24 28z" fill="#3DF2A8" fill-opacity="0.2" stroke="#3DF2A8" stroke-width="1.5"
+              stroke-linejoin="round" class="pulse-vue-inner" />
           </svg>
           <div class="label">// 03 IMPLEMENTASI</div>
           <h3>Vue 3 Code Generator</h3>
@@ -3161,9 +3696,12 @@
         </div>
         <div class="pillar">
           <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
-            <path d="M24 4L6 10v12c0 12.5 8 20.5 18 24 10-3.5 18-11.5 18-24V10L24 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.4" class="shield-outer" />
-            <path d="M24 10L10 14.5v8.5c0 9.5 6 15.5 14 18.5 8-3 14-9 14-18.5v-8.5L24 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity="0.05" class="shield-mid" />
-            <path d="M24 16l-8 3v6c0 6.5 3.5 11 8 13 4.5-2 8-6.5 8-13v-6L24 16z" fill="#3DF2A8" fill-opacity="0.15" stroke="#3DF2A8" stroke-width="1.5" stroke-linejoin="round" class="shield-inner" />
+            <path d="M24 4L6 10v12c0 12.5 8 20.5 18 24 10-3.5 18-11.5 18-24V10L24 4z" stroke="currentColor"
+              stroke-width="1.5" stroke-linejoin="round" opacity="0.4" class="shield-outer" />
+            <path d="M24 10L10 14.5v8.5c0 9.5 6 15.5 14 18.5 8-3 14-9 14-18.5v-8.5L24 10z" stroke="currentColor"
+              stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity="0.05" class="shield-mid" />
+            <path d="M24 16l-8 3v6c0 6.5 3.5 11 8 13 4.5-2 8-6.5 8-13v-6L24 16z" fill="#3DF2A8" fill-opacity="0.15"
+              stroke="#3DF2A8" stroke-width="1.5" stroke-linejoin="round" class="shield-inner" />
           </svg>
           <div class="label">// 04 KEAMANAN</div>
           <h3>CSS Isolation Enforcer</h3>
@@ -3175,9 +3713,273 @@
   </section>
 
   <!-- SLIDE: GREENFIELD -->
+  <section id="instalasi">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">02</span> Setup</p>
+      <h2>Cara Instalasi Skill</h2>
+      <p class="section-lede">Pasang Gwind Skill Module ke IDE Anda dalam empat langkah. Setelah selesai, asisten AI
+        siap memandu setiap baris kode sesuai standar Gwind Design System.</p>
+
+      <div class="install-step-list">
+
+        <div class="install-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Pastikan AI coding assistant aktif</h4>
+            <p>Skill ini berjalan di atas AI coding assistant yang mendukung custom skill. Pastikan asisten sudah
+              terpasang dan aktif di IDE pilihan Anda.</p>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>Salin file skill ke folder <code>.agents/skills/</code></h4>
+            <p>Unduh atau clone file skill, lalu letakkan di dalam folder <code>.agents/skills/gwind-skill/</code> di
+              root proyek Anda.</p>
+            <div class="code-block" style="margin-top:12px;">
+              <span class="cmt"># Struktur folder yang diharapkan</span><br>
+              <span class="cmd">your-project/</span><br>
+              &nbsp;&nbsp;<span class="cmd">.agents/</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="cmd">skills/</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmd">gwind-skill/</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">SKILL.md</span> <span class="cmt">←
+                instruksi utama</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">references/</span> <span class="cmt">←
+                dokumentasi tambahan</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>Pengecekan Kesiapan Environment</h4>
+            <p>Ketika skill dijalankan, ia tidak langsung meng-generate kode, melainkan melakukan pengecekan kesiapan
+              environment secara menyeluruh. Jika ada dependensi yang belum terinstal, token yang kurang, atau
+              konfigurasi Gwind yang belum disetup, skill akan otomatis menginstal dan menyiapkan semuanya sebelum
+              memproses desain.</p>
+            <div class="code-block" style="margin-top:12px;">
+              <span class="cmt">GWIND ENVIRONMENT READINESS — REMOTE-KITA-NEWS (30 JUN 2026)</span><br>
+              <br>
+              <span class="cmt">Package manager:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;npm</span><br>
+              <span class="cmt">Consumer app
+                root:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/Users/dev/remote-kita-news</span><br>
+              <br>
+              <span class="cmd">gwind-system-ui init:</span><br>
+              &nbsp;&nbsp;gwind.json:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                class="str">❌</span>&nbsp;&nbsp;&nbsp;componentsPath: none<br>
+              <br>
+              <span class="cmd">gwind-v2:</span><br>
+              &nbsp;&nbsp;Installed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                class="str">❌</span>&nbsp;&nbsp;&nbsp;Version: none&nbsp;&nbsp;&nbsp;CSS entry: <span
+                class="str">❌</span><br>
+              <br>
+              <span class="cmt">... (pengecekan dependensi lain) ...</span><br>
+              <br>
+              <span class="cmd">Issues:</span> 3<br>
+              &nbsp;&nbsp;- gwind-system-ui init missing: Run npx gwind-system-ui init<br>
+              &nbsp;&nbsp;- gwind-v2 missing: Run npm install gwind-v2<br>
+              &nbsp;&nbsp;- Base deps missing: Run npm install @fontsource/nunito-sans clsx tailwind-merge reka-ui<br>
+              <br>
+              <span class="cmd">Status:</span> <span class="str" style="color:#ef4444;">⚠️ ISSUES MUST BE RESOLVED
+                FIRST</span><br>
+              <br>
+              <span class="cmt"># Skill otomatis menjalankan Step 8 (Resolve issues)...</span><br>
+              <span class="cmd">&gt; npm install gwind-v2 @fontsource/nunito-sans clsx tailwind-merge reka-ui</span><br>
+              <span class="cmd">&gt; npx gwind-system-ui init</span><br>
+              <br>
+              <span class="cmt"># Re-evaluating readiness...</span><br>
+              <span class="cmd">Status:</span> <span class="str">✅ READY TO PROCEED</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>Verifikasi skill &amp; Figma MCP aktif</h4>
+            <p>Buka AI Chat di IDE Anda. Skill otomatis aktif saat mendeteksi folder
+              <code>.agents/skills/gwind-skill/</code>. Pastikan juga mengaktifkan <strong>Figma MCP</strong> sebagai
+              tool tambahan agar asisten dapat membaca desain.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <section id="penggunaan">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">03</span> Figma → Kode</p>
+      <h2>Cara Kerja: Figma MCP + Skill</h2>
+      <p class="section-lede">Skill ini membaca output Figma MCP — node properties, variabel, dan layout — lalu
+        menerjemahkannya ke kode Vue 3 yang otomatis memakai token <code>gwind-v2</code> dan komponen dari
+        <code>gwind-system-ui</code>.
+      </p>
+
+      <!-- Flow diagram: Figma → Skill → Code -->
+      <div
+        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 16px;margin-bottom:32px;">
+        <div
+          style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px;">
+          // Alur kerja</div>
+        <div class="alur-grid">
+
+          <!-- Step 1: Figma -->
+          <div class="step-card primary">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);letter-spacing:0.04em;margin-bottom:8px;">
+              STEP 01</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6">
+                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
+                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
+                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
+                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
+                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">Figma MCP</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Inspeksi node di Figma — warna,
+              spacing, tipografi, komponen.</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
+              fill="none">
+              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+
+          <!-- Step 2: Skill -->
+          <div class="step-card accent">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--acc-dim);letter-spacing:0.04em;margin-bottom:8px;">
+              STEP 02</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
+                <path
+                  d="M9.5 2A2.5 2.5 0 007 4.5v15A2.5 2.5 0 009.5 22h5a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0014.5 2h-5z" />
+                <path d="M9 7h6M9 11h6M9 15h4" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Gwind Skill</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Skill memetakan nilai Figma ke
+              token <code>gwind-v2</code> dan aturan Gwind Design System.</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
+              fill="none">
+              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+
+          <!-- Step 3: AI Chat -->
+          <div class="step-card primary">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);letter-spacing:0.04em;margin-bottom:8px;">
+              STEP 03</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="1.6">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">AI Chat</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Tanyakan ke asisten AI
+              menggunakan konteks Figma MCP yang sudah terbaca.</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
+              fill="none">
+              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+
+          <!-- Step 4: Output -->
+          <div class="step-card accent">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:0.04em;margin-bottom:8px;">
+              OUTPUT</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <path d="M14 2v6h6M10 13l2 2 4-4" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Vue 3 Code</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Kode Vue 3 dengan token
+              gwind-v2, komponen gwind-system-ui, dan CSS isolation.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Two example cards -->
+      <div class="usage-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <div class="usage-card">
+          <div class="usage-card-head">
+            <div class="u-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
+                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
+                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
+                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
+                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
+              </svg>
+            </div>
+            <h4>Implementasi Screen Figma</h4>
+            <span class="u-tag">Figma MCP</span>
+          </div>
+          <div class="usage-card-body">
+            <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;">Arahkan Figma MCP ke
+              frame atau screen tertentu, lalu minta skill menerjemahkan layout, spacing, dan warna ke kode Vue 3 yang
+              sesuai token gwind-v2.</p>
+            <div class="code-block">
+              <span class="cmt">// Di AI Chat (Figma MCP aktif):</span><br>
+              <span class="str">"Implementasikan screen 'Dashboard Home'</span><br>
+              <span class="str"> dari Figma. Gunakan token gwind-v2 untuk</span><br>
+              <span class="str"> semua warna dan spacing, serta komponen</span><br>
+              <span class="str"> dari gwind-system-ui yang relevan."</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="usage-card">
+          <div class="usage-card-head">
+            <div class="u-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path
+                  d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+              </svg>
+            </div>
+            <h4>Mapping Token Figma → gwind-v2</h4>
+            <span class="u-tag">Figma MCP</span>
+          </div>
+          <div class="usage-card-body">
+            <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;">Minta skill membaca
+              variabel warna atau spacing di node Figma dan memetakannya ke token semantik gwind-v2 yang tepat — tanpa
+              menebak-nebak nilai hex.</p>
+            <div class="code-block">
+              <span class="cmt">// Di AI Chat (Figma MCP aktif):</span><br>
+              <span class="str">"Baca node 'Card/Product' di Figma.</span><br>
+              <span class="str"> Petakan semua variabel warna dan spacing</span><br>
+              <span class="str"> ke token gwind-v2 yang setara, lalu</span><br>
+              <span class="str"> generate Vue SFC-nya."</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
   <section id="greenfield">
     <div class="wrap">
-      <p class="kicker"><span class="ix">02</span> Skenario 1</p>
+      <p class="kicker"><span class="ix">04</span> Skenario 1</p>
       <h2>Mode Greenfield — Proyek Baru</h2>
       <p class="section-lede">Membangun screen Vue 3 baru dari desain Figma. Skill membaca variabel dan CSS export Figma
         MCP <em>sebelum</em> satu baris kode ditulis — lalu memetakannya ke token <code>gwind-v2</code> yang tepat.</p>
@@ -3276,22 +4078,23 @@
             <p>Skill generate kode Vue 3 menggunakan komponen dari <code>gwind-system-ui</code>, token gwind-v2, dan CSS
               isolation wrapper. Semua state (default, hover, disabled, loading) direproduksi.</p>
             <div class="code-block" style="margin-top:12px;">
-              <span class="cmt">&lt;!-- Hasil implementasi dari Figma MCP --&gt;</span>
-              <span class="kw">&lt;script</span> setup lang=<span class="str">"ts"</span><span class="kw">&gt;</span>
+              <span class="cmt">&lt;!-- Hasil implementasi dari Figma MCP --&gt;</span><br>
+              <span class="kw">&lt;script</span> setup lang=<span class="str">"ts"</span><span
+                class="kw">&gt;</span><br>
               <span class="cmd">import</span> { SCOPE_CLASS } <span class="cmd">from</span> <span
-                class="str">"@/constants/css-scope"</span>
+                class="str">"@/constants/css-scope"</span><br>
               <span class="cmd">import</span> { Card } <span class="cmd">from</span> <span
-                class="str">"@/components/ui/card"</span>
-              <span class="kw">&lt;/script&gt;</span>
-              <span class="kw">&lt;template&gt;</span>
-              <span class="kw">&lt;div</span> :class=<span class="str">"SCOPE_CLASS"</span><span class="kw">&gt;</span>
-              <span class="cmt">&lt;!-- CSS isolation --&gt;</span>
-              <span class="kw">&lt;Card</span> class=<span class="str">"bg-primary rounded-lg py-gw-24 px-gw-16
-                gap-gw-16"</span><span class="kw">&gt;</span>
-              <span class="kw">&lt;p</span> class=<span class="str">"text-omicron font-normal
-                text-foreground"</span><span class="kw">&gt;</span>...<span class="kw">&lt;/p&gt;</span>
-              <span class="kw">&lt;/Card&gt;</span>
-              <span class="kw">&lt;/div&gt;</span>
+                class="str">"@/components/ui/card"</span><br>
+              <span class="kw">&lt;/script&gt;</span><br>
+              <span class="kw">&lt;template&gt;</span><br>
+              &nbsp;&nbsp;<span class="kw">&lt;div</span> :class=<span class="str">"SCOPE_CLASS"</span><span
+                class="kw">&gt;</span> <span class="cmt">&lt;!-- CSS isolation --&gt;</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;Card</span> class=<span class="str">"bg-primary rounded-lg
+                py-gw-24 px-gw-16 gap-gw-16"</span><span class="kw">&gt;</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;p</span> class=<span class="str">"text-omicron
+                font-normal text-foreground"</span><span class="kw">&gt;</span>...<span class="kw">&lt;/p&gt;</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;/Card&gt;</span><br>
+              &nbsp;&nbsp;<span class="kw">&lt;/div&gt;</span><br>
               <span class="kw">&lt;/template&gt;</span>
             </div>
           </div>
@@ -3305,9 +4108,9 @@
             <p>Skill membandingkan hasil implementasi dengan Figma: typecheck, lint, build, lalu visual check di
               mobile/tablet/desktop. Khusus remote app, verifikasi CSS isolation di DevTools.</p>
             <div class="code-block" style="margin-top:10px;">
-              <span class="cmt"># Verifikasi CSS isolation (remote app)</span>
+              <span class="cmt"># Verifikasi CSS isolation (remote app)</span><br>
               <span class="cmd">grep</span> -c <span class="str">':root'</span> dist/style-*.css <span class="cmt">#
-                harus 0</span>
+                harus 0</span><br>
               <span class="cmd">grep</span> -c <span class="str">'gw-scope-news'</span> dist/style-*.css <span
                 class="cmt"># harus &gt; 0</span>
             </div>
@@ -3321,7 +4124,7 @@
   <!-- SLIDE: AUDIT MODE -->
   <section id="audit">
     <div class="wrap">
-      <p class="kicker"><span class="ix">03</span> Skenario 2</p>
+      <p class="kicker"><span class="ix">05</span> Skenario 2</p>
       <h2>Mode Audit — Review &amp; Fix</h2>
       <p class="section-lede">Komponen lama sudah ada tapi tidak sesuai Figma. Skill menjalankan 5 fase audit
         sistematis: re-inspeksi Figma MCP, klasifikasi gap, perbaiki via token, dan laporan terstruktur.</p>
@@ -3423,11 +4226,11 @@
               <div class="fix-pill p3"><span class="pn">3rd</span>Edit generated source (last resort)</div>
             </div>
             <div class="code-block" style="margin-top:12px;">
-              <span class="cmt">&lt;!-- ❌ Salah: hardcode warna --&gt;</span>
+              <span class="cmt">&lt;!-- ❌ Salah: hardcode warna --&gt;</span><br>
               <span class="kw">&lt;Badge</span> class=<span class="str">"bg-[#22C55E] text-white"</span><span
-                class="kw">/&gt;</span>
-
-              <span class="cmt">&lt;!-- ✅ Benar: gunakan prop variant --&gt;</span>
+                class="kw">/&gt;</span><br>
+              <br>
+              <span class="cmt">&lt;!-- ✅ Benar: gunakan prop variant --&gt;</span><br>
               <span class="kw">&lt;Badge</span> variant=<span class="str">"green"</span><span class="kw">/&gt;</span>
             </div>
           </div>
@@ -3441,9 +4244,9 @@
             <p>Setiap perbaikan harus melacak rantai: <strong>Figma variable → gwind-v2 token → utility class</strong>.
               Jika rantai tidak lengkap, dokumentasikan sebagai token gap dengan komentar.</p>
             <div class="code-block" style="margin-top:10px;">
-              <span class="cmt">&lt;!-- Token gap terdokumentasi --&gt;</span>
-              <span class="cmd">&lt;!-- token gap: shadow/card-custom = 0 4px 20px rgba(0,0,0,0.12)</span>
-              <span class="cmd"> tidak ada di gwind-v2; using arbitrary --&gt;</span>
+              <span class="cmt">&lt;!-- Token gap terdokumentasi --&gt;</span><br>
+              <span class="cmd">&lt;!-- token gap: shadow/card-custom = 0 4px 20px rgba(0,0,0,0.12)</span><br>
+              <span class="cmd"> tidak ada di gwind-v2; using arbitrary --&gt;</span><br>
               <span class="kw">&lt;Card</span> class=<span
                 class="str">"shadow-[0_4px_20px_rgba(0,0,0,0.12)]"</span><span class="kw">/&gt;</span>
             </div>
@@ -3474,243 +4277,8 @@
   </section>
 
   <!-- SLIDE: INSTALASI SKILL -->
-  <section id="instalasi">
-    <div class="wrap">
-      <p class="kicker"><span class="ix">04</span> Setup</p>
-      <h2>Cara Instalasi Skill</h2>
-      <p class="section-lede">Pasang Gwind Skill Module ke IDE Anda dalam empat langkah. Setelah selesai, asisten AI
-        siap memandu setiap baris kode sesuai standar Gwind Design System.</p>
-
-      <div class="install-step-list">
-
-        <div class="install-step">
-          <div class="step-num">01</div>
-          <div class="step-content">
-            <h4>Pastikan AI coding assistant aktif</h4>
-            <p>Skill ini berjalan di atas AI coding assistant yang mendukung custom skill. Pastikan asisten sudah
-              terpasang dan aktif di IDE pilihan Anda.</p>
-          </div>
-        </div>
-
-        <div class="install-step">
-          <div class="step-num">02</div>
-          <div class="step-content">
-            <h4>Salin file skill ke folder <code>.agents/skills/</code></h4>
-            <p>Unduh atau clone file skill, lalu letakkan di dalam folder <code>.agents/skills/gwind-skill/</code> di
-              root proyek Anda.</p>
-            <div class="code-block" style="margin-top:12px;">
-              <span class="cmt"># Struktur folder yang diharapkan</span>
-              <span class="cmd">your-project/</span>
-              <span class="cmd"> .agents/</span>
-              <span class="cmd"> skills/</span>
-              <span class="cmd"> gwind-skill/</span>
-              <span class="kw"> SKILL.md</span> <span class="cmt">← instruksi utama</span>
-              <span class="kw"> references/</span> <span class="cmt">← dokumentasi tambahan</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="install-step">
-          <div class="step-num">03</div>
-          <div class="step-content">
-            <h4>Inisialisasi project dengan CLI</h4>
-            <p>Jalankan perintah berikut di root proyek Anda untuk menyiapkan fondasi Gwind — token, CSS layer, dan
-              konfigurasi Tailwind v4.</p>
-            <div class="code-block" style="margin-top:12px;">
-              <span class="cmt">$ </span><span class="cmd">npx gwind-system-ui init</span>
-              <span class="str">✓</span> scanning gwind-v2 tokens<span class="cmt">...</span>
-              <span class="str">✓</span> injecting gwind.css foundation
-              <span class="str">✓</span> applying Tailwind CSS v4
-              <span class="str">✓</span> init complete <span class="cmt">— gwind.json written</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="install-step">
-          <div class="step-num">04</div>
-          <div class="step-content">
-            <h4>Verifikasi skill &amp; Figma MCP aktif</h4>
-            <p>Buka AI Chat di IDE Anda. Skill otomatis aktif saat mendeteksi folder
-              <code>.agents/skills/gwind-skill/</code>. Pastikan juga mengaktifkan <strong>Figma MCP</strong> sebagai
-              tool tambahan agar asisten dapat membaca desain.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
 
   <!-- SLIDE: CARA PENGGUNAAN -->
-  <section id="penggunaan">
-    <div class="wrap">
-      <p class="kicker"><span class="ix">05</span> Figma → Kode</p>
-      <h2>Cara Kerja: Figma MCP + Skill</h2>
-      <p class="section-lede">Skill ini membaca output Figma MCP — node properties, variabel, dan layout — lalu
-        menerjemahkannya ke kode Vue 3 yang otomatis memakai token <code>gwind-v2</code> dan komponen dari
-        <code>gwind-system-ui</code>.</p>
-
-      <!-- Flow diagram: Figma → Skill → Code -->
-      <div
-        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 32px;margin-bottom:32px;">
-        <div
-          style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px;">
-          // Alur kerja</div>
-        <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:16px;">
-
-          <!-- Step 1: Figma -->
-          <div
-            style="flex:1;min-width:140px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:16px 18px;">
-            <div
-              style="font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);letter-spacing:0.04em;margin-bottom:8px;">
-              STEP 01</div>
-            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6">
-                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
-                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
-                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
-                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
-                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
-              </svg>
-              <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">Figma MCP</span>
-            </div>
-            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Inspeksi node di Figma — warna,
-              spacing, tipografi, komponen.</p>
-          </div>
-
-          <!-- Arrow -->
-          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
-              fill="none">
-              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg></div>
-
-          <!-- Step 2: Skill -->
-          <div
-            style="flex:1;min-width:140px;background:rgba(61,242,168,0.04);border:1px solid rgba(61,242,168,0.25);border-radius:10px;padding:16px 18px;">
-            <div
-              style="font-family:var(--mono);font-size:9.5px;color:var(--acc-dim);letter-spacing:0.04em;margin-bottom:8px;">
-              STEP 02</div>
-            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
-                <path
-                  d="M9.5 2A2.5 2.5 0 007 4.5v15A2.5 2.5 0 009.5 22h5a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0014.5 2h-5z" />
-                <path d="M9 7h6M9 11h6M9 15h4" />
-              </svg>
-              <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Gwind Skill</span>
-            </div>
-            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Skill memetakan nilai Figma ke
-              token <code>gwind-v2</code> dan aturan Gwind Design System.</p>
-          </div>
-
-          <!-- Arrow -->
-          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
-              fill="none">
-              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg></div>
-
-          <!-- Step 3: AI Chat -->
-          <div
-            style="flex:1;min-width:140px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:16px 18px;">
-            <div
-              style="font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);letter-spacing:0.04em;margin-bottom:8px;">
-              STEP 03</div>
-            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="1.6">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-              </svg>
-              <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">AI Chat</span>
-            </div>
-            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Tanyakan ke asisten AI
-              menggunakan konteks Figma MCP yang sudah terbaca.</p>
-          </div>
-
-          <!-- Arrow -->
-          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
-              fill="none">
-              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg></div>
-
-          <!-- Step 4: Output -->
-          <div
-            style="flex:1;min-width:140px;background:rgba(61,242,168,0.08);border:1px solid var(--acc);border-radius:10px;padding:16px 18px;">
-            <div
-              style="font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:0.04em;margin-bottom:8px;">
-              OUTPUT</div>
-            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                <path d="M14 2v6h6M10 13l2 2 4-4" />
-              </svg>
-              <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Vue 3 Code</span>
-            </div>
-            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Kode Vue 3 dengan token
-              gwind-v2, komponen gwind-system-ui, dan CSS isolation.</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Two example cards -->
-      <div class="usage-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-
-        <div class="usage-card">
-          <div class="usage-card-head">
-            <div class="u-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
-                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
-                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
-                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
-                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
-              </svg>
-            </div>
-            <h4>Implementasi Screen Figma</h4>
-            <span class="u-tag">Figma MCP</span>
-          </div>
-          <div class="usage-card-body">
-            <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;">Arahkan Figma MCP ke
-              frame atau screen tertentu, lalu minta skill menerjemahkan layout, spacing, dan warna ke kode Vue 3 yang
-              sesuai token gwind-v2.</p>
-            <div class="code-block">
-              <span class="cmt">// Di AI Chat (Figma MCP aktif):</span>
-              <span class="str">"Implementasikan screen 'Dashboard Home'</span>
-              <span class="str"> dari Figma. Gunakan token gwind-v2 untuk</span>
-              <span class="str"> semua warna dan spacing, serta komponen</span>
-              <span class="str"> dari gwind-system-ui yang relevan."</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="usage-card">
-          <div class="usage-card-head">
-            <div class="u-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                <path
-                  d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
-              </svg>
-            </div>
-            <h4>Mapping Token Figma → gwind-v2</h4>
-            <span class="u-tag">Figma MCP</span>
-          </div>
-          <div class="usage-card-body">
-            <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;">Minta skill membaca
-              variabel warna atau spacing di node Figma dan memetakannya ke token semantik gwind-v2 yang tepat — tanpa
-              menebak-nebak nilai hex.</p>
-            <div class="code-block">
-              <span class="cmt">// Di AI Chat (Figma MCP aktif):</span>
-              <span class="str">"Baca node 'Card/Product' di Figma.</span>
-              <span class="str"> Petakan semua variabel warna dan spacing</span>
-              <span class="str"> ke token gwind-v2 yang setara, lalu</span>
-              <span class="str"> generate Vue SFC-nya."</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
 
   <!-- SLIDE 4: ISOLATION -->
   <section id="isolasi">
@@ -3786,7 +4354,7 @@
             B</text>
           <text x="262" y="289" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
             fill="#8CA39A">.scope-event</text>
-          <path d="M96 44 L224 44" stroke="#F2715E" stroke-width="1.2" stroke-dasharray="2 4" />
+          <path class="attack-line" d="M96 44 L224 44" stroke="#F2715E" stroke-width="1.2" stroke-dasharray="2 4" />
           <circle cx="160" cy="44" r="9" fill="#1A0F0D" stroke="#F2715E" />
           <path class="x-strike-anim" d="M155 39l10 10M165 39l-10 10" stroke="#F2715E" stroke-width="1.5" />
         </svg>
@@ -3803,47 +4371,36 @@
           skill tidak akan lagi menggunakan nilai HEX statis, melainkan langsung memetakannya ke 11 palette warna, 12
           skala tipografi, dan 11 langkah spacing ini.</strong></p>
 
-      <div
-        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 28px;margin-bottom:40px;display:flex;align-items:center;justify-content:center;gap:0;">
-        <svg class="pipe-box" viewBox="0 0 800 60" style="width:100%;max-width:720px;height:auto;">
-          <!-- Figma source -->
-          <rect x="10" y="6" width="150" height="48" rx="8" fill="var(--bg-soft)" stroke="var(--line)"
-            stroke-width="1" />
-          <text x="85" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
-            fill="var(--ink-dim)">Figma</text>
-          <text x="85" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
-            fill="var(--acc)">Variables</text>
-          <!-- Arrow 1 -->
-          <path class="pipe-arrow" d="M170 30h30M194 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
-            stroke-linecap="round" stroke-linejoin="round" />
-          <!-- CSS layer -->
-          <rect x="210" y="6" width="170" height="48" rx="8" fill="rgba(61,242,168,0.04)" stroke="rgba(61,242,168,0.25)"
-            stroke-width="1" />
-          <text x="295" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
-            fill="var(--ink-soft)">gwind-v2</text>
-          <text x="295" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
-            fill="var(--acc)">--primary: var(--lime-500)</text>
-          <!-- Arrow 2 -->
-          <path class="pipe-arrow" d="M390 30h30M414 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
-            stroke-linecap="round" stroke-linejoin="round" />
-          <!-- Tailwind layer -->
-          <rect x="430" y="6" width="160" height="48" rx="8" fill="rgba(61,242,168,0.04)" stroke="rgba(61,242,168,0.25)"
-            stroke-width="1" />
-          <text x="510" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
-            fill="var(--ink-soft)">Tailwind v4</text>
-          <text x="510" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--acc)">@theme
-            mapping</text>
-          <!-- Arrow 3 -->
-          <path class="pipe-arrow" d="M600 30h30M624 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
-            stroke-linecap="round" stroke-linejoin="round" />
-          <!-- Result -->
-          <rect x="640" y="6" width="145" height="48" rx="8" fill="rgba(61,242,168,0.08)" stroke="#3DF2A8"
-            stroke-width="1.2" />
-          <text x="712" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
-            fill="var(--acc)">bg-primary</text>
-          <text x="712" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
-            fill="var(--ink)">text-omicron</text>
-        </svg>
+      <div class="flow-diagram" style="margin-bottom:40px;">
+        <div class="flow-box">
+          <div style="font-family:JetBrains Mono;font-size:11px;color:var(--ink-dim);margin-bottom:4px;">Figma</div>
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--acc);">Variables</div>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
+            <path class="arrow-lightning" d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg></div>
+        <div class="flow-box" style="background:rgba(61,242,168,0.04);border-color:rgba(61,242,168,0.25);">
+          <div style="font-family:JetBrains Mono;font-size:11px;color:var(--ink-soft);margin-bottom:4px;">gwind-v2</div>
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--acc);">--primary: var(--lime-500)</div>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
+            <path class="arrow-lightning" d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg></div>
+        <div class="flow-box" style="background:rgba(61,242,168,0.04);border-color:rgba(61,242,168,0.25);">
+          <div style="font-family:JetBrains Mono;font-size:11px;color:var(--ink-soft);margin-bottom:4px;">Tailwind v4
+          </div>
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--acc);">@theme mapping</div>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
+            <path class="arrow-lightning" d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg></div>
+        <div class="flow-box" style="background:rgba(61,242,168,0.08);border-color:#3DF2A8;border-width:1.2px;">
+          <div style="font-family:JetBrains Mono;font-size:11px;color:var(--acc);margin-bottom:4px;">bg-primary</div>
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--ink);">text-omicron</div>
+        </div>
       </div>
 
       <div class="token-grid">
@@ -3979,56 +4536,52 @@
       <h2>Source-code distribution — milik Anda sepenuhnya</h2>
       <p class="section-lede">CLI meng-copy source code komponen langsung ke <code>src/components/ui/</code>.
         <strong>Dalam workflow Figma MCP, skill tidak membuat komponen dari nol, melainkan akan otomatis merakit
-          komponen-komponen siap pakai ini untuk membangun screen yang Anda minta.</strong></p>
+          komponen-komponen siap pakai ini untuk membangun screen yang Anda minta.</strong>
+      </p>
 
-      <div
-        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;justify-content:center;">
-        <svg class="pipe-box" viewBox="0 0 760 64" style="width:100%;max-width:700px;height:auto;">
-          <!-- Registry -->
-          <rect x="5" y="7" width="140" height="50" rx="8" fill="var(--bg-soft)" stroke="var(--line)"
-            stroke-width="1" />
-          <rect x="13" y="14" width="36" height="14" rx="3" fill="rgba(242,184,75,0.15)" stroke="rgba(242,184,75,0.3)"
-            stroke-width="0.8" />
-          <text x="31" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
-            fill="#F2B84B">.json</text>
-          <rect x="53" y="14" width="36" height="14" rx="3" fill="rgba(61,242,168,0.12)" stroke="rgba(61,242,168,0.25)"
-            stroke-width="0.8" />
-          <text x="71" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
-            fill="var(--acc)">.vue</text>
-          <rect x="93" y="14" width="36" height="14" rx="3" fill="rgba(242,113,94,0.1)" stroke="rgba(242,113,94,0.2)"
-            stroke-width="0.8" />
-          <text x="111" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2715E">.ts</text>
-          <text x="75" y="48" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
-            fill="var(--ink-dim)">Registry</text>
-          <!-- Arrow -->
-          <path class="pipe-arrow" d="M155 32h25M174 26l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
-            stroke-linecap="round" stroke-linejoin="round" />
-          <!-- CLI -->
-          <rect x="190" y="7" width="180" height="50" rx="8" fill="rgba(61,242,168,0.05)" stroke="rgba(61,242,168,0.25)"
-            stroke-width="1" />
-          <text x="216" y="27" font-family="JetBrains Mono" font-size="11" fill="var(--ink-dim)">$</text>
-          <text x="230" y="27" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">gwind-system-ui</text>
-          <text x="216" y="44" font-family="JetBrains Mono" font-size="10" fill="var(--ink-soft)">add button</text>
-          <circle cx="352" cy="43" r="3" fill="var(--acc)" opacity="0.5" />
-          <!-- Arrow -->
-          <path class="pipe-arrow" d="M380 32h25M399 26l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
-            stroke-linecap="round" stroke-linejoin="round" />
-          <!-- Local project -->
-          <rect x="415" y="7" width="190" height="50" rx="8" fill="rgba(61,242,168,0.06)" stroke="var(--acc)"
-            stroke-width="1.2" />
-          <text x="445" y="27" font-family="JetBrains Mono" font-size="10" fill="var(--ink-dim)">src/</text>
-          <text x="470" y="27" font-family="JetBrains Mono" font-size="10" fill="var(--ink-soft)">components/ui/</text>
-          <text x="510" y="44" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">button/</text>
-          <rect x="558" y="36" width="12" height="12" rx="2" fill="rgba(61,242,168,0.15)" stroke="var(--acc)"
-            stroke-width="0.6" />
-          <text x="564" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
-            fill="var(--acc)">V</text>
-          <!-- Ownership banner -->
-          <rect x="620" y="14" width="125" height="36" rx="6" fill="rgba(61,242,168,0.08)" stroke="var(--acc)"
-            stroke-width="1" />
-          <text x="682" y="38" text-anchor="middle" font-family="var(--disp)" font-size="12" fill="var(--acc)"
-            font-weight="600">Milik Anda ✓</text>
-        </svg>
+      <div class="flow-diagram">
+        <div class="flow-box">
+          <div style="display:flex;gap:6px;justify-content:center;margin-bottom:8px;">
+            <span
+              style="font-family:JetBrains Mono;font-size:8px;color:#F2B84B;background:rgba(242,184,75,0.15);border:0.8px solid rgba(242,184,75,0.3);padding:2px 6px;border-radius:3px;">.json</span>
+            <span
+              style="font-family:JetBrains Mono;font-size:8px;color:var(--acc);background:rgba(61,242,168,0.12);border:0.8px solid rgba(61,242,168,0.25);padding:2px 6px;border-radius:3px;">.vue</span>
+            <span
+              style="font-family:JetBrains Mono;font-size:8px;color:#F2715E;background:rgba(242,113,94,0.1);border:0.8px solid rgba(242,113,94,0.2);padding:2px 6px;border-radius:3px;">.ts</span>
+          </div>
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--ink-dim)">Registry</div>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
+            <path class="arrow-lightning" d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg></div>
+        <div class="flow-box"
+          style="background:rgba(61,242,168,0.05);border-color:rgba(61,242,168,0.25);text-align:left;position:relative;">
+          <div style="font-family:JetBrains Mono;font-size:11px;color:var(--ink-dim);margin-bottom:4px;"><span
+              style="color:var(--ink-dim)">$</span> <span style="color:var(--acc)">gwind-system-ui</span></div>
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--ink-soft)">add button</div>
+          <div class="dot-pulse"
+            style="position:absolute;bottom:8px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--acc);opacity:0.5;">
+          </div>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24">
+            <path d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
+            <path class="arrow-lightning" d="M5 12h13M14 7l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg></div>
+        <div class="flow-box"
+          style="background:rgba(61,242,168,0.06);border-color:var(--acc);border-width:1.2px;text-align:left;position:relative;">
+          <div style="font-family:JetBrains Mono;font-size:10px;color:var(--ink-dim);margin-bottom:4px;">src/ <span
+              style="color:var(--ink-soft)">components/ui/</span></div>
+          <div style="font-family:JetBrains Mono;font-size:11px;color:var(--acc);">button/</div>
+          <div
+            style="position:absolute;bottom:8px;right:8px;width:12px;height:12px;border-radius:2px;background:rgba(61,242,168,0.15);border:0.6px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--acc);font-family:JetBrains Mono;">
+            V</div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <div
+            style="padding: 10px 18px; border-radius: 8px; background:rgba(61,242,168,0.08); border:1px solid var(--acc); color:var(--acc); font-family:var(--disp); font-size:12px; font-weight:600; white-space:nowrap; margin-left:8px;">
+            Milik Anda ✓</div>
+        </div>
       </div>
       <div class="comp-cols">
         <div class="comp-col">
