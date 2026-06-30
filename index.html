@@ -3581,13 +3581,11 @@
         <div class="eyebrow"><span class="pulse"></span>AI coding assistant · gwind-system-ui@1.0.1 · gwind-v2@0.2.1
         </div>
         <h1>Jembatan Pintar antara <span class="grad">Figma</span> &amp; Vue.</h1>
-        <p class="lede">Gwind Skill Module men-transformasikan asisten AI Anda menjadi ahli ekosistem Gwind. AI akan membaca desain via
-          <strong style="color:var(--acc)">Figma MCP</strong>, lalu secara otomatis mengorkestrasi token
-          <code>gwind-v2</code>, CLI, dan komponen Vue 3 dalam satu <em>workflow</em> yang mulus.
+        <p class="lede"><code>gwind-skill-module</code> mengubah AI assistant-mu jadi rekan kerja yang paham luar dalam ekosistem desain Pegadaian Kita. Cukup baca desain dari Figma lewat <strong style="color:var(--acc)">Figma MCP</strong>, dan AI akan otomatis menyusun token (<code>gwind-v2</code>), variabel styling, hingga komponen dari <code>gwind-system-ui</code> — semuanya rapi dan selaras dalam satu alur kerja yang mulus.
         </p>
         <div class="hero-tags">
-          <span><b>$</b> Figma Inspection</span>
-          <span><b>$</b> Env Readiness Check</span>
+          <span><b>$</b> Figma Inspect</span>
+          <span><b>$</b> Environment Dependencies Check</span>
           <span><b>$</b> Token Mapping</span>
           <span><b>$</b> Vue 3 Generation</span>
           <span><b>$</b> CSS Isolation</span>
@@ -3691,7 +3689,8 @@
           </svg>
           <div class="label">// 03 CODE GEN</div>
           <h3>Vue 3 Code Generator</h3>
-          <p>Merakit komponen <code>gwind-system-ui</code> (termasuk state management dari Reka UI) menjadi file Vue SFC yang utuh.
+          <p>Merakit komponen <code>gwind-system-ui</code> (termasuk state management dari Reka UI) menjadi file Vue SFC
+            yang utuh.
             Skill juga memastikan teks label mematuhi standarisasi Bahasa Indonesia.</p>
         </div>
         <div class="pillar">
@@ -3726,7 +3725,8 @@
           <div class="step-num">01</div>
           <div class="step-content">
             <h4>Pastikan AI Coding Assistant Aktif</h4>
-            <p>Skill ini berjalan di atas AI coding assistant yang mendukung custom skill. Pastikan extension/plugin asisten
+            <p>Skill ini berjalan di atas AI coding assistant yang mendukung custom skill. Pastikan extension/plugin
+              asisten
               sudah terpasang dan aktif di IDE Anda.</p>
           </div>
         </div>
@@ -3940,10 +3940,9 @@
               dan warna dari token <code>gwind-v2</code>.</p>
             <div class="code-block">
               <span class="cmt">// Di AI Chat (Figma MCP aktif):</span><br>
-              <span class="str">"Implementasikan screen 'Dashboard Home'</span><br>
-              <span class="str"> dari Figma. Gunakan token gwind-v2 untuk</span><br>
-              <span class="str"> semua warna dan spacing, serta komponen</span><br>
-              <span class="str"> dari gwind-system-ui yang relevan."</span>
+              <span class="str">Pada folder @nama_folder gunakan @gwind-skill-module </span><br>
+              <span class="str">lalu implementasikan @nama_screen</span><br><br>
+              <span class="str">@https://www.figma.com/</span><span class="str">@link_design_token</span>
             </div>
           </div>
         </div>
@@ -3965,10 +3964,10 @@
               tepat, tanpa perlu menebak nilai HEX secara manual.</p>
             <div class="code-block">
               <span class="cmt">// Di AI Chat (Figma MCP aktif):</span><br>
-              <span class="str">"Baca node 'Card/Product' di Figma.</span><br>
-              <span class="str"> Petakan semua variabel warna dan spacing</span><br>
-              <span class="str"> ke token gwind-v2 yang setara, lalu</span><br>
-              <span class="str"> generate Vue SFC-nya."</span>
+              <span class="str">Pada 'Card/Product' cek styling dan</span><br>
+              <span class="str">petakan semua variabel warna dan spacing</span><br>
+              <span class="str">lalu implementasikan komponen sesuai</span><br><br>
+              <span class="str">@https://www.figma.com/</span><span class="str">@link_design_token</span>
             </div>
           </div>
         </div>
@@ -3990,7 +3989,8 @@
           <div class="sc-num">01</div>
           <div class="sc-body">
             <h4>Buka Figma MCP &amp; Arahkan ke Target Frame</h4>
-            <p>Arahkan Figma MCP ke frame atau komponen yang ingin dibuat. AI akan membaca seluruh node tree secara detail
+            <p>Arahkan Figma MCP ke frame atau komponen yang ingin dibuat. AI akan membaca seluruh node tree secara
+              detail
               (nama layer, properties, variables, dan constraints).</p>
             <div class="figma-panel">
               <div class="fp-bar"><span class="fp-dot"></span>Figma MCP — Node Inspector</div>
@@ -4018,7 +4018,8 @@
           <div class="sc-body">
             <h4>Environment Readiness Check — 9 Langkah Wajib</h4>
             <p>Skill akan otomatis memverifikasi 9 hal sebelum menulis kode: package manager, <code>gwind.json</code>,
-              <code>gwind-v2</code>, base dependencies, project structure, generated components, dan CSS isolation.</p>
+              <code>gwind-v2</code>, base dependencies, project structure, generated components, dan CSS isolation.
+            </p>
             <div class="ready-report">
               <div class="rr-title">GWIND ENVIRONMENT READINESS — remote-kita-news (30 Jun 2026)</div>
               <div><span class="rr-label">gwind-system-ui init: </span><span class="rr-ok">✅ gwind.json • gwind.css
@@ -4073,8 +4074,10 @@
           <div class="sc-num">04</div>
           <div class="sc-body">
             <h4>Code Generation — Token ke Komponen Vue 3</h4>
-            <p>Skill men-generate file Vue 3 menggunakan komponen <code>gwind-system-ui</code>, token <code>gwind-v2</code>,
-              dan CSS isolation wrapper. Semua state (default, hover, active, disabled, loading) ikut diimplementasikan.</p>
+            <p>Skill men-generate file Vue 3 menggunakan komponen <code>gwind-system-ui</code>, token
+              <code>gwind-v2</code>,
+              dan CSS isolation wrapper. Semua state (default, hover, active, disabled, loading) ikut diimplementasikan.
+            </p>
             <div class="code-block" style="margin-top:12px;">
               <span class="cmt">&lt;!-- Hasil implementasi dari Figma MCP --&gt;</span><br>
               <span class="kw">&lt;script</span> setup lang=<span class="str">"ts"</span><span
@@ -4104,7 +4107,8 @@
           <div class="sc-body">
             <h4>Verifikasi — Visual Match vs Figma</h4>
             <p>Memastikan hasil implementasi sesuai dengan desain: menjalankan typecheck, linter, build test,
-              hingga visual check di berbagai viewport (mobile/tablet/desktop). Khusus RemoteApp, keaktifan CSS isolation divalidasi lewat DevTools.</p>
+              hingga visual check di berbagai viewport (mobile/tablet/desktop). Khusus RemoteApp, keaktifan CSS
+              isolation divalidasi lewat DevTools.</p>
             <div class="code-block" style="margin-top:10px;">
               <span class="cmt"># Verifikasi CSS isolation (remote app)</span><br>
               <span class="cmd">grep</span> -c <span class="str">':root'</span> dist/style-*.css <span class="cmt">#
@@ -4125,7 +4129,8 @@
       <p class="kicker"><span class="ix">05</span> Skenario 2</p>
       <h2>Mode Audit — Code Review &amp; Fix</h2>
       <p class="section-lede">Digunakan ketika komponen sudah ada di kode, tapi belum presisi dengan desain Figma.
-        Skill akan menjalankan 5 fase audit sistematis: re-inspeksi via Figma MCP, klasifikasi gap, perbaikan token, hingga pembuatan laporan.</p>
+        Skill akan menjalankan 5 fase audit sistematis: re-inspeksi via Figma MCP, klasifikasi gap, perbaikan token,
+        hingga pembuatan laporan.</p>
 
       <div class="scenario-steps">
 
@@ -4155,9 +4160,10 @@
           <div class="sc-num">P2</div>
           <div class="sc-body">
             <h4>Audit Table — Klasifikasi Setiap Property</h4>
-            <p>Setiap property dimasukkan ke dalam tabel audit dengan status: <span style="color:var(--acc)">✅ match</span>, <span
-                style="color:var(--amber)">⚠️ close</span>, <span style="color:var(--ink)">🔧 fixable</span>, atau <span
-                style="color:var(--red)">❌ mismatch</span>. Token gap yang ditemukan akan didata sebelum perbaikan dimulai.</p>
+            <p>Setiap property dimasukkan ke dalam tabel audit dengan status: <span style="color:var(--acc)">✅
+                match</span>, <span style="color:var(--amber)">⚠️ close</span>, <span style="color:var(--ink)">🔧
+                fixable</span>, atau <span style="color:var(--red)">❌ mismatch</span>. Token gap yang ditemukan akan
+              didata sebelum perbaikan dimulai.</p>
             <div class="table-wrap">
               <table class="audit-table">
                 <thead>
@@ -4214,7 +4220,8 @@
           <div class="sc-num">P3</div>
           <div class="sc-body">
             <h4>Fix Strategy — Tentukan Prioritas</h4>
-            <p>Skill menyusun strategi perbaikan terstruktur berdasarkan tingkat prioritas. Mengutamakan solusi non-invasif
+            <p>Skill menyusun strategi perbaikan terstruktur berdasarkan tingkat prioritas. Mengutamakan solusi
+              non-invasif
               terlebih dahulu sebelum melakukan modifikasi pada source code utama.</p>
             <div class="fix-pills">
               <div class="fix-pill p1"><span class="pn">1st</span>Ganti via props komponen</div>
@@ -4256,7 +4263,8 @@
           <div class="sc-num">P5</div>
           <div class="sc-body">
             <h4>Audit Report — Laporan Token Gap</h4>
-            <p>Skill men-generate laporan audit terperinci sebelum sesi chat ditutup. Laporan mencakup seluruh gap yang ditemukan,
+            <p>Skill men-generate laporan audit terperinci sebelum sesi chat ditutup. Laporan mencakup seluruh gap yang
+              ditemukan,
               tindakan perbaikan yang diambil, serta feedback untuk design system owner.</p>
             <div class="gap-card">
               <div class="gc-title">TOKEN GAPS — Card/Product (30 Jun 2026)</div>
@@ -4292,8 +4300,10 @@
             <div class="num">01</div>
             <div>
               <h4>Unique Scope Wrapper &lt;div&gt;</h4>
-              <p>Setiap view akan dibungkus oleh div dengan class scope unik (diambil dari <code>package.json</code> → <code>gw-scope-*</code>).
-                Placeholder <code>.gw-scope</code> akan di-replace otomatis saat proses build.</p>
+              <p>Setiap view akan dibungkus oleh div dengan class scope unik (diambil dari <code>package.json</code> →
+                <code>gw-scope-*</code>).
+                Placeholder <code>.gw-scope</code> akan di-replace otomatis saat proses build.
+              </p>
             </div>
           </div>
           <div class="layer-item">
@@ -4308,7 +4318,8 @@
             <div class="num">03</div>
             <div>
               <h4>tailwindcss-mangle</h4>
-              <p>Melakukan obfuscation/mangling pada utility class Tailwind sehingga nama class antar remote app tidak akan pernah bentrok.</p>
+              <p>Melakukan obfuscation/mangling pada utility class Tailwind sehingga nama class antar remote app tidak
+                akan pernah bentrok.</p>
             </div>
           </div>
           <div class="layer-item">
@@ -4365,7 +4376,8 @@
     <div class="wrap">
       <p class="kicker"><span class="ix">07</span> Bahasa Visual Kita</p>
       <h2>Design Tokens — gwind-v2</h2>
-      <p class="section-lede">Variabel CSS murni siap pakai yang ter-integrasi dengan Tailwind v4. <strong>Saat memproses
+      <p class="section-lede">Variabel CSS murni siap pakai yang ter-integrasi dengan Tailwind v4. <strong>Saat
+          memproses
           node dari Figma MCP, skill akan memetakan nilainya langsung ke 11 palette warna, 12 skala tipografi,
           dan 11 tingkat spacing ini (tanpa hardcoded HEX).</strong></p>
 
@@ -4624,7 +4636,8 @@
           </ul>
         </div>
       </div>
-      <div class="comp-foot">// 28 komponen • 3 kategori • source code distribution • teruji secara aksesibilitas (a11y)</div>
+      <div class="comp-foot">// 28 komponen • 3 kategori • source code distribution • teruji secara aksesibilitas (a11y)
+      </div>
     </div>
   </section>
 
