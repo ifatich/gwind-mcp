@@ -141,12 +141,49 @@
       letter-spacing: 0.02em;
     }
 
-    .brand .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--acc);
-      box-shadow: 0 0 8px var(--acc);
+    @keyframes gwind-logo-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 1px rgba(64, 192, 166, 0.4));
+      }
+
+      50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 6px rgba(88, 239, 179, 0.75));
+      }
+    }
+
+    @keyframes gwind-core-glow {
+
+      0%,
+      100% {
+        opacity: 0.65;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .gwind-logo-svg {
+      display: inline-block;
+      vertical-align: middle;
+      width: 15px;
+      height: 16px;
+      animation: gwind-logo-pulse 3s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .gwind-logo-svg .gl-path-6,
+    .gwind-logo-svg .gl-path-7 {
+      animation: gwind-core-glow 2s ease-in-out infinite;
+    }
+
+    footer .gwind-logo-svg {
+      width: 13px;
+      height: 14px;
     }
 
     nav .links {
@@ -793,40 +830,42 @@
       animation-delay: 1.5s;
     }
 
-    /* -- tag float: hero tag pills -- */
-    @keyframes tag-float {
-
-      0%,
-      100% {
-        transform: translateY(0);
+    /* -- tag sequence entrance & exit cascade: hero tag pills -- */
+    @keyframes tag-fade-in {
+      0% {
+        opacity: 0;
+        transform: translateY(8px);
       }
-
-      50% {
-        transform: translateY(-2px);
+      100% {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
     .hero-tags span {
-      animation: tag-float 4s ease-in-out infinite;
+      opacity: 0;
+      animation: tag-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .hero-tags span:nth-child(1) {
-      animation-delay: 0s;
-    }
-
-    .hero-tags span:nth-child(2) {
       animation-delay: 0.3s;
     }
 
+    .hero-tags span:nth-child(2) {
+      animation-delay: 0.45s;
+    }
+
     .hero-tags span:nth-child(3) {
-      animation-delay: 0.6s;
+      animation-delay: 0.60s;
     }
 
     .hero-tags span:nth-child(4) {
-      animation-delay: 0.9s;
+      animation-delay: 0.75s;
     }
 
-    /* -- badge pop: workflow step entrance -- */
+    .hero-tags span:nth-child(5) {
+      animation-delay: 0.90s;
+    }
     @keyframes badge-pop {
       0% {
         transform: scale(0.6);
@@ -1446,13 +1485,35 @@
 
       0%,
       100% {
-        filter: drop-shadow(0 0 2px var(--acc));
+        filter: drop-shadow(0 0 2px rgba(188, 19, 254, 0.3));
         transform: scale(1);
+        opacity: 0.85;
       }
 
-      50% {
-        filter: drop-shadow(0 0 12px var(--acc));
-        transform: scale(1.05);
+      10%,
+      15% {
+        filter: drop-shadow(0 0 10px rgba(188, 19, 254, 0.95)) drop-shadow(0 0 2px #fff);
+        transform: scale(1.04);
+        opacity: 1;
+      }
+
+      18% {
+        filter: drop-shadow(0 0 2px rgba(188, 19, 254, 0.3));
+        transform: scale(1);
+        opacity: 0.85;
+      }
+
+      22%,
+      24% {
+        filter: drop-shadow(0 0 8px rgba(188, 19, 254, 0.85)) drop-shadow(0 0 1px #fff);
+        transform: scale(1.03);
+        opacity: 1;
+      }
+
+      28% {
+        filter: drop-shadow(0 0 2px rgba(188, 19, 254, 0.3));
+        transform: scale(1);
+        opacity: 0.85;
       }
     }
 
@@ -1485,24 +1546,113 @@
       }
     }
 
-    .iso-ring-1 {
-      transform-origin: 160px 160px;
-      animation: iso-spin 40s linear infinite;
+    @keyframes circle-lightning-1 {
+      0% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: 754;
+        opacity: 0;
+      }
     }
 
-    .iso-ring-2 {
-      transform-origin: 160px 160px;
-      animation: iso-spin-rev 30s linear infinite;
+    @keyframes circle-lightning-2 {
+      0% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: 565;
+        opacity: 0;
+      }
     }
 
-    .iso-ring-3 {
+    @keyframes circle-lightning-3 {
+      0% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: 377;
+        opacity: 0;
+      }
+    }
+
+    @keyframes circle-lightning-center {
+      0% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: 188.5;
+        opacity: 0;
+      }
+    }
+
+    .iso-ring-lightning-1 {
+      stroke-dasharray: 80 674;
+      animation: circle-lightning-1 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       transform-origin: 160px 160px;
-      animation: iso-spin 20s linear infinite;
+    }
+
+    .iso-ring-lightning-2 {
+      stroke-dasharray: 60 505;
+      animation: circle-lightning-2 2.3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      transform-origin: 160px 160px;
+    }
+
+    .iso-ring-lightning-3 {
+      stroke-dasharray: 40 337;
+      animation: circle-lightning-3 2.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      transform-origin: 160px 160px;
+    }
+
+    .iso-gwind-logo {
+      transform-origin: center;
+      transform-box: fill-box;
     }
 
     .iso-center {
+      stroke-dasharray: 25 163.5;
+      animation: circle-lightning-center 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       transform-origin: 160px 160px;
-      animation: iso-pulse 3s ease-in-out infinite;
     }
 
     .attack-line {
@@ -1515,34 +1665,36 @@
       animation: iso-x-strike 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
 
-    @keyframes iso-card-pulse-a {
-      0%, 100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 2px rgba(61, 242, 168, 0.4));
+    @keyframes card-lightning-run {
+      0% {
+        stroke-dashoffset: 248;
+        opacity: 0;
       }
-      50% {
-        transform: scale(1.03);
-        filter: drop-shadow(0 0 8px rgba(61, 242, 168, 0.8));
+
+      12% {
+        opacity: 1;
       }
-    }
-    @keyframes iso-card-pulse-b {
-      0%, 100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 2px rgba(242, 113, 94, 0.4));
+
+      88% {
+        opacity: 1;
       }
-      50% {
-        transform: scale(1.03);
-        filter: drop-shadow(0 0 8px rgba(242, 113, 94, 0.8));
+
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
       }
     }
 
-    .iso-card-a {
-      transform-origin: 58px 44px;
-      animation: iso-card-pulse-a 4s ease-in-out infinite;
+    .card-border-glow-a {
+      stroke-dasharray: 40 208;
+      animation: card-lightning-run 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      filter: drop-shadow(0 0 6px #3DF2A8) drop-shadow(0 0 2px #fff);
     }
-    .iso-card-b {
-      transform-origin: 262px 276px;
-      animation: iso-card-pulse-b 4s ease-in-out infinite;
+
+    .card-border-glow-b {
+      stroke-dasharray: 40 208;
+      animation: card-lightning-run 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      filter: drop-shadow(0 0 6px #F2715E) drop-shadow(0 0 2px #fff);
     }
 
     /* ---------- SLIDE 5: TOKENS ---------- */
@@ -2609,6 +2761,120 @@
       border: 1px solid rgba(61, 242, 168, 0.25);
     }
 
+    /* Workflow Steps Icon Animations */
+    @keyframes read-figma {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+        stroke-width: 2.2px;
+        filter: drop-shadow(0 0 2px var(--amber));
+      }
+    }
+
+    .figma-p1 {
+      animation: read-figma 2s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+
+    .figma-p2 {
+      animation: read-figma 2s ease-in-out infinite;
+      animation-delay: 0.3s;
+    }
+
+    .figma-p3 {
+      animation: read-figma 2s ease-in-out infinite;
+      animation-delay: 0.6s;
+    }
+
+    .figma-p4 {
+      animation: read-figma 2s ease-in-out infinite;
+      animation-delay: 0.9s;
+    }
+
+    .figma-p5 {
+      animation: read-figma 2s ease-in-out infinite;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes pulse-chip-line {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+        stroke-width: 2px;
+        filter: drop-shadow(0 0 2px var(--acc));
+      }
+    }
+
+    .chip-l1 {
+      animation: pulse-chip-line 1.8s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+
+    .chip-l2 {
+      animation: pulse-chip-line 1.8s ease-in-out infinite;
+      animation-delay: 0.4s;
+    }
+
+    .chip-l3 {
+      animation: pulse-chip-line 1.8s ease-in-out infinite;
+      animation-delay: 0.8s;
+    }
+
+    @keyframes chat-dots-typing {
+
+      0%,
+      100% {
+        opacity: 0.2;
+        transform: translateY(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateY(-1.5px);
+      }
+    }
+
+    .chat-dot {
+      animation: chat-dots-typing 1.4s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    @keyframes draw-check-mark {
+      0% {
+        stroke-dashoffset: 12;
+        stroke-opacity: 0;
+      }
+
+      30%,
+      70% {
+        stroke-dashoffset: 0;
+        stroke-opacity: 1;
+        filter: drop-shadow(0 0 3px var(--acc)) drop-shadow(0 0 1px #fff);
+      }
+
+      100% {
+        stroke-dashoffset: -12;
+        stroke-opacity: 0;
+      }
+    }
+
+    .code-check {
+      stroke-dasharray: 12;
+      stroke-dashoffset: 12;
+      animation: draw-check-mark 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
     .gap-card .gc-title {
       font-size: 9.5px;
       color: var(--red);
@@ -3503,7 +3769,7 @@
       transform-box: fill-box;
     }
 
-    /* Pillar 4: Shield Layers */
+    /* Pillar 4: Shield Security Scan Animations */
     @keyframes shield-outer-pulse {
 
       0%,
@@ -3562,6 +3828,38 @@
       transform-box: fill-box;
     }
 
+    @keyframes shield-scan {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.3;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      50% {
+        transform: translateY(28px);
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 0.3;
+      }
+    }
+
+    .shield-scanner-beam {
+      animation: shield-scan 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 4px #3DF2A8) drop-shadow(0 0 1px #fff);
+    }
+
     /* Usage Cards SVGs */
     .usage-card:hover .u-icon svg {
       animation: usage-icon-shake 0.5s ease-in-out;
@@ -3592,7 +3890,49 @@
 
   <nav>
     <div class="wrap">
-      <div class="brand"><span class="dot"></span>gwind-skill-module</div>
+      <div class="brand">
+        <svg class="gwind-logo-svg" viewBox="0 0 248 263" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="gl-path-1"
+            d="M13.3045 90.411C5.78528 145.204 53.8282 199.969 106.733 207.409C137.832 214.664 181.326 209.823 196.405 190.422L190.572 191.945C179.048 194.953 166.794 191.588 158.423 183.116L155.403 180.059L216.179 166.354C217.022 166.124 217.907 165.978 218.824 165.928C220.179 165.854 221.445 166.608 222.024 167.835L247.444 221.682L241.653 221.397C229.201 220.785 218.353 212.705 214.2 200.949L212.932 197.36C194.738 241.415 157.107 265.205 114.879 261.949C91.4199 260.14 68.9873 251.571 50.2957 237.281C31.6042 222.991 17.4544 203.589 9.55741 181.426C1.6605 159.262 0.35448 135.284 5.79862 112.394C7.60272 104.809 10.1219 97.4505 13.3045 90.411ZM130.122 71.7831C133.16 71.4864 136.218 71.3668 139.278 71.4305C141.627 71.4795 143.964 71.6364 146.28 71.8973L150.488 76.7167C143.956 74.0315 137.086 72.3786 130.122 71.7831ZM103.617 23.0448C95.9464 25.1056 88.4443 27.8302 81.2107 31.1991C66.9545 37.8387 44.7476 51.399 29.1267 64.5682C32.5387 60.298 36.2473 56.2471 40.2332 52.4471C57.263 36.212 78.6327 25.259 101.757 20.9139L103.617 23.0448Z"
+            fill="#40C0A6" />
+          <path class="gl-path-2"
+            d="M13.305 90.4098C5.78498 145.203 53.8269 199.968 106.732 207.409C137.83 214.664 181.326 209.823 196.405 190.422L190.572 191.945C179.048 194.953 166.794 191.588 158.423 183.117L155.403 180.06L216.18 166.353C217.023 166.123 217.907 165.978 218.825 165.927C220.179 165.853 221.444 166.608 222.024 167.835L247.444 221.681L241.653 221.397C229.2 220.784 218.353 212.704 214.201 200.949L212.932 197.359C194.738 241.414 157.107 265.205 114.879 261.949C91.4203 260.14 68.9869 251.571 50.2952 237.281C31.604 222.991 17.4539 203.59 9.55696 181.426C1.66007 159.263 0.354215 135.285 5.79817 112.395C7.6024 104.809 10.1221 97.4499 13.305 90.4098ZM139.279 71.4303C141.628 71.4792 143.964 71.6372 146.28 71.8981L150.488 76.7164C143.956 74.0313 137.087 72.3784 130.122 71.7828C133.161 71.4862 136.219 71.3666 139.279 71.4303ZM103.618 23.0446C95.9468 25.1054 88.445 27.8299 81.2113 31.1989C66.9541 37.8388 44.7446 51.4007 29.1234 64.5709C32.536 60.2995 36.2458 56.2478 40.2327 52.4469C57.2625 36.2117 78.6323 25.2588 101.756 20.9137L103.618 23.0446Z"
+            fill="url(#paint0_linear_1905_666)" />
+          <path class="gl-path-3"
+            d="M129.785 140.651C118.866 136.48 109.39 129.235 102.503 119.792L123.659 104.362C127.565 109.717 132.938 113.825 139.129 116.19C145.32 118.555 152.064 119.076 158.544 117.688C165.025 116.301 170.737 112.827 175.645 108.373C194.184 91.5497 190.36 42.7683 165.553 25.5628C178.245 30.6502 197.879 39.8996 207.806 62.4313C212.005 73.3392 212.953 85.23 210.535 96.6652C208.117 108.1 202.438 118.59 194.184 126.865C185.93 135.14 175.454 140.846 164.025 143.293C152.596 145.74 140.703 144.822 129.785 140.651Z"
+            fill="#40C0A6" />
+          <path class="gl-path-4"
+            d="M121.773 136.898C113.217 132.097 105.958 125.287 100.621 117.055C96.5643 110.798 103.56 91.8164 117.216 87.2682C117.721 92.8084 119.566 98.1425 122.592 102.81C125.618 107.478 129.735 111.34 134.586 114.062C139.438 116.784 144.879 118.285 150.44 118.436C188.308 116.348 194.461 100.06 195.164 60.7099C230.811 107.574 175.243 153.109 121.773 136.898Z"
+            fill="#40C0A6" />
+          <path class="gl-path-5"
+            d="M121.773 136.898C113.217 132.097 105.958 125.287 100.62 117.055C96.5642 110.798 103.56 91.8163 117.216 87.2681C117.721 92.8082 119.566 98.1423 122.592 102.81C125.618 107.478 129.735 111.34 134.586 114.062C139.438 116.784 144.879 118.285 150.44 118.435C190.572 115.522 192.909 74.9021 182.093 47.066C230.685 117.055 150.44 154.953 121.773 136.898Z"
+            fill="url(#paint1_linear_1905_666)" />
+          <path class="gl-path-6"
+            d="M63.3651 35.1313C80.4692 25.256 99.7189 19.6902 119.454 18.9139C124.663 18.7091 129.864 18.8395 135.027 19.2988C149.016 20.5434 162.78 26.4337 170.562 38.125C183.997 58.3083 187.062 86.8188 179.547 99.2548C172.845 90.2823 164.062 83.0749 153.953 78.2544C143.845 73.4339 132.716 71.1449 121.526 71.5851C110.335 72.0252 99.4201 75.1812 89.7216 80.7808C80.0231 86.3804 71.8325 94.2554 65.8565 103.727C59.8804 113.198 56.2982 123.98 55.419 135.145C54.5398 146.309 56.3899 157.52 60.8098 167.81C65.2297 178.099 72.0866 187.159 80.789 194.208C89.4914 201.257 99.778 206.083 110.761 208.269C59.8905 201.221 9.15973 137.58 21.2771 75.5978C31.8164 58.8948 46.2611 45.0066 63.3651 35.1313Z"
+            fill="#40C0A6" />
+          <path class="gl-path-7"
+            d="M63.3651 35.1313C80.4692 25.256 99.7189 19.6902 119.454 18.9139C127.863 18.5832 136.252 19.1263 144.491 20.5162C152.108 21.8012 159.457 24.932 164.691 30.6131C183.002 50.4889 188.056 85.1747 179.547 99.2548C172.845 90.2823 164.062 83.0749 153.953 78.2544C143.845 73.4339 132.716 71.1449 121.526 71.5851C110.335 72.0252 99.4201 75.1812 89.7216 80.7808C80.0231 86.3804 71.8325 94.2554 65.8565 103.727C59.8804 113.198 56.2982 123.98 55.419 135.145C54.5398 146.309 56.3899 157.52 60.8098 167.81C65.2297 178.099 72.0866 187.159 80.789 194.208C89.4914 201.257 99.778 206.083 110.761 208.269C59.8905 201.221 9.15973 137.58 21.2771 75.5978C31.8164 58.8948 46.2611 45.0066 63.3651 35.1313Z"
+            fill="url(#paint2_linear_1905_666)" />
+          <defs>
+            <linearGradient id="paint0_linear_1905_666" x1="61.5908" y1="229.69" x2="186.09" y2="209.531"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#40C0A6" stop-opacity="0" />
+              <stop offset="0.95144" stop-color="#58EFB3" />
+            </linearGradient>
+            <linearGradient id="paint1_linear_1905_666" x1="226.489" y1="56.0167" x2="121.313" y2="167.733"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#40C0A6" stop-opacity="0" />
+              <stop offset="1" stop-color="#58EFB3" />
+            </linearGradient>
+            <linearGradient id="paint2_linear_1905_666" x1="83.7634" y1="32.4529" x2="46.3916" y2="194.183"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4FC69F" stop-opacity="0" />
+              <stop offset="0.796592" stop-color="#58EFB3" />
+            </linearGradient>
+          </defs>
+        </svg>
+        gwind-skill-module
+      </div>
       <div class="links">
         <a href="#pilar"><span>01</span>Pilar</a>
         <a href="#instalasi"><span>02</span>Instalasi</a>
@@ -3753,6 +4093,8 @@
               stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity="0.05" class="shield-mid" />
             <path d="M24 16l-8 3v6c0 6.5 3.5 11 8 13 4.5-2 8-6.5 8-13v-6L24 16z" fill="#3DF2A8" fill-opacity="0.15"
               stroke="#3DF2A8" stroke-width="1.5" stroke-linejoin="round" class="shield-inner" />
+            <!-- Security Scanner Beam -->
+            <line x1="6" y1="12" x2="42" y2="12" stroke="#3DF2A8" stroke-width="1.5" class="shield-scanner-beam" />
           </svg>
           <div class="label">// 04 ISOLATION</div>
           <h3>CSS Isolation Enforcer</h3>
@@ -3885,11 +4227,11 @@
               STEP 01</div>
             <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6">
-                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
-                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
-                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
-                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
-                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
+                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" class="figma-p1" />
+                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" class="figma-p2" />
+                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" class="figma-p3" />
+                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" class="figma-p4" />
+                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" class="figma-p5" />
               </svg>
               <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">Figma MCP</span>
             </div>
@@ -3913,7 +4255,9 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
                 <path
                   d="M9.5 2A2.5 2.5 0 007 4.5v15A2.5 2.5 0 009.5 22h5a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0014.5 2h-5z" />
-                <path d="M9 7h6M9 11h6M9 15h4" />
+                <path d="M9 7h6" class="chip-l1" />
+                <path d="M9 11h6" class="chip-l2" />
+                <path d="M9 15h4" class="chip-l3" />
               </svg>
               <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Gwind Skill</span>
             </div>
@@ -3936,6 +4280,9 @@
             <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="1.6">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                <circle cx="8" cy="10" r="1.2" fill="currentColor" class="chat-dot" style="animation-delay: 0s;" />
+                <circle cx="12" cy="10" r="1.2" fill="currentColor" class="chat-dot" style="animation-delay: 0.25s;" />
+                <circle cx="16" cy="10" r="1.2" fill="currentColor" class="chat-dot" style="animation-delay: 0.5s;" />
               </svg>
               <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">AI Chat</span>
             </div>
@@ -3958,7 +4305,8 @@
             <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                <path d="M14 2v6h6M10 13l2 2 4-4" />
+                <path d="M14 2v6h6" />
+                <path d="M10 13l2 2 4-4" class="code-check" />
               </svg>
               <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Vue 3 Code</span>
             </div>
@@ -4396,26 +4744,93 @@
       </div>
       <div class="isolate-art">
         <svg viewBox="0 0 320 320" fill="none">
+          <defs>
+            <linearGradient id="paint0_linear_1905_666_iso" x1="61.5908" y1="229.69" x2="186.09" y2="209.531"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#BC13FE" stop-opacity="0" />
+              <stop offset="0.95144" stop-color="#D500F9" />
+            </linearGradient>
+            <linearGradient id="paint1_linear_1905_666_iso" x1="226.489" y1="56.0167" x2="121.313" y2="167.733"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#BC13FE" stop-opacity="0" />
+              <stop offset="1" stop-color="#D500F9" />
+            </linearGradient>
+            <linearGradient id="paint2_linear_1905_666_iso" x1="83.7634" y1="32.4529" x2="46.3916" y2="194.183"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#BC13FE" stop-opacity="0" />
+              <stop offset="0.796592" stop-color="#D500F9" />
+            </linearGradient>
+          </defs>
           <circle cx="160" cy="160" r="150" stroke="#172420" stroke-width="1" />
-          <circle class="iso-ring-1" cx="160" cy="160" r="120" stroke="#1F8A62" stroke-width="1"
+
+          <!-- Background rotating dashed rings -->
+          <circle class="iso-ring-1" cx="160" cy="160" r="120" stroke="rgba(188, 19, 254, 0.55)" stroke-width="1.1"
             stroke-dasharray="3 5" />
-          <circle class="iso-ring-2" cx="160" cy="160" r="90" stroke="#1F8A62" stroke-width="1"
+          <circle class="iso-ring-2" cx="160" cy="160" r="90" stroke="rgba(188, 19, 254, 0.55)" stroke-width="1.1"
             stroke-dasharray="3 5" />
-          <circle class="iso-ring-3" cx="160" cy="160" r="60" stroke="#1F8A62" stroke-width="1"
+          <circle class="iso-ring-3" cx="160" cy="160" r="60" stroke="rgba(188, 19, 254, 0.55)" stroke-width="1.1"
             stroke-dasharray="3 5" />
-          <circle class="iso-center" cx="160" cy="160" r="30" fill="#0E1513" stroke="#3DF2A8" stroke-width="1.3" />
-          <path d="M160 134l10 6v11l-10 6-10-6v-11z" stroke="#3DF2A8" stroke-width="1.4" fill="none" />
+
+          <!-- Glowing CCW lightning rings -->
+          <circle class="iso-ring-lightning-1" cx="160" cy="160" r="120" stroke="#00E5FF" stroke-width="1.2"
+            fill="none" />
+          <circle class="iso-ring-lightning-2" cx="160" cy="160" r="90" stroke="#FF007F" stroke-width="1.2"
+            fill="none" />
+          <circle class="iso-ring-lightning-3" cx="160" cy="160" r="60" stroke="#BC13FE" stroke-width="1.2"
+            fill="none" />
+
+          <circle class="iso-center" cx="160" cy="160" r="30" fill="transparent" stroke="#BC13FE" stroke-width="1.2"
+            stroke-dasharray="3 5" />
+
+          <!-- Gwind logo at the center of the isolation diagram -->
+          <g transform="translate(151.3, 136.3) scale(0.07)">
+            <g class="iso-gwind-logo">
+              <path class="gl-path-1"
+                d="M13.3045 90.411C5.78528 145.204 53.8282 199.969 106.733 207.409C137.832 214.664 181.326 209.823 196.405 190.422L190.572 191.945C179.048 194.953 166.794 191.588 158.423 183.116L155.403 180.059L216.179 166.354C217.022 166.124 217.907 165.978 218.824 165.928C220.179 165.854 221.445 166.608 222.024 167.835L247.444 221.682L241.653 221.397C229.201 220.785 218.353 212.705 214.2 200.949L212.932 197.36C194.738 241.415 157.107 265.205 114.879 261.949C91.4199 260.14 68.9873 251.571 50.2957 237.281C31.6042 222.991 17.4544 203.589 9.55741 181.426C1.6605 159.262 0.35448 135.284 5.79862 112.394C7.60272 104.809 10.1219 97.4505 13.3045 90.411ZM130.122 71.7831C133.16 71.4864 136.218 71.3668 139.278 71.4305C141.627 71.4795 143.964 71.6364 146.28 71.8973L150.488 76.7167C143.956 74.0315 137.086 72.3786 130.122 71.7831ZM103.617 23.0448C95.9464 25.1056 88.4443 27.8302 81.2107 31.1991C66.9545 37.8387 44.7476 51.399 29.1267 64.5682C32.5387 60.298 36.2473 56.2471 40.2332 52.4471C57.263 36.212 78.6327 25.259 101.757 20.9139L103.617 23.0448Z"
+                fill="#BC13FE" />
+              <path
+                d="M13.305 90.4098C5.78498 145.203 53.8269 199.968 106.732 207.409C137.83 214.664 181.326 209.823 196.405 190.422L190.572 191.945C179.048 194.953 166.794 191.588 158.423 183.117L155.403 180.06L216.18 166.353C217.023 166.123 217.907 165.978 218.825 165.927C220.179 165.853 221.444 166.608 222.024 167.835L247.444 221.681L241.653 221.397C229.2 220.784 218.353 212.704 214.201 200.949L212.932 197.359C194.738 241.414 157.107 265.205 114.879 261.949C91.4203 260.14 68.9869 251.571 50.2952 237.281C31.604 222.991 17.4539 203.59 9.55696 181.426C1.66007 159.263 0.354215 135.285 5.79817 112.395C7.6024 104.809 10.1221 97.4499 13.305 90.4098ZM139.279 71.4303C141.628 71.4792 143.964 71.6372 146.28 71.8981L150.488 76.7164C143.956 74.0313 137.087 72.3784 130.122 71.7828C133.161 71.4862 136.219 71.3666 139.279 71.4303ZM103.618 23.0446C95.9468 25.1054 88.445 27.8299 81.2113 31.1989C66.9541 37.8388 44.7446 51.4007 29.1234 64.5709C32.536 60.2995 36.2458 56.2478 40.2327 52.4469C57.2625 36.2117 78.6323 25.2588 101.756 20.9137L103.618 23.0446Z"
+                fill="url(#paint0_linear_1905_666_iso)" />
+              <path
+                d="M129.785 140.651C118.866 136.48 109.39 129.235 102.503 119.792L123.659 104.362C127.565 109.717 132.938 113.825 139.129 116.19C145.32 118.555 152.064 119.076 158.544 117.688C165.025 116.301 170.737 112.827 175.645 108.373C194.184 91.5497 190.36 42.7683 165.553 25.5628C178.245 30.6502 197.879 39.8996 207.806 62.4313C212.005 73.3392 212.953 85.23 210.535 96.6652C208.117 108.1 202.438 118.59 194.184 126.865C185.93 135.14 175.454 140.846 164.025 143.293C152.596 145.74 140.703 144.822 129.785 140.651Z"
+                fill="#BC13FE" />
+              <path
+                d="M121.773 136.898C113.217 132.097 105.958 125.287 100.621 117.055C96.5643 110.798 103.56 91.8164 117.216 87.2682C117.721 92.8084 119.566 98.1425 122.592 102.81C125.618 107.478 129.735 111.34 134.586 114.062C139.438 116.784 144.879 118.285 150.44 118.436C188.308 116.348 194.461 100.06 195.164 60.7099C230.811 107.574 175.243 153.109 121.773 136.898Z"
+                fill="#BC13FE" />
+              <path
+                d="M121.773 136.898C113.217 132.097 105.958 125.287 100.62 117.055C96.5642 110.798 103.56 91.8163 117.216 87.2681C117.721 92.8082 119.566 98.1423 122.592 102.81C125.618 107.478 129.735 111.34 134.586 114.062C139.438 116.784 144.879 118.285 150.44 118.435C190.572 115.522 192.909 74.9021 182.093 47.066C230.685 117.055 150.44 154.953 121.773 136.898Z"
+                fill="url(#paint1_linear_1905_666_iso)" />
+              <path
+                d="M63.3651 35.1313C80.4692 25.256 99.7189 19.6902 119.454 18.9139C124.663 18.7091 129.864 18.8395 135.027 19.2988C149.016 20.5434 162.78 26.4337 170.562 38.125C183.997 58.3083 187.062 86.8188 179.547 99.2548C172.845 90.2823 164.062 83.0749 153.953 78.2544C143.845 73.4339 132.716 71.1449 121.526 71.5851C110.335 72.0252 99.4201 75.1812 89.7216 80.7808C80.0231 86.3804 71.8325 94.2554 65.8565 103.727C59.8804 113.198 56.2982 123.98 55.419 135.145C54.5398 146.309 56.3899 157.52 60.8098 167.81C65.2297 178.099 72.0866 187.159 80.789 194.208C89.4914 201.257 99.778 206.083 110.761 208.269C59.8905 201.221 9.15973 137.58 21.2771 75.5978C31.8164 58.8948 46.2611 45.0066 63.3651 35.1313Z"
+                fill="#BC13FE" />
+              <path
+                d="M63.3651 35.1313C80.4692 25.256 99.7189 19.6902 119.454 18.9139C127.863 18.5832 136.252 19.1263 144.491 20.5162C152.108 21.8012 159.457 24.932 164.691 30.6131C183.002 50.4889 188.056 85.1747 179.547 99.2548C172.845 90.2823 164.062 83.0749 153.953 78.2544C143.845 73.4339 132.716 71.1449 121.526 71.5851C110.335 72.0252 99.4201 75.1812 89.7216 80.7808C80.0231 86.3804 71.8325 94.2554 65.8565 103.727C59.8804 113.198 56.2982 123.98 55.419 135.145C54.5398 146.309 56.3899 157.52 60.8098 167.81C65.2297 178.099 72.0866 187.159 80.789 194.208C89.4914 201.257 99.778 206.083 110.761 208.269C59.8905 201.221 9.15973 137.58 21.2771 75.5978C31.8164 58.8948 46.2611 45.0066 63.3651 35.1313Z"
+                fill="url(#paint2_linear_1905_666_iso)" />
+            </g>
+          </g>
           <text x="160" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
-            fill="#3DF2A8">gw-scope</text>
+            fill="#BC13FE">gw-scope</text>
           <g class="iso-card-a">
-            <rect x="20" y="20" width="76" height="48" rx="7" fill="#0E1513" stroke="#3DF2A8" />
-            <text x="58" y="41" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#3DF2A8">Remote A</text>
-            <text x="58" y="53" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#8CA39A">.scope-news</text>
+            <!-- Background base card -->
+            <rect x="20" y="20" width="76" height="48" rx="7" fill="#0E1513" stroke="#3DF2A8" stroke-opacity="0.15" />
+            <!-- Glowing animated outline -->
+            <rect class="card-border-glow-a" x="20" y="20" width="76" height="48" rx="7" fill="none" stroke="#3DF2A8"
+              stroke-width="1.3" />
+            <text x="58" y="41" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#3DF2A8">Remote
+              A</text>
+            <text x="58" y="53" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
+              fill="#8CA39A">.scope-news</text>
           </g>
           <g class="iso-card-b">
-            <rect x="224" y="252" width="76" height="48" rx="7" fill="#0E1513" stroke="#F2715E" />
-            <text x="262" y="273" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#F2715E">Remote B</text>
-            <text x="262" y="285" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#8CA39A">.scope-event</text>
+            <!-- Background base card -->
+            <rect x="224" y="252" width="76" height="48" rx="7" fill="#0E1513" stroke="#F2715E" stroke-opacity="0.15" />
+            <!-- Glowing animated outline -->
+            <rect class="card-border-glow-b" x="224" y="252" width="76" height="48" rx="7" fill="none" stroke="#F2715E"
+              stroke-width="1.3" />
+            <text x="262" y="273" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#F2715E">Remote
+              B</text>
+            <text x="262" y="285" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
+              fill="#8CA39A">.scope-event</text>
           </g>
           <path class="attack-line" d="M96 44 L224 44" stroke="#F2715E" stroke-width="1.2" stroke-dasharray="2 4" />
           <circle cx="160" cy="44" r="9" fill="#1A0F0D" stroke="#F2715E" />
@@ -4789,13 +5204,53 @@
 
   <footer>
     <div class="wrap">
-      <div class="brand mono"><span class="dot"
-          style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-right:8px;"></span>gwind-skill-module
+      <div class="brand mono">
+        <svg class="gwind-logo-svg" viewBox="0 0 248 263" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="gl-path-1"
+            d="M13.3045 90.411C5.78528 145.204 53.8282 199.969 106.733 207.409C137.832 214.664 181.326 209.823 196.405 190.422L190.572 191.945C179.048 194.953 166.794 191.588 158.423 183.116L155.403 180.059L216.179 166.354C217.022 166.124 217.907 165.978 218.824 165.928C220.179 165.854 221.445 166.608 222.024 167.835L247.444 221.682L241.653 221.397C229.201 220.785 218.353 212.705 214.2 200.949L212.932 197.36C194.738 241.415 157.107 265.205 114.879 261.949C91.4199 260.14 68.9873 251.571 50.2957 237.281C31.6042 222.991 17.4544 203.589 9.55741 181.426C1.6605 159.262 0.35448 135.284 5.79862 112.394C7.60272 104.809 10.1219 97.4505 13.3045 90.411ZM130.122 71.7831C133.16 71.4864 136.218 71.3668 139.278 71.4305C141.627 71.4795 143.964 71.6364 146.28 71.8973L150.488 76.7167C143.956 74.0315 137.086 72.3786 130.122 71.7831ZM103.617 23.0448C95.9464 25.1056 88.4443 27.8302 81.2107 31.1991C66.9545 37.8387 44.7476 51.399 29.1267 64.5682C32.5387 60.298 36.2473 56.2471 40.2332 52.4471C57.263 36.212 78.6327 25.259 101.757 20.9139L103.617 23.0448Z"
+            fill="#40C0A6" />
+          <path class="gl-path-2"
+            d="M13.305 90.4098C5.78498 145.203 53.8269 199.968 106.732 207.409C137.83 214.664 181.326 209.823 196.405 190.422L190.572 191.945C179.048 194.953 166.794 191.588 158.423 183.117L155.403 180.06L216.18 166.353C217.023 166.123 217.907 165.978 218.825 165.927C220.179 165.853 221.444 166.608 222.024 167.835L247.444 221.681L241.653 221.397C229.2 220.784 218.353 212.704 214.201 200.949L212.932 197.359C194.738 241.414 157.107 265.205 114.879 261.949C91.4203 260.14 68.9869 251.571 50.2952 237.281C31.604 222.991 17.4539 203.59 9.55696 181.426C1.66007 159.263 0.354215 135.285 5.79817 112.395C7.6024 104.809 10.1221 97.4499 13.305 90.4098ZM139.279 71.4303C141.628 71.4792 143.964 71.6372 146.28 71.8981L150.488 76.7164C143.956 74.0313 137.087 72.3784 130.122 71.7828C133.161 71.4862 136.219 71.3666 139.279 71.4303ZM103.618 23.0446C95.9468 25.1054 88.445 27.8299 81.2113 31.1989C66.9541 37.8388 44.7446 51.4007 29.1234 64.5709C32.536 60.2995 36.2458 56.2478 40.2327 52.4469C57.2625 36.2117 78.6323 25.2588 101.756 20.9137L103.618 23.0446Z"
+            fill="url(#paint0_linear_1905_666)" />
+          <path class="gl-path-3"
+            d="M129.785 140.651C118.866 136.48 109.39 129.235 102.503 119.792L123.659 104.362C127.565 109.717 132.938 113.825 139.129 116.19C145.32 118.555 152.064 119.076 158.544 117.688C165.025 116.301 170.737 112.827 175.645 108.373C194.184 91.5497 190.36 42.7683 165.553 25.5628C178.245 30.6502 197.879 39.8996 207.806 62.4313C212.005 73.3392 212.953 85.23 210.535 96.6652C208.117 108.1 202.438 118.59 194.184 126.865C185.93 135.14 175.454 140.846 164.025 143.293C152.596 145.74 140.703 144.822 129.785 140.651Z"
+            fill="#40C0A6" />
+          <path class="gl-path-4"
+            d="M121.773 136.898C113.217 132.097 105.958 125.287 100.621 117.055C96.5643 110.798 103.56 91.8164 117.216 87.2682C117.721 92.8084 119.566 98.1425 122.592 102.81C125.618 107.478 129.735 111.34 134.586 114.062C139.438 116.784 144.879 118.285 150.44 118.436C188.308 116.348 194.461 100.06 195.164 60.7099C230.811 107.574 175.243 153.109 121.773 136.898Z"
+            fill="#40C0A6" />
+          <path class="gl-path-5"
+            d="M121.773 136.898C113.217 132.097 105.958 125.287 100.62 117.055C96.5642 110.798 103.56 91.8163 117.216 87.2681C117.721 92.8082 119.566 98.1423 122.592 102.81C125.618 107.478 129.735 111.34 134.586 114.062C139.438 116.784 144.879 118.285 150.44 118.435C190.572 115.522 192.909 74.9021 182.093 47.066C230.685 117.055 150.44 154.953 121.773 136.898Z"
+            fill="url(#paint1_linear_1905_666)" />
+          <path class="gl-path-6"
+            d="M63.3651 35.1313C80.4692 25.256 99.7189 19.6902 119.454 18.9139C124.663 18.7091 129.864 18.8395 135.027 19.2988C149.016 20.5434 162.78 26.4337 170.562 38.125C183.997 58.3083 187.062 86.8188 179.547 99.2548C172.845 90.2823 164.062 83.0749 153.953 78.2544C143.845 73.4339 132.716 71.1449 121.526 71.5851C110.335 72.0252 99.4201 75.1812 89.7216 80.7808C80.0231 86.3804 71.8325 94.2554 65.8565 103.727C59.8804 113.198 56.2982 123.98 55.419 135.145C54.5398 146.309 56.3899 157.52 60.8098 167.81C65.2297 178.099 72.0866 187.159 80.789 194.208C89.4914 201.257 99.778 206.083 110.761 208.269C59.8905 201.221 9.15973 137.58 21.2771 75.5978C31.8164 58.8948 46.2611 45.0066 63.3651 35.1313Z"
+            fill="#40C0A6" />
+          <path class="gl-path-7"
+            d="M63.3651 35.1313C80.4692 25.256 99.7189 19.6902 119.454 18.9139C127.863 18.5832 136.252 19.1263 144.491 20.5162C152.108 21.8012 159.457 24.932 164.691 30.6131C183.002 50.4889 188.056 85.1747 179.547 99.2548C172.845 90.2823 164.062 83.0749 153.953 78.2544C143.845 73.4339 132.716 71.1449 121.526 71.5851C110.335 72.0252 99.4201 75.1812 89.7216 80.7808C80.0231 86.3804 71.8325 94.2554 65.8565 103.727C59.8804 113.198 56.2982 123.98 55.419 135.145C54.5398 146.309 56.3899 157.52 60.8098 167.81C65.2297 178.099 72.0866 187.159 80.789 194.208C89.4914 201.257 99.778 206.083 110.761 208.269C59.8905 201.221 9.15973 137.58 21.2771 75.5978C31.8164 58.8948 46.2611 45.0066 63.3651 35.1313Z"
+            fill="url(#paint2_linear_1905_666)" />
+          <defs>
+            <linearGradient id="paint0_linear_1905_666" x1="61.5908" y1="229.69" x2="186.09" y2="209.531"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#40C0A6" stop-opacity="0" />
+              <stop offset="0.95144" stop-color="#58EFB3" />
+            </linearGradient>
+            <linearGradient id="paint1_linear_1905_666" x1="226.489" y1="56.0167" x2="121.313" y2="167.733"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#40C0A6" stop-opacity="0" />
+              <stop offset="1" stop-color="#58EFB3" />
+            </linearGradient>
+            <linearGradient id="paint2_linear_1905_666" x1="83.7634" y1="32.4529" x2="46.3916" y2="194.183"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4FC69F" stop-opacity="0" />
+              <stop offset="0.796592" stop-color="#58EFB3" />
+            </linearGradient>
+          </defs>
+        </svg>
+        gwind-skill-module
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;" class="footer-credit">
         <p>// gwind-system-ui + gwind-v2 — design system internal PT Pegadaian</p>
         <p style="font-size:11px;color:var(--ink-soft);">by <span style="color:var(--acc);">Pegadaian Design</span> —
-          F.Imam.A.A</p>
+          Fatich Imam Al Arasy</p>
       </div>
     </div>
   </footer>
