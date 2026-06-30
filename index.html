@@ -53,7 +53,7 @@
     scroll-behavior:smooth;
     overscroll-behavior-y:none;
     scroll-padding-top:60px;
-    scroll-padding-bottom:56px;
+    scroll-padding-bottom:48px;
   }
   body{
     background:var(--bg);
@@ -110,14 +110,14 @@
   /* ---------- SECTION SHELL : scroll snap, full height ---------- */
   section, header.hero{
     position:relative;z-index:1;
-    min-height:100vh;
+    min-height:calc(100vh - 56px);
     scroll-snap-align:start;
     scroll-snap-stop:always;
     display:flex;flex-direction:column;justify-content:center;
     padding:80px 0 56px;
     border-bottom:1px solid var(--line-soft);
   }
-  section:last-of-type{border-bottom:none;}
+  section:last-of-type{border-bottom:none;padding-bottom:80px;}
 
   .index-no{font-family:var(--mono);font-size:11px;color:var(--ink-dim);}
   .kicker{
@@ -605,12 +605,10 @@
   footer p{font-size:11px;font-family:var(--mono);white-space:nowrap;}
   .footer-credit{gap:2px !important;}
 
-  /* compensate fixed footer height */
-  section:last-of-type{padding-bottom:80px;}
-
   @media(max-width:900px){
     html{scroll-snap-type:none;}
     section, header.hero{scroll-snap-align:none;min-height:auto;padding:64px 0 48px;}
+    section:last-of-type{padding-bottom:84px;}
     .hero-grid{grid-template-columns:1fr;}
     .hero-art{margin-top:24px;}
     .pillars{grid-template-columns:repeat(2,1fr);}
@@ -628,13 +626,13 @@
     footer .brand{font-size:11.5px;}
     footer p{font-size:10px;white-space:normal;}
     .footer-credit{align-items:center !important;}
-    section:last-of-type{padding-bottom:90px;}
   }
 
   /* -- Tablet / small laptop -- */
   @media(max-width:640px){
     .wrap{padding:0 18px;}
     section, header.hero{padding:56px 0 40px;}
+    section:last-of-type{padding-bottom:76px;}
     section h2, header.hero h2{font-size:clamp(22px,5vw,28px);}
     .section-lede{font-size:14px;}
     .pillars{grid-template-columns:1fr;}
@@ -650,8 +648,7 @@
     footer .wrap{flex-direction:column;gap:3px;}
     footer .brand{font-size:10.5px;}
     footer p{font-size:9.5px;white-space:normal;}
-    section:last-of-type{padding-bottom:85px;}
-    .rail{right:12px;gap:10px;}
+    .rail{right:12px;gap:10px;
     .rail a{width:5px;height:5px;}
     .isolate-art svg{max-width:280px;}
   }
@@ -660,6 +657,7 @@
   @media(max-width:480px){
     .wrap{padding:0 14px;}
     section, header.hero{padding:44px 0 32px;}
+    section:last-of-type{padding-bottom:72px;}
     header.hero h1{font-size:clamp(24px,7vw,32px);}
     .hero-tags span{font-size:10.5px;padding:5px 10px;}
     .hero-art .term{font-size:10px;}
