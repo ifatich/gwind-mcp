@@ -2738,6 +2738,28 @@
       .footer-credit {
         align-items: center !important;
       }
+
+      .flow-diagram {
+        flex-direction: column;
+        padding: 12px 14px;
+        gap: 12px;
+      }
+      .flow-box {
+        width: 100%;
+      }
+      .flow-arrow svg {
+        transform: rotate(90deg);
+      }
+      .flow-last-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .flow-last-item > div {
+        margin-left: 0 !important;
+        width: 100%;
+        text-align: center;
+      }
     }
 
     /* -- Tablet / small laptop -- */
@@ -2955,16 +2977,6 @@
 
     /* -- Phone -- */
     @media(max-width:480px) {
-      .flow-diagram {
-        flex-direction: column;
-        padding: 12px 14px;
-        gap: 12px;
-      }
-
-      .flow-box {
-        width: 100%;
-      }
-
       .alur-grid {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -4587,7 +4599,7 @@
             style="position:absolute;bottom:8px;right:8px;width:12px;height:12px;border-radius:2px;background:rgba(61,242,168,0.15);border:0.6px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--acc);font-family:JetBrains Mono;">
             V</div>
         </div>
-        <div style="display:flex;align-items:center;">
+        <div class="flow-last-item">
           <div
             style="padding: 10px 18px; border-radius: 8px; background:rgba(61,242,168,0.08); border:1px solid var(--acc); color:var(--acc); font-family:var(--disp); font-size:12px; font-weight:600; white-space:nowrap; margin-left:8px;">
             Milik Anda ✓</div>
