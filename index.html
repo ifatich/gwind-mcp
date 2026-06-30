@@ -1,1300 +1,4269 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gwind Skill Module — Bangun Tampilan Web Lebih Cepat &amp; Seragam</title>
-
-<!-- SEO -->
-<meta name="description" content="Gwind Skill Module adalah asisten Copilot untuk developer Vue 3 — membangun antarmuka dengan komponen CLI, token gwind-v2, dan CSS isolation 5-layer. 100% sesuai standar Gwind Design System PT Pegadaian.">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#06090A">
-<meta name="author" content="Pegadaian Design — F.Imam.A.A">
-
-<!-- Open Graph -->
-<meta property="og:title" content="Gwind Skill Module — Bangun Tampilan Web Lebih Cepat & Seragam">
-<meta property="og:description" content="Asisten Copilot untuk developer Vue 3: komponen generate CLI, token gwind-v2, CSS isolation 5-layer. 100% sesuai standar Gwind Design System.">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Gwind Design System">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Gwind Skill Module — Bangun Tampilan Web Lebih Cepat & Seragam">
-<meta name="twitter:description" content="Asisten Copilot untuk developer Vue 3: komponen generate CLI, token gwind-v2, CSS isolation 5-layer.">
-
-<!-- Favicon — inline SVG -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23060A0A'/><path d='M16 6l2 8h8l-6 4.5 2.5 7.5-6.5-4.5-6.5 4.5 2.5-7.5L6 14h8l2-8z' fill='%233DF2A8' opacity='0.9'/></svg>">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#06090A;
-    --bg-soft:#0A0F0E;
-    --surface:#0E1513;
-    --surface-2:#111B18;
-    --line:#1E2B27;
-    --line-soft:#172420;
-    --ink:#E9F1EC;
-    --ink-soft:#8CA39A;
-    --ink-dim:#566E65;
-    --acc:#3DF2A8;
-    --acc-dim:#1F8A62;
-    --amber:#F2B84B;
-    --red:#F2715E;
-    --mono:'JetBrains Mono',monospace;
-    --disp:'Space Grotesk',sans-serif;
-    --body:'Inter',sans-serif;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{
-    background:var(--bg);
-    scroll-snap-type:y mandatory;
-    scroll-behavior:smooth;
-    overscroll-behavior-y:none;
-    scroll-padding-top:60px;
-    scroll-padding-bottom:48px;
-  }
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--body);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-  h1,h2,h3,.disp{font-family:var(--disp);font-weight:600;letter-spacing:-0.01em;color:var(--ink);}
-  .mono{font-family:var(--mono);}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 32px;width:100%;}
-
-  /* background grid texture, fixed */
-  .bg-grid{
-    position:fixed;inset:0;z-index:0;pointer-events:none;
-    background-image:
-      linear-gradient(rgba(61,242,168,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(61,242,168,0.035) 1px, transparent 1px);
-    background-size:48px 48px;
-    mask-image:radial-gradient(ellipse 80% 65% at 50% 0%, black, transparent 75%);
-  }
-
-  /* ---------- NAV (fixed, slim) ---------- */
-  nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    background:rgba(6,9,10,0.78);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line);
-  }
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;}
-  .brand{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-weight:600;font-size:13.5px;color:var(--ink);letter-spacing:0.02em;}
-  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc);}
-  nav .links{display:flex;gap:0;font-family:var(--mono);font-size:11.5px;}
-  nav .links a{
-    color:var(--ink-dim);text-decoration:none;padding:8px 14px;position:relative;
-    transition:color .15s;
-  }
-  nav .links a span{color:var(--acc-dim);margin-right:6px;}
-  nav .links a:hover{color:var(--ink);}
-  nav .progress{position:absolute;bottom:-1px;left:0;height:1px;background:var(--acc);width:0%;transition:width .2s;}
-
-  /* dot rail (right side section indicator) */
-  .rail{
-    position:fixed;right:26px;top:50%;transform:translateY(-50%);
-    z-index:90;display:flex;flex-direction:column;gap:14px;
-  }
-  .rail a{
-    width:7px;height:7px;border-radius:50%;background:var(--line);
-    border:1px solid var(--line-soft);display:block;transition:all .2s;
-  }
-  .rail a.active{background:var(--acc);box-shadow:0 0 10px var(--acc);transform:scale(1.3);}
-  @media(max-width:900px){.rail{display:none;}}
-
-  /* ---------- SECTION SHELL : scroll snap, full height ---------- */
-  section, header.hero{
-    position:relative;z-index:1;
-    min-height:calc(100vh - 56px);
-    scroll-snap-align:start;
-    scroll-snap-stop:always;
-    display:flex;flex-direction:column;justify-content:center;
-    padding:80px 0 56px;
-    border-bottom:1px solid var(--line-soft);
-  }
-  section:last-of-type{border-bottom:none;padding-bottom:80px;}
-
-  .index-no{font-family:var(--mono);font-size:11px;color:var(--ink-dim);}
-  .kicker{
-    font-family:var(--mono);font-size:11.5px;letter-spacing:0.1em;
-    color:var(--acc);text-transform:uppercase;margin:0 0 14px;
-    display:flex;align-items:center;gap:10px;
-  }
-  .kicker .ix{color:var(--ink-dim);}
-  .kicker::after{content:"";flex:1;max-width:60px;height:1px;background:var(--line);display:inline-block;}
-  section h2, header.hero h2{font-size:clamp(26px,3.4vw,38px);margin:0 0 16px;max-width:680px;}
-  .section-lede{font-size:15.5px;color:var(--ink-soft);max-width:600px;line-height:1.7;margin:0 0 46px;}
-
-  /* ---------- HERO ---------- */
-  header.hero{justify-content:center;border-bottom:1px solid var(--line-soft);}
-  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:center;}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    font-family:var(--mono);font-size:11.5px;letter-spacing:0.06em;
-    color:var(--acc);background:rgba(61,242,168,0.06);
-    border:1px solid rgba(61,242,168,0.25);
-    padding:6px 12px;border-radius:4px;margin-bottom:26px;
-  }
-  .eyebrow .pulse{width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc);animation:pulse 1.8s infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
-  header.hero h1{
-    font-size:clamp(34px,5vw,52px);line-height:1.1;margin:0 0 22px;max-width:600px;
-    color:var(--ink);
-  }
-  header.hero h1 .grad{
-    background:linear-gradient(90deg,var(--acc),#7CF7C9);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  header.hero p.lede{font-size:16.5px;line-height:1.7;color:var(--ink-soft);max-width:480px;margin:0 0 32px;}
-  .hero-tags{display:flex;flex-wrap:wrap;gap:9px;}
-  .hero-tags span{
-    font-size:11.5px;font-family:var(--mono);
-    border:1px solid var(--line);color:var(--ink-soft);
-    padding:7px 12px;border-radius:5px;background:var(--surface);
-  }
-  .hero-tags span b{color:var(--acc);font-weight:500;}
-  .hero-art{position:relative;}
-  .hero-art .term{
-    background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;
-    box-shadow:0 0 0 1px rgba(61,242,168,0.04), 0 30px 60px -20px rgba(0,0,0,0.6);
-  }
-  .term .term-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);}
-  .term .term-bar span{width:9px;height:9px;border-radius:50%;background:var(--line);}
-  .term .term-bar .label{margin-left:8px;font-family:var(--mono);font-size:11px;color:var(--ink-dim);}
-  .term .term-body{padding:18px 18px 22px;font-family:var(--mono);font-size:12.5px;line-height:2;color:var(--ink-soft);}
-  .term .term-body .c1{color:var(--acc);}
-  .term .term-body .c2{color:var(--amber);}
-  .term .term-body .c3{color:var(--ink-dim);}
-  .scroll-hint{
-    position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);
-    display:flex;flex-direction:column;align-items:center;gap:8px;
-  }
-  .scroll-hint .ln{width:1px;height:26px;background:linear-gradient(var(--acc),transparent);animation:flow 1.6s infinite;}
-  @keyframes flow{0%{opacity:0;}50%{opacity:1;}100%{opacity:0;}}
-
-  /* ---------- SHARED ANIMATIONS ---------- */
-  @keyframes terminal-line-in{
-    0%{opacity:0;transform:translateX(-8px);}
-    100%{opacity:1;transform:translateX(0);}
-  }
-  .term-line{animation:terminal-line-in .35s ease-out both;}
-  .term-line:nth-child(1){animation-delay:0.2s;}
-  .term-line:nth-child(2){animation-delay:0.5s;}
-  .term-line:nth-child(3){animation-delay:0.8s;}
-  .term-line:nth-child(4){animation-delay:1.1s;}
-  .term-line:nth-child(5){animation-delay:1.4s;}
-  .term-line:nth-child(6){animation-delay:1.7s;}
-  .term-line:nth-child(7){animation-delay:2.0s;}
-
-  @keyframes cursor-blink{
-    0%,100%{opacity:1;}
-    50%{opacity:0;}
-  }
-  .term-cursor{
-    display:inline-block;width:8px;height:15px;background:var(--acc);
-    margin-left:2px;vertical-align:middle;animation:cursor-blink 1s step-end infinite;
-  }
-
-  @keyframes arrow-pulse{
-    0%,100%{opacity:0.3;transform:translateX(0);}
-    50%{opacity:1;transform:translateX(4px);}
-  }
-  .arrow-anim{animation:arrow-pulse 1.4s ease-in-out infinite;}
-  .arrow-anim:nth-child(2){animation-delay:0.2s;}
-  .arrow-anim:nth-child(4){animation-delay:0.4s;}
-  .arrow-anim:nth-child(6){animation-delay:0.6s;}
-  .arrow-anim:nth-child(8){animation-delay:0.8s;}
-
-  @keyframes badge-glow{
-    0%,100%{box-shadow:0 0 0 0 rgba(61,242,168,0.4);}
-    50%{box-shadow:0 0 0 10px rgba(61,242,168,0);}
-  }
-  .badge.final{animation:badge-glow 2.2s ease-in-out infinite;}
-
-  @keyframes circle-rotate{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-  }
-  .iso-ring-1{animation:circle-rotate 30s linear infinite;transform-origin:160px 160px;}
-  .iso-ring-2{animation:circle-rotate 22s linear reverse infinite;transform-origin:160px 160px;}
-  .iso-ring-3{animation:circle-rotate 18s linear infinite;transform-origin:160px 160px;}
-
-  @keyframes center-pulse{
-    0%,100%{r:30;opacity:1;}
-    50%{r:33;opacity:0.85;}
-  }
-  .iso-center{animation:center-pulse 3s ease-in-out infinite;}
-
-  @keyframes x-strike{
-    0%{stroke-dashoffset:60;opacity:0;}
-    60%{opacity:1;}
-    100%{stroke-dashoffset:0;opacity:1;}
-  }
-  .x-strike-anim{
-    stroke-dasharray:60;stroke-dashoffset:60;
-    animation:x-strike 0.6s 0.5s ease-out forwards;
-  }
-
-  @keyframes icon-float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-4px);}
-  }
-  .icon-float{animation:icon-float 3s ease-in-out infinite;}
-  .icon-float:nth-child(2){animation-delay:0.8s;}
-  .icon-float:nth-child(3){animation-delay:1.6s;}
-  .icon-float:nth-child(4){animation-delay:2.4s;}
-
-  @keyframes shimmer{
-    0%{background-position:-200% 0;}
-    100%{background-position:200% 0;}
-  }
-  .swatch-shimmer{
-    position:relative;overflow:hidden;
-  }
-  .swatch-shimmer::after{
-    content:"";position:absolute;inset:0;
-    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.06) 50%,transparent 100%);
-    background-size:200% 100%;
-    animation:shimmer 3s ease-in-out infinite;
-    pointer-events:none;
-  }
-
-  @keyframes rule-icon-in{
-    0%{transform:scale(0) rotate(-15deg);opacity:0;}
-    60%{transform:scale(1.15) rotate(3deg);}
-    100%{transform:scale(1) rotate(0deg);opacity:1;}
-  }
-  .r-icon.anim-in{animation:rule-icon-in .5s ease-out both;}
-  .rules-side.dont .r-icon.anim-in{animation-delay:0.3s;}
-
-  @keyframes draw-arrow{
-    0%{stroke-dashoffset:100;}
-    100%{stroke-dashoffset:0;}
-  }
-  .draw-arrow{
-    stroke-dasharray:100;stroke-dashoffset:100;
-  }
-
-  /* -- orbit: hero floating badges -- */
-  @keyframes orbit-spin{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-  }
-  .orbit-ring{animation:orbit-spin 20s linear infinite;transform-origin:35px 35px;}
-
-  @keyframes orbit-badge-float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-3px);}
-  }
-  .orbit-badge{animation:orbit-badge-float 3s ease-in-out infinite;}
-  .orbit-badge:nth-child(2){animation-delay:0.5s;}
-  .orbit-badge:nth-child(3){animation-delay:1s;}
-  .orbit-badge:nth-child(4){animation-delay:1.5s;}
-
-  /* -- tag float: hero tag pills -- */
-  @keyframes tag-float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-2px);}
-  }
-  .hero-tags span{animation:tag-float 4s ease-in-out infinite;}
-  .hero-tags span:nth-child(1){animation-delay:0s;}
-  .hero-tags span:nth-child(2){animation-delay:0.3s;}
-  .hero-tags span:nth-child(3){animation-delay:0.6s;}
-  .hero-tags span:nth-child(4){animation-delay:0.9s;}
-
-  /* -- badge pop: workflow step entrance -- */
-  @keyframes badge-pop{
-    0%{transform:scale(0.6);opacity:0;}
-    70%{transform:scale(1.08);}
-    100%{transform:scale(1);opacity:1;}
-  }
-  .badge-pop{animation:badge-pop .5s ease-out both;}
-  .flow-step:nth-child(1) .badge{animation-delay:0.1s;}
-  .flow-step:nth-child(3) .badge{animation-delay:0.3s;}
-  .flow-step:nth-child(5) .badge{animation-delay:0.5s;}
-  .flow-step:nth-child(7) .badge{animation-delay:0.7s;}
-  .flow-step:nth-child(9) .badge{animation-delay:0.9s;}
-
-  /* -- pipeline arrow flow -- */
-  @keyframes pipe-flow{
-    0%{stroke-dashoffset:40;}
-    100%{stroke-dashoffset:-40;}
-  }
-  .pipe-arrow{
-    stroke-dasharray:8 32;
-    animation:pipe-flow 1.2s linear infinite;
-  }
-  .pipe-arrow:nth-of-type(2){animation-delay:0.3s;}
-  .pipe-arrow:nth-of-type(3){animation-delay:0.6s;}
-
-  /* -- bar rise: spacing bars -- */
-  @keyframes bar-rise{
-    0%{transform:scaleY(0);}
-    100%{transform:scaleY(1);}
-  }
-  .space-item .bar{animation:bar-rise .6s ease-out both;transform-origin:bottom;}
-  .space-item:nth-child(1) .bar{animation-delay:0.05s;}
-  .space-item:nth-child(2) .bar{animation-delay:0.1s;}
-  .space-item:nth-child(3) .bar{animation-delay:0.15s;}
-  .space-item:nth-child(4) .bar{animation-delay:0.2s;}
-  .space-item:nth-child(5) .bar{animation-delay:0.25s;}
-  .space-item:nth-child(6) .bar{animation-delay:0.3s;}
-  .space-item:nth-child(7) .bar{animation-delay:0.35s;}
-  .space-item:nth-child(8) .bar{animation-delay:0.4s;}
-  .space-item:nth-child(9) .bar{animation-delay:0.45s;}
-
-  /* -- type row reveal -- */
-  @keyframes type-row-in{
-    0%{opacity:0;transform:translateX(-12px);}
-    100%{opacity:1;transform:translateX(0);}
-  }
-  .type-row{animation:type-row-in .4s ease-out both;}
-  .type-row:nth-child(1){animation-delay:0.05s;}
-  .type-row:nth-child(2){animation-delay:0.1s;}
-  .type-row:nth-child(3){animation-delay:0.15s;}
-  .type-row:nth-child(4){animation-delay:0.2s;}
-  .type-row:nth-child(5){animation-delay:0.25s;}
-  .type-row:nth-child(6){animation-delay:0.3s;}
-  .type-row:nth-child(7){animation-delay:0.35s;}
-  .type-row:nth-child(8){animation-delay:0.4s;}
-  .type-row:nth-child(9){animation-delay:0.45s;}
-  .type-row:nth-child(10){animation-delay:0.5s;}
-
-  /* -- swatch glow: all color chips -- */
-  @keyframes swatch-glow{
-    0%,100%{box-shadow:inset 0 0 0 0 rgba(255,255,255,0);}
-    50%{box-shadow:inset 0 0 12px 2px rgba(255,255,255,0.08);}
-  }
-  .swatch .chip{animation:swatch-glow 3s ease-in-out infinite;}
-  .swatch:nth-child(2) .chip{animation-delay:0.2s;}
-  .swatch:nth-child(3) .chip{animation-delay:0.4s;}
-  .swatch:nth-child(4) .chip{animation-delay:0.6s;}
-  .swatch:nth-child(5) .chip{animation-delay:0.8s;}
-  .swatch:nth-child(6) .chip{animation-delay:1s;}
-  .swatch:nth-child(7) .chip{animation-delay:1.2s;}
-  .swatch:nth-child(8) .chip{animation-delay:1.4s;}
-  .swatch:nth-child(9) .chip{animation-delay:1.6s;}
-  .swatch:nth-child(10) .chip{animation-delay:1.8s;}
-  .swatch:nth-child(11) .chip{animation-delay:2s;}
-
-  /* -- comp icon bob -- */
-  @keyframes comp-icon-bob{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-3px);}
-  }
-  .comp-col .cat-icon{animation:comp-icon-bob 4s ease-in-out infinite;}
-  .comp-col:nth-child(2) .cat-icon{animation-delay:0.6s;}
-  .comp-col:nth-child(3) .cat-icon{animation-delay:1.2s;}
-
-  /* -- layer num beat -- */
-  @keyframes layer-num-beat{
-    0%,100%{transform:scale(1);opacity:0.8;}
-    50%{transform:scale(1.2);opacity:1;}
-  }
-  .layer-item .num{animation:layer-num-beat 2.5s ease-in-out infinite;}
-  .layer-item:nth-child(1) .num{animation-delay:0s;}
-  .layer-item:nth-child(2) .num{animation-delay:0.3s;}
-  .layer-item:nth-child(3) .num{animation-delay:0.6s;}
-  .layer-item:nth-child(4) .num{animation-delay:0.9s;}
-  .layer-item:nth-child(5) .num{animation-delay:1.2s;}
-
-  /* -- bullet pop: rule bullets -- */
-  @keyframes bullet-pop{
-    0%{transform:scale(0);opacity:0;}
-    70%{transform:scale(1.2);}
-    100%{transform:scale(1);opacity:1;}
-  }
-  .rule-item .r-bullet{animation:bullet-pop .4s ease-out both;}
-  .rule-item:nth-child(1) .r-bullet{animation-delay:0.1s;}
-  .rule-item:nth-child(2) .r-bullet{animation-delay:0.2s;}
-  .rule-item:nth-child(3) .r-bullet{animation-delay:0.3s;}
-  .rule-item:nth-child(4) .r-bullet{animation-delay:0.4s;}
-
-  /* -- rule item slide -- */
-  @keyframes rule-item-in{
-    0%{opacity:0;transform:translateY(10px);}
-    100%{opacity:1;transform:translateY(0);}
-  }
-  .rule-item{animation:rule-item-in .4s ease-out both;}
-  .rule-item:nth-child(1){animation-delay:0.15s;}
-  .rule-item:nth-child(2){animation-delay:0.25s;}
-  .rule-item:nth-child(3){animation-delay:0.35s;}
-  .rule-item:nth-child(4){animation-delay:0.45s;}
-
-  /* -- pipeline box entrance -- */
-  @keyframes pipe-box-in{
-    0%{opacity:0;transform:scale(0.95);}
-    100%{opacity:1;transform:scale(1);}
-  }
-  .pipe-box rect{animation:pipe-box-in .5s ease-out both;}
-  .pipe-box rect:nth-child(1){animation-delay:0.1s;}
-  .pipe-box rect:nth-child(2){animation-delay:0.25s;}
-  .pipe-box rect:nth-child(3){animation-delay:0.4s;}
-  .pipe-box rect:nth-child(4){animation-delay:0.55s;}
-  .pipe-box rect:nth-child(5){animation-delay:0.7s;}
-
-  /* ---------- SLIDE 2: 4 PILLARS ---------- */
-  .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .pillar{background:var(--surface);padding:28px 22px;position:relative;transition:background .2s;}
-  .pillar:hover{background:var(--surface-2);}
-  .pillar .icon{width:48px;height:48px;margin-bottom:20px;color:var(--acc);}
-  .pillar .label{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);letter-spacing:0.06em;margin-bottom:8px;}
-  .pillar h3{font-size:16px;margin:0 0 8px;font-family:var(--disp);}
-  .pillar p{font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0;}
-
-  /* ---------- SLIDE 3: WORKFLOW ---------- */
-  .flow-panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:30px 32px;margin-bottom:18px;}
-  .flow-panel h3{font-size:14px;margin:0 0 26px;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;color:var(--ink);text-transform:uppercase;letter-spacing:0.04em;}
-  .flow-panel h3 .n{width:22px;height:22px;border-radius:5px;background:var(--acc-dim);color:#06120D;font-family:var(--mono);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;}
-  .flow-row{display:grid;align-items:start;grid-template-columns:repeat(9,1fr);}
-  .flow-row.r5{grid-template-columns:repeat(7,1fr);}
-  .flow-step{text-align:center;grid-column:span 1;}
-  .flow-step.wide{grid-column:span 2;}
-  .flow-step .badge{
-    width:48px;height:48px;border-radius:10px;background:var(--bg-soft);border:1px solid var(--line);color:var(--acc);
-    display:flex;align-items:center;justify-content:center;margin:0 auto 12px;
-  }
-  .flow-step .badge svg{width:22px;height:22px;}
-  .flow-step .badge.final{background:var(--acc);border-color:var(--acc);color:#06120D;}
-  .flow-step .t{font-size:12px;color:var(--ink-soft);line-height:1.4;}
-  .arrow-cell{display:flex;align-items:center;justify-content:center;height:48px;color:var(--ink-dim);font-family:var(--mono);font-size:13px;}
-
-  /* ---------- SLIDE 4: ISOLATION ---------- */
-  .isolate-grid{display:grid;grid-template-columns:0.95fr 1.05fr;gap:54px;align-items:center;}
-  .layer-list{display:flex;flex-direction:column;}
-  .layer-item{display:flex;gap:18px;padding:16px 0;border-top:1px solid var(--line-soft);}
-  .layer-item:first-child{border-top:none;}
-  .layer-item .num{font-family:var(--mono);font-size:11px;color:var(--acc);width:26px;flex-shrink:0;padding-top:2px;}
-  .layer-item h4{margin:0 0 4px;font-size:14px;font-family:var(--disp);color:var(--ink);}
-  .layer-item p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.6;}
-  .isolate-art{display:flex;justify-content:center;}
-  .isolate-art svg{max-width:100%;height:auto;}
-
-  /* ---------- SLIDE 5: TOKENS ---------- */
-  .token-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
-  .token-block h3{font-size:11.5px;font-family:var(--mono);color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.06em;margin:0 0 18px;font-weight:500;}
-  .swatches{display:flex;gap:9px;flex-wrap:wrap;}
-  .swatch{width:64px;}
-  .swatch .chip{height:46px;border-radius:7px;border:1px solid var(--line);margin-bottom:6px;}
-  .swatch .name{font-size:9.5px;font-family:var(--mono);color:var(--ink-dim);text-align:center;}
-  .type-scale{display:flex;flex-direction:column;gap:12px;}
-  .type-row{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line-soft);padding-bottom:10px;}
-  .type-row .px{font-family:var(--mono);font-size:10.5px;color:var(--acc);width:48px;flex-shrink:0;}
-  .type-row .sample{font-family:var(--disp);color:var(--ink);white-space:nowrap;overflow:hidden;}
-  .spacing-row{display:flex;align-items:flex-end;gap:12px;margin-top:6px;}
-  .space-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
-  .space-item .bar{width:12px;background:linear-gradient(var(--acc),var(--acc-dim));border-radius:2px;}
-  .space-item .lab{font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);}
-
-  /* ---------- SLIDE 6: COMPONENTS ---------- */
-  .comp-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .comp-col{background:var(--surface);padding:26px 24px;}
-  .comp-col .cat-icon{width:28px;height:28px;margin-bottom:16px;color:var(--acc);}
-  .comp-col h3{font-size:15px;margin:0 0 16px;font-family:var(--disp);}
-  .comp-col ul{list-style:none;}
-  .comp-col li{font-size:13px;color:var(--ink-soft);padding:8px 0;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:9px;font-family:var(--mono);}
-  .comp-col li:first-child{border-top:none;}
-  .comp-col li::before{content:"";width:4px;height:4px;background:var(--acc);flex-shrink:0;}
-  .comp-foot{margin-top:20px;font-size:11.5px;color:var(--ink-dim);font-family:var(--mono);}
-
-  /* ---------- SLIDE 7: DO/DONT ---------- */
-  .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-  .rules-side{
-    border-radius:14px;overflow:hidden;position:relative;
-    background:var(--surface);border:1px solid var(--line);
-  }
-  .rules-side::before{
-    content:"";position:absolute;inset:0;
-    opacity:0.04;pointer-events:none;z-index:0;
-  }
-  .rules-side.do{border-color:rgba(61,242,168,0.2);}
-  .rules-side.do::before{background:var(--acc);}
-  .rules-side.dont{border-color:rgba(242,113,94,0.2);}
-  .rules-side.dont::before{background:var(--red);}
-  .rules-head{
-    display:flex;align-items:center;gap:14px;
-    padding:24px 28px 18px;
-    border-bottom:1px solid var(--line-soft);
-    position:relative;z-index:1;
-  }
-  .rules-head .r-icon{
-    width:44px;height:44px;border-radius:12px;flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;
-    font-size:22px;font-weight:700;
-  }
-  .rules-side.do .r-icon{
-    background:rgba(61,242,168,0.12);color:var(--acc);
-    box-shadow:0 0 20px rgba(61,242,168,0.15);
-  }
-  .rules-side.dont .r-icon{
-    background:rgba(242,113,94,0.12);color:var(--red);
-    box-shadow:0 0 20px rgba(242,113,94,0.12);
-  }
-  .rules-head h3{
-    margin:0;font-family:var(--disp);font-size:18px;letter-spacing:-0.01em;
-  }
-  .rules-side.do .rules-head h3{color:var(--acc);}
-  .rules-side.dont .rules-head h3{color:var(--red);}
-  .rules-head .sub{
-    font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);
-    text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;
-  }
-  .rules-body{
-    padding:6px 0;position:relative;z-index:1;
-  }
-  .rule-item{
-    display:flex;gap:16px;padding:16px 28px;
-    border-bottom:1px solid var(--line-soft);
-    transition:background .15s;
-  }
-  .rule-item:last-child{border-bottom:none;}
-  .rule-item:hover{background:var(--bg-soft);}
-  .rule-item .r-bullet{
-    width:22px;height:22px;border-radius:6px;flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;
-    margin-top:1px;font-size:11px;font-weight:700;
-  }
-  .rules-side.do .r-bullet{
-    background:rgba(61,242,168,0.1);color:var(--acc);
-  }
-  .rules-side.dont .r-bullet{
-    background:rgba(242,113,94,0.1);color:var(--red);
-  }
-  .rule-item .r-text{flex:1;}
-  .rule-item .r-label{
-    font-size:13.5px;color:var(--ink);font-weight:600;margin:0 0 4px;
-    line-height:1.4;
-  }
-  .rule-item .r-code{
-    font-family:var(--mono);font-size:11px;color:var(--ink-dim);
-    background:var(--bg-soft);padding:5px 10px;border-radius:6px;
-    display:inline-block;margin-top:6px;border:1px solid var(--line-soft);
-  }
-  .rules-divider{
-    display:flex;align-items:center;justify-content:center;
-    padding:0 4px;position:relative;z-index:1;
-  }
-  .rules-divider .vs{
-    width:40px;height:40px;border-radius:50%;
-    background:var(--surface-2);border:1px solid var(--line);
-    display:flex;align-items:center;justify-content:center;
-    font-family:var(--disp);font-size:14px;font-weight:700;
-    color:var(--ink-dim);letter-spacing:-0.02em;
-  }
-  @media(max-width:900px){
-    .rules-grid{grid-template-columns:1fr;}
-    .rules-divider{display:none;}
-  }
-
-  /* ---------- FOOTER ---------- */
-  footer{
-    position:fixed;bottom:0;left:0;right:0;z-index:100;
-    background:rgba(6,9,10,0.82);backdrop-filter:blur(10px);
-    color:var(--ink-dim);padding:12px 0;
-    border-top:1px solid var(--line);min-height:auto;
-    display:flex;justify-content:center;
-  }
-  footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;}
-  footer .brand{color:var(--ink-soft);white-space:nowrap;}
-  footer p{font-size:11px;font-family:var(--mono);white-space:nowrap;}
-  .footer-credit{gap:2px !important;}
-
-  @media(max-width:900px){
-    html{scroll-snap-type:none;}
-    section, header.hero{scroll-snap-align:none;min-height:auto;padding:64px 0 48px;}
-    section:last-of-type{padding-bottom:84px;}
-    .hero-grid{grid-template-columns:1fr;}
-    .hero-art{margin-top:24px;}
-    .pillars{grid-template-columns:repeat(2,1fr);}
-    .isolate-grid{grid-template-columns:1fr;}
-    .comp-cols{grid-template-columns:1fr;}
-    .rules-grid{grid-template-columns:1fr;}
-    .token-grid{grid-template-columns:1fr;}
-    .flow-row,.flow-row.r5{grid-template-columns:repeat(3,1fr);row-gap:24px;}
-    .arrow-cell{display:none;}
-    nav .links{display:none;}
-    .wrap{padding:0 24px;}
-    section, header.hero{padding:72px 0 48px;}
-    footer{padding:10px 0;}
-    footer .wrap{flex-direction:column;gap:4px;text-align:center;}
-    footer .brand{font-size:11.5px;}
-    footer p{font-size:10px;white-space:normal;}
-    .footer-credit{align-items:center !important;}
-  }
-
-  /* -- Tablet / small laptop -- */
-  @media(max-width:640px){
-    .wrap{padding:0 18px;}
-    section, header.hero{padding:56px 0 40px;}
-    section:last-of-type{padding-bottom:76px;}
-    section h2, header.hero h2{font-size:clamp(22px,5vw,28px);}
-    .section-lede{font-size:14px;}
-    .pillars{grid-template-columns:1fr;}
-    .hero-art .term{font-size:11px;max-width:100%;overflow-x:auto;}
-    .term .term-body{font-size:10.5px;padding:12px 14px 16px;white-space:nowrap;}
-    .token-grid{grid-template-columns:1fr;gap:28px;}
-    .swatch{width:52px;}
-    .swatch .chip{height:36px;}
-    .rules-head{padding:18px 20px 14px;}
-    .rules-head .r-icon{width:36px;height:36px;font-size:18px;}
-    .rule-item{padding:14px 20px;}
-    footer{padding:8px 0;}
-    footer .wrap{flex-direction:column;gap:3px;}
-    footer .brand{font-size:10.5px;}
-    footer p{font-size:9.5px;white-space:normal;}
-    .rail{right:12px;gap:10px;}
-    .rail a{width:5px;height:5px;}
-    .isolate-art svg{max-width:280px;}
-  }
-
-  /* -- Phone -- */
-  @media(max-width:480px){
-    .wrap{padding:0 14px;}
-    section, header.hero{padding:44px 0 32px;}
-    section:last-of-type{padding-bottom:72px;}
-    header.hero h1{font-size:clamp(24px,7vw,32px);}
-    .hero-tags span{font-size:10.5px;padding:5px 10px;}
-    .hero-art .term{font-size:10px;}
-    .term .term-body{font-size:9.5px;padding:10px 12px 12px;}
-    .term .term-bar{padding:8px 12px;}
-    .term .term-bar span{width:7px;height:7px;}
-    .pillar{padding:20px 16px;}
-    .pillar .icon{width:38px;height:38px;}
-    .pillar h3{font-size:14px;}
-    .flow-panel{padding:18px 16px;}
-    .flow-panel h3{font-size:12px;}
-    .flow-row,.flow-row.r5{grid-template-columns:repeat(2,1fr);}
-    .flow-step .badge{width:40px;height:40px;}
-    .flow-step .badge svg{width:18px;height:18px;}
-    .flow-step .t{font-size:10.5px;}
-    .layer-item{gap:12px;padding:12px 0;}
-    .layer-item h4{font-size:13px;}
-    .layer-item p{font-size:12px;}
-    .swatches{gap:6px;}
-    .swatch{width:44px;}
-    .swatch .chip{height:32px;}
-    .swatch .name{font-size:8px;}
-    .spacing-row{gap:8px;}
-    .space-item .bar{width:10px;}
-    .type-row{gap:10px;}
-    .type-row .px{font-size:9px;width:60px;}
-    .type-row .sample{font-size:12px;}
-    .comp-col{padding:18px 16px;}
-    .comp-col h3{font-size:14px;}
-    .comp-col li{font-size:11.5px;}
-    .rules-head{padding:14px 16px 12px;}
-    .rules-head h3{font-size:15px;}
-    .rules-head .sub{font-size:9.5px;}
-    .rule-item{padding:12px 16px;gap:12px;}
-    .rule-item .r-label{font-size:12px;}
-    .rule-item .r-code{font-size:9.5px;padding:3px 7px;}
-    .rules-head .r-icon{width:32px;height:32px;font-size:16px;}
-    .scroll-hint{bottom:8px;font-size:9px;}
-    .eyebrow{font-size:10px;padding:4px 10px;}
-    .hero-tags{gap:6px;}
-    .hero-tags span{font-size:10px;padding:5px 8px;}
-    nav .brand{font-size:12px;}
-    footer{padding:8px 0;}
-    footer .brand{font-size:10px;}
-    footer p{font-size:9px;}
-    section:last-of-type{padding-bottom:85px;}
-    .rail{right:8px;gap:8px;}
-    .rail a{width:4px;height:4px;}
-    .isolate-art svg{max-width:260px;}
-  }
-
-  /* -- Extra small -- */
-  @media(max-width:380px){
-    .flow-row,.flow-row.r5{grid-template-columns:1fr;}
-    .flow-step{grid-column:span 2;}
-    .hero-tags{flex-direction:column;align-items:flex-start;}
-    .hero-tags span{width:100%;}
-    .term .term-body{font-size:8.5px;padding:8px 10px 10px;}
-    .term-cursor{width:6px;height:12px;}
-    .kicker{font-size:10px;}
-    .spacing-row{flex-wrap:wrap;gap:6px;}
-    .swatches{gap:4px;}
-    .swatch{width:38px;}
-    .swatch .chip{height:28px;}
-  }
-</style>
-</head>
-<body>
-
-<div class="bg-grid"></div>
-
-<nav>
-  <div class="wrap">
-    <div class="brand"><span class="dot"></span>gwind-skill-module</div>
-    <div class="links">
-      <a href="#pilar"><span>01</span>Pilar</a>
-      <a href="#alur"><span>02</span>Alur</a>
-      <a href="#isolasi"><span>03</span>Isolasi</a>
-      <a href="#token"><span>04</span>Tokens</a>
-      <a href="#komponen"><span>05</span>Komponen</a>
-      <a href="#aturan"><span>06</span>Aturan</a>
-    </div>
-  </div>
-  <div class="progress" id="navProgress"></div>
-</nav>
-
-<div class="rail" id="rail">
-  <a href="#top" class="active" data-target="top"></a>
-  <a href="#pilar" data-target="pilar"></a>
-  <a href="#alur" data-target="alur"></a>
-  <a href="#isolasi" data-target="isolasi"></a>
-  <a href="#token" data-target="token"></a>
-  <a href="#komponen" data-target="komponen"></a>
-  <a href="#aturan" data-target="aturan"></a>
-</div>
-
-<header class="hero" id="top">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow"><span class="pulse"></span>terhubung dengan GitHub Copilot · gwind-system-ui@1.0.1 · gwind-v2@0.2.1</div>
-      <h1>Bangun tampilan web lebih cepat &amp; <span class="grad">seragam</span>.</h1>
-      <p class="lede">Gwind Skill Module adalah asisten pintar untuk Copilot yang memandu developer membangun antarmuka Vue 3 dengan komponen hasil generate CLI, token dari gwind-v2, dan CSS isolation 5-layer — 100% sesuai standar Gwind Design System.</p>
-      <div class="hero-tags">
-        <span><b>$</b> gwind-system-ui CLI</span>
-        <span><b>$</b> gwind-v2 Tokens</span>
-        <span><b>$</b> Reka UI</span>
-        <span><b>$</b> Tailwind CSS v4</span>
-      </div>
-    </div>
-    <div class="hero-art">
-      <div class="term">
-        <div class="term-bar"><span></span><span></span><span></span><div class="label">gwind --init</div></div>
-        <div class="term-body">
-<div class="term-line"><span class="c3">$</span> npx gwind-system-ui init<span class="term-cursor"></span></div>
-<div class="term-line"><span class="c1">✓</span> scanning gwind-v2 tokens<span class="c3">...</span></div>
-<div class="term-line"><span class="c1">✓</span> injecting gwind.css foundation</div>
-<div class="term-line"><span class="c1">✓</span> configuring reka-ui primitives</div>
-<div class="term-line"><span class="c1">✓</span> applying Tailwind CSS v4</div>
-<div class="term-line"><span class="c2">→</span> css-isolation: 5-layer defense active</div>
-<div class="term-line"><span class="c1">✓</span> init complete <span class="c3">— gwind.json written</span></div>
-        </div>
-      </div>
-      <!-- Floating decorative badges -->
-      <svg style="position:absolute;top:-18px;right:-22px;width:70px;height:70px;pointer-events:none;" viewBox="0 0 70 70" fill="none">
-        <circle class="orbit-ring" cx="35" cy="35" r="32" stroke="rgba(61,242,168,0.15)" stroke-width="1" stroke-dasharray="4 6"/>
-        <circle class="orbit-badge" cx="35" cy="20" r="10" fill="rgba(61,242,168,0.08)" stroke="rgba(61,242,168,0.3)" stroke-width="0.8"/>
-        <text x="35" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--acc)">token</text>
-        <circle class="orbit-badge" cx="20" cy="42" r="10" fill="rgba(242,184,75,0.08)" stroke="rgba(242,184,75,0.3)" stroke-width="0.8"/>
-        <text x="20" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2B84B">css</text>
-        <circle class="orbit-badge" cx="50" cy="42" r="10" fill="rgba(242,113,94,0.06)" stroke="rgba(242,113,94,0.25)" stroke-width="0.8"/>
-        <text x="50" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2715E">vue</text>
-      </svg>
-    </div>
-  </div>
-  <div class="scroll-hint"><span>SCROLL</span><span class="ln"></span></div>
-</header>
-
-<!-- SLIDE 2: 4 PILLARS -->
-<section id="pilar">
-  <div class="wrap">
-    <p class="kicker"><span class="ix">01</span> Fondasi</p>
-    <h2>4 pilar utama Gwind</h2>
-    <p class="section-lede">Gwind bukan satu library monolitik, melainkan gabungan empat elemen independen yang saling melengkapi — semuanya publik, tidak ada ketergantungan ke package private <code>@pegadaian</code>.</p>
-    <div class="pillars">
-      <div class="pillar">
-        <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
-          <rect x="3" y="6" width="42" height="32" rx="4" stroke="currentColor" stroke-width="1.5"/>
-          <rect x="3" y="6" width="42" height="10" rx="4" fill="currentColor" opacity="0.1"/>
-          <circle cx="9" cy="10" r="2.5" fill="#F2715E" opacity="0.8"/>
-          <circle cx="17" cy="10" r="2.5" fill="#F2B84B" opacity="0.8"/>
-          <circle cx="25" cy="10" r="2.5" fill="#3DF2A8" opacity="0.8"/>
-          <path d="M10 24l2-2 2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M22 24l2-2 2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
-          <circle cx="39" cy="29" r="6" stroke="currentColor" stroke-width="1.3" opacity="0.6"/>
-          <path d="M37 27l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="label">// 01 OTOMASI</div>
-        <h3>gwind-system-ui CLI</h3>
-        <p>Package publik npm yang men-generate source code komponen ke proyek lokal. Perintah <code>init</code> menyiapkan fondasi CSS, <code>add</code> meng-copy komponen spesifik dari registry.</p>
-      </div>
-      <div class="pillar">
-        <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
-          <circle cx="24" cy="15" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
-          <circle cx="24" cy="15" r="7" fill="#3DF2A8" opacity="0.15"/>
-          <rect x="10" y="29" width="28" height="7" rx="3.5" stroke="currentColor" stroke-width="1.3" opacity="0.4"/>
-          <rect x="10" y="29" width="28" height="7" rx="3.5" fill="#F2B84B" opacity="0.12"/>
-          <circle cx="24" cy="15" r="3.5" fill="currentColor" opacity="0.9"/>
-          <circle cx="15" cy="32.5" r="2" fill="#F2715E" opacity="0.7"/>
-          <circle cx="24" cy="32.5" r="2" fill="#3DF2A8" opacity="0.7"/>
-          <circle cx="33" cy="32.5" r="2" fill="#207 75.4% 38.2%" opacity="0.5"/>
-        </svg>
-        <div class="label">// 02 STANDAR</div>
-        <h3>gwind-v2 (Design Tokens)</h3>
-        <p>Package npm (versi 0.2.1) yang mengekspor variabel CSS murni: 11 palette warna, 12 skala tipografi, spacing gw-2 s.d. gw-120, radius, shadow, dan breakpoint — kompatibel Micro Frontend.</p>
-      </div>
-      <div class="pillar">
-        <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
-          <rect x="4" y="5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
-          <rect x="4" y="5" width="17" height="17" rx="3" fill="#3DF2A8" opacity="0.08"/>
-          <rect x="27" y="5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
-          <rect x="27" y="5" width="17" height="17" rx="3" fill="#F2715E" opacity="0.05"/>
-          <rect x="10" y="26" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
-          <rect x="10" y="26" width="17" height="17" rx="3" fill="#F2B84B" opacity="0.07"/>
-          <rect x="4" y="5" width="17" height="17" rx="3" fill="#3DF2A8" opacity="0.25"/>
-          <rect x="4" y="5" width="17" height="17" rx="3" stroke="#3DF2A8" stroke-width="1.5"/>
-          <path d="M10 13.5L13 16l4-5" stroke="#06090A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M33 12l2-2 2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
-          <circle cx="18.5" cy="34.5" r="3" stroke="currentColor" stroke-width="1.3" opacity="0.5"/>
-          <circle cx="18.5" cy="34.5" r="1.5" fill="currentColor" opacity="0.4"/>
-          <circle cx="27" cy="39" r="1.2" fill="currentColor" opacity="0.2"/>
-        </svg>
-        <div class="label">// 03 INTERAKSI</div>
-        <h3>Reka UI (Headless Primitives)</h3>
-        <p>Library headless component Vue 3 yang menyediakan aksesibilitas dan logika interaksi (dialog, dropdown, combobox, popover) — tanpa styling bawaan, sepenuhnya dikontrol oleh Gwind.</p>
-      </div>
-      <div class="pillar">
-        <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
-          <path d="M24 4L28 16h12l-9.6 7.2 3.6 11.8L24 28l-10 7 3.6-11.8L8 16h12L24 4z" stroke="currentColor" stroke-width="1" opacity="0.2" fill="currentColor" fill-opacity="0.06"/>
-          <path d="M4 34h12M6 39h8M8 44h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
-          <path d="M30 34h14M32 39h10M34 44h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
-          <path d="M24 4L28 16h12l-9.6 7.2 3.6 11.8L24 28" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="#3DF2A8" fill-opacity="0.18"/>
-          <path d="M18 18l6 10 6-10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
-        </svg>
-        <div class="label">// 04 KECEPATAN</div>
-        <h3>Tailwind CSS v4</h3>
-        <p>Utility-first CSS framework engine Oxide. Integrasi native dengan gwind-v2 melalui <code>@theme</code>, animasi <code>@utility animate-*</code>, dan source scanning tanpa konfigurasi PostCSS.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SLIDE 3: WORKFLOW -->
-<section id="alur">
-  <div class="wrap">
-    <p class="kicker"><span class="ix">02</span> Alur Kerja</p>
-    <h2>Bagaimana cara kerjanya?</h2>
-    <p class="section-lede">Dua skenario utama: membangun dari nol dengan <code>init</code> + <code>add</code>, atau mengaudit proyek lama yang perlu diselaraskan dengan token Gwind terbaru.</p>
-
-    <div class="flow-panel">
-      <h3><span class="n">1</span>Mode Mulai — Proyek Baru (Greenfield)</h3>
-      <div class="flow-row">
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5zM5 17a5 5 0 015 5M19 17a5 5 0 00-5 5"/></svg></div>
-          <div class="t">Desain Figma<br/>Sudah Siap</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
-          <div class="t">Cek Environment<br/>(Node, pnpm, Vue)</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
-          <div class="t">gwind-system-ui<br/>init</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg></div>
-          <div class="t">gwind-system-ui<br/>add button, dsb.</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge final"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
-          <div class="t">Import &amp; Verifikasi<br/>Selesai!</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flow-panel">
-      <h3><span class="n">2</span>Mode Audit — Proyek Lama (Brownfield)</h3>
-      <div class="flow-row r5">
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
-          <div class="t">Inspeksi Ulang<br/>Figma → Token</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 11H7a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-2M9 11V7a3 3 0 016 0v4M9 11h6"/></svg></div>
-          <div class="t">Audit per Komponen<br/>Token vs Kode</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge badge-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 3v4a1 1 0 001 1h4M5 12V5a2 2 0 012-2h7l5 5v4M5 12v7a2 2 0 002 2h4M14 17l2 2 4-4"/></svg></div>
-          <div class="t">Perbaiki Token &amp;<br/>Utility CSS</div>
-        </div>
-        <div class="arrow-cell arrow-anim"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M14 7l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="flow-step">
-          <div class="badge final"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 17V9m3 8V5m3 12v-5M5 19h14"/></svg></div>
-          <div class="t">Laporan Hasil<br/>Audit &amp; Gap</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SLIDE 4: ISOLATION -->
-<section id="isolasi">
-  <div class="wrap isolate-grid">
-    <div>
-      <p class="kicker"><span class="ix">03</span> Fitur Anti-Bocor</p>
-      <h2>CSS Isolation — 5 Lapis Pertahanan</h2>
-      <p class="section-lede" style="margin-bottom:30px;">Untuk aplikasi Micro Frontend (Module Federation), Gwind menjamin nol kebocoran CSS antar host dan remote. Arsitektur 5-layer ini sudah diverifikasi di <code>@originjs/vite-plugin-federation</code>.</p>
-      <div class="layer-list">
-        <div class="layer-item"><div class="num">01</div><div><h4>Scope &lt;div&gt; Unik</h4><p>Setiap view terbungkus scope selector turunan dari <code>package.json</code> → <code>gw-scope-*</code>. Placeholder <code>.gw-scope</code> di-replace saat build.</p></div></div>
-        <div class="layer-item"><div class="num">02</div><div><h4>postcss-prefix-selector</h4><p>Plugin PostCSS otomatis menambahkan prefix scope class ke setiap selector CSS, menjamin tidak ada rule global yang bocor.</p></div></div>
-        <div class="layer-item"><div class="num">03</div><div><h4>tailwindcss-mangle</h4><p>Utility class Tailwind di-hash/di-mangle sehingga nama class antar remote tidak mungkin bentrok.</p></div></div>
-        <div class="layer-item"><div class="num">04</div><div><h4>Vue &lt;style scoped&gt;</h4><p>Isolasi per komponen Vue 3 dengan <code>data-v-*</code> attribute selector — komponen A tidak bisa menyentuh komponen B.</p></div></div>
-        <div class="layer-item"><div class="num">05</div><div><h4>@layer gw-base</h4><p>Cascade layer CSS memastikan aturan fondasi Gwind tidak bisa ditimpa secara tidak sengaja oleh kode di layer lain.</p></div></div>
-      </div>
-    </div>
-    <div class="isolate-art">
-      <svg viewBox="0 0 320 320" fill="none">
-        <circle cx="160" cy="160" r="150" stroke="#172420" stroke-width="1"/>
-        <circle class="iso-ring-1" cx="160" cy="160" r="120" stroke="#1F8A62" stroke-width="1" stroke-dasharray="3 5"/>
-        <circle class="iso-ring-2" cx="160" cy="160" r="90" stroke="#1F8A62" stroke-width="1" stroke-dasharray="3 5"/>
-        <circle class="iso-ring-3" cx="160" cy="160" r="60" stroke="#1F8A62" stroke-width="1" stroke-dasharray="3 5"/>
-        <circle class="iso-center" cx="160" cy="160" r="30" fill="#0E1513" stroke="#3DF2A8" stroke-width="1.3"/>
-        <path d="M160 146l10 6v11l-10 6-10-6v-11z" stroke="#3DF2A8" stroke-width="1.4" fill="none"/>
-        <text x="160" y="164" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#3DF2A8">gw-scope</text>
-        <rect x="20" y="20" width="76" height="48" rx="7" fill="#0E1513" stroke="#3DF2A8"/>
-        <text x="58" y="44" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#3DF2A8">Remote A</text>
-        <text x="58" y="57" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#8CA39A">.scope-news</text>
-        <rect x="224" y="252" width="76" height="48" rx="7" fill="#0E1513" stroke="#F2715E"/>
-        <text x="262" y="276" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#F2715E">Remote B</text>
-        <text x="262" y="289" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="#8CA39A">.scope-event</text>
-        <path d="M96 44 L224 44" stroke="#F2715E" stroke-width="1.2" stroke-dasharray="2 4"/>
-        <circle cx="160" cy="44" r="9" fill="#1A0F0D" stroke="#F2715E"/>
-        <path class="x-strike-anim" d="M155 39l10 10M165 39l-10 10" stroke="#F2715E" stroke-width="1.5"/>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- SLIDE 5: TOKENS -->
-<section id="token">
-  <div class="wrap">
-    <p class="kicker"><span class="ix">04</span> Bahasa Visual Kita</p>
-    <h2>Design Tokens — gwind-v2</h2>
-    <p class="section-lede">Package <code>gwind-v2@0.2.1</code> mengekspor 11 palette warna, 12 skala tipografi, dan 11 langkah spacing — semua sebagai variabel CSS murni, siap pakai di Tailwind v4.</p>
-
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 28px;margin-bottom:40px;display:flex;align-items:center;justify-content:center;gap:0;">
-      <svg class="pipe-box" viewBox="0 0 800 60" style="width:100%;max-width:720px;height:auto;">
-        <!-- Figma source -->
-        <rect x="10" y="6" width="150" height="48" rx="8" fill="var(--bg-soft)" stroke="var(--line)" stroke-width="1"/>
-        <text x="85" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink-dim)">Figma</text>
-        <text x="85" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--acc)">Variables</text>
-        <!-- Arrow 1 -->
-        <path class="pipe-arrow" d="M170 30h30M194 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- CSS layer -->
-        <rect x="210" y="6" width="170" height="48" rx="8" fill="rgba(61,242,168,0.04)" stroke="rgba(61,242,168,0.25)" stroke-width="1"/>
-        <text x="295" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink-soft)">gwind-v2</text>
-        <text x="295" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--acc)">--primary: var(--lime-500)</text>
-        <!-- Arrow 2 -->
-        <path class="pipe-arrow" d="M390 30h30M414 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Tailwind layer -->
-        <rect x="430" y="6" width="160" height="48" rx="8" fill="rgba(61,242,168,0.04)" stroke="rgba(61,242,168,0.25)" stroke-width="1"/>
-        <text x="510" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--ink-soft)">Tailwind v4</text>
-        <text x="510" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--acc)">@theme mapping</text>
-        <!-- Arrow 3 -->
-        <path class="pipe-arrow" d="M600 30h30M624 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Result -->
-        <rect x="640" y="6" width="145" height="48" rx="8" fill="rgba(61,242,168,0.08)" stroke="#3DF2A8" stroke-width="1.2"/>
-        <text x="712" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">bg-primary</text>
-        <text x="712" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--ink)">text-omicron</text>
-      </svg>
-    </div>
-
-    <div class="token-grid">
-      <div>
-        <div class="token-block" style="margin-bottom:34px;">
-          <h3>11 Palette Warna</h3>
-          <div class="swatches">
-            <div class="swatch"><div class="chip" style="background:hsl(172 100% 15.1%);"></div><div class="name">broccoli</div></div>
-            <div class="swatch swatch-shimmer"><div class="chip" style="background:hsl(147 100% 33.5%);"></div><div class="name">lime</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(98 49% 50.8%);"></div><div class="name">pear</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(69 67.6% 51.6%);"></div><div class="name">kiwi</div></div>
-            <div class="swatch swatch-shimmer"><div class="chip" style="background:hsl(358 70.6% 40%);"></div><div class="name">red</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(28 75% 51.4%);"></div><div class="name">orange</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(40 100% 65.5%);"></div><div class="name">yellow</div></div>
-            <div class="swatch swatch-shimmer"><div class="chip" style="background:hsl(40 57.8% 63.7%);"></div><div class="name">gold</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(168 100% 33.7%);"></div><div class="name">turquoise</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(207 75.4% 38.2%);"></div><div class="name">blue</div></div>
-            <div class="swatch"><div class="chip" style="background:hsl(301 55.1% 34.9%);"></div><div class="name">purple</div></div>
-          </div>
-        </div>
-        <div class="token-block">
-          <h3>Spacing (11 langkah)</h3>
-          <div class="spacing-row">
-            <div class="space-item"><div class="bar" style="height:2px;"></div><div class="lab">gw-2</div></div>
-            <div class="space-item"><div class="bar" style="height:4px;"></div><div class="lab">gw-4</div></div>
-            <div class="space-item"><div class="bar" style="height:8px;"></div><div class="lab">gw-8</div></div>
-            <div class="space-item"><div class="bar" style="height:16px;"></div><div class="lab">gw-16</div></div>
-            <div class="space-item"><div class="bar" style="height:24px;"></div><div class="lab">gw-24</div></div>
-            <div class="space-item"><div class="bar" style="height:32px;"></div><div class="lab">gw-32</div></div>
-            <div class="space-item"><div class="bar" style="height:48px;"></div><div class="lab">gw-48</div></div>
-            <div class="space-item"><div class="bar" style="height:64px;"></div><div class="lab">gw-64</div></div>
-            <div class="space-item"><div class="bar" style="height:96px;"></div><div class="lab">gw-120</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="token-block">
-        <h3>Tipografi — 12 Skala</h3>
-        <div class="type-scale">
-          <div class="type-row"><span class="px">text-alpha</span><span class="sample" style="font-size:30px;font-weight:800;">4.5rem</span></div>
-          <div class="type-row"><span class="px">text-beta</span><span class="sample" style="font-size:26px;font-weight:800;">3.75rem</span></div>
-          <div class="type-row"><span class="px">text-gamma</span><span class="sample" style="font-size:22px;font-weight:800;">3rem</span></div>
-          <div class="type-row"><span class="px">text-delta</span><span class="sample" style="font-size:20px;font-weight:800;">2.25rem</span></div>
-          <div class="type-row"><span class="px">text-epsilon</span><span class="sample" style="font-size:18px;font-weight:800;">1.875rem</span></div>
-          <div class="type-row"><span class="px">text-zeta</span><span class="sample" style="font-size:16px;font-weight:800;">1.5rem</span></div>
-          <div class="type-row"><span class="px">text-omicron</span><span class="sample" style="font-size:14px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;">1rem — body</span></div>
-          <div class="type-row"><span class="px">text-sigma</span><span class="sample" style="font-size:13px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;">0.875rem</span></div>
-          <div class="type-row"><span class="px">text-omega</span><span class="sample" style="font-size:12px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;">0.75rem — helper</span></div>
-          <div class="type-row"><span class="px">text-atom</span><span class="sample" style="font-size:10px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;color:var(--ink-soft);">0.625rem</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SLIDE 6: COMPONENTS -->
-<section id="komponen">
-  <div class="wrap">
-    <p class="kicker"><span class="ix">05</span> 28 Komponen "Lego" Siap Pakai</p>
-    <h2>Source-code distribution — milik Anda sepenuhnya</h2>
-    <p class="section-lede">CLI meng-copy source code komponen langsung ke <code>src/components/ui/</code>. Bukan dependency runtime — Anda bisa menyesuaikan sesuka hati. Semua sudah aksesibel dan memakai Reka UI.</p>
-
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;justify-content:center;">
-      <svg class="pipe-box" viewBox="0 0 760 64" style="width:100%;max-width:700px;height:auto;">
-        <!-- Registry -->
-        <rect x="5" y="7" width="140" height="50" rx="8" fill="var(--bg-soft)" stroke="var(--line)" stroke-width="1"/>
-        <rect x="13" y="14" width="36" height="14" rx="3" fill="rgba(242,184,75,0.15)" stroke="rgba(242,184,75,0.3)" stroke-width="0.8"/>
-        <text x="31" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2B84B">.json</text>
-        <rect x="53" y="14" width="36" height="14" rx="3" fill="rgba(61,242,168,0.12)" stroke="rgba(61,242,168,0.25)" stroke-width="0.8"/>
-        <text x="71" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--acc)">.vue</text>
-        <rect x="93" y="14" width="36" height="14" rx="3" fill="rgba(242,113,94,0.1)" stroke="rgba(242,113,94,0.2)" stroke-width="0.8"/>
-        <text x="111" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2715E">.ts</text>
-        <text x="75" y="48" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--ink-dim)">Registry</text>
-        <!-- Arrow -->
-        <path class="pipe-arrow" d="M155 32h25M174 26l6 6-6 6" stroke="var(--acc)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- CLI -->
-        <rect x="190" y="7" width="180" height="50" rx="8" fill="rgba(61,242,168,0.05)" stroke="rgba(61,242,168,0.25)" stroke-width="1"/>
-        <text x="216" y="27" font-family="JetBrains Mono" font-size="11" fill="var(--ink-dim)">$</text>
-        <text x="230" y="27" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">gwind-system-ui</text>
-        <text x="216" y="44" font-family="JetBrains Mono" font-size="10" fill="var(--ink-soft)">add button</text>
-        <circle cx="352" cy="43" r="3" fill="var(--acc)" opacity="0.5"/>
-        <!-- Arrow -->
-        <path class="pipe-arrow" d="M380 32h25M399 26l6 6-6 6" stroke="var(--acc)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Local project -->
-        <rect x="415" y="7" width="190" height="50" rx="8" fill="rgba(61,242,168,0.06)" stroke="var(--acc)" stroke-width="1.2"/>
-        <text x="445" y="27" font-family="JetBrains Mono" font-size="10" fill="var(--ink-dim)">src/</text>
-        <text x="470" y="27" font-family="JetBrains Mono" font-size="10" fill="var(--ink-soft)">components/ui/</text>
-        <text x="510" y="44" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">button/</text>
-        <rect x="558" y="36" width="12" height="12" rx="2" fill="rgba(61,242,168,0.15)" stroke="var(--acc)" stroke-width="0.6"/>
-        <text x="564" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="7" fill="var(--acc)">V</text>
-        <!-- Ownership banner -->
-        <rect x="620" y="14" width="125" height="36" rx="6" fill="rgba(61,242,168,0.08)" stroke="var(--acc)" stroke-width="1"/>
-        <text x="682" y="38" text-anchor="middle" font-family="var(--disp)" font-size="12" fill="var(--acc)" font-weight="600">Milik Anda ✓</text>
-      </svg>
-    </div>
-    <div class="comp-cols">
-      <div class="comp-col">
-        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg>
-        <h3>Navigasi &amp; Struktur</h3>
-        <ul><li>accordion</li><li>breadcrumb</li><li>pagination</li><li>tabs</li><li>divider</li></ul>
-      </div>
-      <div class="comp-col">
-        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M5 5h14v14H5z"/></svg>
-        <h3>Input &amp; Aksi</h3>
-        <ul><li>button (12 varian)</li><li>checkbox &amp; switch</li><li>input &amp; input-rupiah</li><li>textarea &amp; select</li><li>combobox &amp; radio-group</li></ul>
-      </div>
-      <div class="comp-col">
-        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v14"/></svg>
-        <h3>Umpan Balik &amp; Overlay</h3>
-        <ul><li>table &amp; data-table</li><li>dialog &amp; popover</li><li>dropdown &amp; tooltip</li><li>toast, alert &amp; badge</li><li>card, avatar &amp; label</li><li>progress &amp; spinner</li></ul>
-      </div>
-    </div>
-    <div class="comp-foot">// 28 komponen • 3 kategori • source-code distribution • teruji aksesibilitas</div>
-  </div>
-</section>
-
-<!-- SLIDE 7: DO/DONT -->
-<section id="aturan">
-  <div class="wrap">
-    <p class="kicker"><span class="ix">06</span> Konvensi Tim</p>
-    <h2>Do's &amp; Don'ts</h2>
-    <p class="section-lede">Patuhi konvensi ini agar konsistensi desain tetap terjaga di seluruh remote app. Setiap aturan sudah diverifikasi di Gwind Skill Module v1.7.0.</p>
-
-    <div class="rules-grid">
-      <!-- DO column -->
-      <div class="rules-side do">
-        <div class="rules-head">
-          <div class="r-icon anim-in">✓</div>
-          <div>
-            <h3>Yang Harus Dilakukan</h3>
-            <div class="sub">4 aturan wajib</div>
-          </div>
-        </div>
-        <div class="rules-body">
-          <div class="rule-item">
-            <div class="r-bullet">1</div>
-            <div class="r-text">
-              <div class="r-label">Semantic token dulu, palette belakangan</div>
-              <span class="r-code">bg-primary</span>&nbsp;<span class="r-code">text-foreground</span>&nbsp;<span class="r-code">border-border</span>
-            </div>
-          </div>
-          <div class="rule-item">
-            <div class="r-bullet">2</div>
-            <div class="r-text">
-              <div class="r-label">Semua state komponen wajib terdefinisi</div>
-              <span class="r-code">default</span>&nbsp;<span class="r-code">hover</span>&nbsp;<span class="r-code">active</span>&nbsp;<span class="r-code">focus-visible</span>&nbsp;<span class="r-code">disabled</span>&nbsp;<span class="r-code">loading</span>
-            </div>
-          </div>
-          <div class="rule-item">
-            <div class="r-bullet">3</div>
-            <div class="r-text">
-              <div class="r-label">Bahasa Indonesia untuk semua label pengguna</div>
-              <span class="r-code">Simpan</span>&nbsp;<span class="r-code">Batal</span>&nbsp;<span class="r-code">Lanjutkan</span>
-            </div>
-          </div>
-          <div class="rule-item">
-            <div class="r-bullet">4</div>
-            <div class="r-text">
-              <div class="r-label">Import dari family barrel lokal</div>
-              <span class="r-code">import { Button } from '@/components/ui/button'</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- DON'T column -->
-      <div class="rules-side dont">
-        <div class="rules-head">
-          <div class="r-icon anim-in">✗</div>
-          <div>
-            <h3>Yang Dilarang</h3>
-            <div class="sub">3 pantangan</div>
-          </div>
-        </div>
-        <div class="rules-body">
-          <div class="rule-item">
-            <div class="r-bullet">1</div>
-            <div class="r-text">
-              <div class="r-label">Kode hex mentah atau piksel arbitrer</div>
-              <span class="r-code">#FF5733</span>&nbsp;<span class="r-code">17px</span>&nbsp;— mapping ke token Gwind
-            </div>
-          </div>
-          <div class="rule-item">
-            <div class="r-bullet">2</div>
-            <div class="r-text">
-              <div class="r-label">Override paksa: !important &amp; inline style</div>
-              <span class="r-code">style="color:red"</span>&nbsp;<span class="r-code">!important</span>
-            </div>
-          </div>
-          <div class="rule-item">
-            <div class="r-bullet">3</div>
-            <div class="r-text">
-              <div class="r-label">Package private @pegadaian — sudah deprecated</div>
-              <span class="r-code">@pegadaian/gwind-vue</span>&nbsp;<span class="r-code">@pegadaian/gwind-ui</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="brand mono"><span class="dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-right:8px;"></span>gwind-skill-module</div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;" class="footer-credit">
-      <p>// gwind-system-ui + gwind-v2 — design system internal PT Pegadaian</p>
-      <p style="font-size:11px;color:var(--ink-soft);">by <span style="color:var(--acc);">Pegadaian Design</span> — F.Imam.A.A</p>
-    </div>
-  </div>
-</footer>
-
-<script>
-  (function(){
-    var sections = document.querySelectorAll('section, header.hero');
-    var railLinks = document.querySelectorAll('.rail a');
-    var navProgress = document.getElementById('navProgress');
-    var isSnap = window.matchMedia('(min-width:901px)').matches;
-
-    // Detect if scroll-snap is active (desktop)
-    window.matchMedia('(min-width:901px)').addEventListener('change', function(e){
-      isSnap = e.matches;
-    });
-
-    // Measure fixed bars height once
-    var navH = 60;
-    function footerH(){
-      var f = document.querySelector('footer');
-      return f ? f.offsetHeight : 56;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gwind Skill Module — Bangun Tampilan Web Lebih Cepat &amp; Seragam</title>
+
+  <!-- SEO -->
+  <meta name="description"
+    content="Gwind Skill Module adalah asisten AI untuk developer Vue 3 — membangun antarmuka dengan komponen CLI, token gwind-v2, dan CSS isolation 5-layer. 100% sesuai standar Gwind Design System PT Pegadaian.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#06090A">
+  <meta name="author" content="Pegadaian Design — F.Imam.A.A">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Gwind Skill Module — Bangun Tampilan Web Lebih Cepat & Seragam">
+  <meta property="og:description"
+    content="Asisten AI untuk developer Vue 3: komponen generate CLI, token gwind-v2, CSS isolation 5-layer. 100% sesuai standar Gwind Design System.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gwind Design System">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gwind Skill Module — Bangun Tampilan Web Lebih Cepat & Seragam">
+  <meta name="twitter:description"
+    content="Asisten AI untuk developer Vue 3: komponen generate CLI, token gwind-v2, CSS isolation 5-layer.">
+
+  <!-- Favicon — inline SVG -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23060A0A'/><path d='M16 6l2 8h8l-6 4.5 2.5 7.5-6.5-4.5-6.5 4.5 2.5-7.5L6 14h8l2-8z' fill='%233DF2A8' opacity='0.9'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #06090A;
+      --bg-soft: #0A0F0E;
+      --surface: #0E1513;
+      --surface-2: #111B18;
+      --line: #1E2B27;
+      --line-soft: #172420;
+      --ink: #E9F1EC;
+      --ink-soft: #8CA39A;
+      --ink-dim: #566E65;
+      --acc: #3DF2A8;
+      --acc-dim: #1F8A62;
+      --amber: #F2B84B;
+      --red: #F2715E;
+      --mono: 'JetBrains Mono', monospace;
+      --disp: 'Space Grotesk', sans-serif;
+      --body: 'Inter', sans-serif;
     }
 
-    // Smooth scroll helper — works with or without scroll-snap
-    function scrollToSection(id){
-      var target = document.getElementById(id);
-      if(!target) return;
-      if(isSnap){
-        // With scroll-snap: scroll-padding handles nav + footer clearance
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-      }else{
-        // Without scroll-snap (mobile): manual offset for nav + footer
-        var top = target.getBoundingClientRect().top + window.pageYOffset - navH;
-        // If scrolled near bottom, ensure footer clearance
-        var maxTop = document.body.scrollHeight - window.innerHeight + footerH();
-        if(top > maxTop) top = maxTop;
-        window.scrollTo({top:top, behavior:'smooth'});
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: var(--bg);
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overscroll-behavior-y: none;
+      scroll-padding-top: 60px;
+      scroll-padding-bottom: 48px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    .disp {
+      font-family: var(--disp);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+      width: 100%;
+    }
+
+    /* background grid texture, fixed */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(61, 242, 168, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61, 242, 168, 0.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 65% at 50% 0%, black, transparent 75%);
+    }
+
+    /* ---------- NAV (fixed, slim) ---------- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(6, 9, 10, 0.78);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    .brand .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--acc);
+      box-shadow: 0 0 8px var(--acc);
+    }
+
+    nav .links {
+      display: flex;
+      gap: 0;
+      font-family: var(--mono);
+      font-size: 11.5px;
+    }
+
+    nav .links a {
+      color: var(--ink-dim);
+      text-decoration: none;
+      padding: 8px 14px;
+      position: relative;
+      transition: color .15s;
+    }
+
+    nav .links a span {
+      color: var(--acc-dim);
+      margin-right: 6px;
+    }
+
+    nav .links a:hover {
+      color: var(--ink);
+    }
+
+    nav .progress {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      height: 1px;
+      background: var(--acc);
+      width: 0%;
+      transition: width .2s;
+    }
+
+    /* dot rail (right side section indicator) */
+    .rail {
+      position: fixed;
+      right: 26px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .rail a {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--line);
+      border: 1px solid var(--line-soft);
+      display: block;
+      transition: all .2s;
+    }
+
+    .rail a.active {
+      background: var(--acc);
+      box-shadow: 0 0 10px var(--acc);
+      transform: scale(1.3);
+    }
+
+    @media(max-width:900px) {
+      .rail {
+        display: none;
       }
     }
 
-    // Intersection Observer — update rail dots
-    var observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          var id = entry.target.id;
-          railLinks.forEach(function(l){
-            l.classList.toggle('active', l.dataset.target === id);
-          });
-        }
-      });
-    }, {threshold:0.5});
-
-    sections.forEach(function(s){ observer.observe(s); });
-
-    // Scroll progress bar
-    window.addEventListener('scroll', function(){
-      var h = document.documentElement;
-      var pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-      navProgress.style.width = Math.min(pct, 100) + '%';
-    }, {passive:true});
-
-    // Smooth-scroll nav links & rail dots
-    document.querySelectorAll('nav a[href^="#"], .rail a[href^="#"]').forEach(function(link){
-      link.addEventListener('click', function(e){
-        e.preventDefault();
-        var id = this.getAttribute('href').slice(1);
-        scrollToSection(id);
-      });
-    });
-
-    // Handle hash navigation (direct URL access)
-    window.addEventListener('hashchange', function(){
-      var id = location.hash.slice(1);
-      if(id) scrollToSection(id);
-    });
-
-    // Handle initial hash on page load
-    if(location.hash){
-      setTimeout(function(){
-        var id = location.hash.slice(1);
-        if(id) scrollToSection(id);
-      }, 100);
+    /* ---------- SECTION SHELL : scroll snap, full height ---------- */
+    section,
+    header.hero {
+      position: relative;
+      z-index: 1;
+      min-height: calc(100vh - 100px);
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 0 56px;
+      border-bottom: 1px solid var(--line-soft);
     }
-  })();
-</script>
+
+    section:last-of-type {
+      border-bottom: none;
+      padding-bottom: 80px;
+    }
+
+    .index-no {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-dim);
+    }
+
+    .kicker {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: 0.1em;
+      color: var(--acc);
+      text-transform: uppercase;
+      margin: 0 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kicker .ix {
+      color: var(--ink-dim);
+    }
+
+    .kicker::after {
+      content: "";
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--line);
+      display: inline-block;
+    }
+
+    section h2,
+    header.hero h2 {
+      font-size: clamp(26px, 3.4vw, 38px);
+      margin: 0 0 16px;
+      max-width: 680px;
+    }
+
+    .section-lede {
+      font-size: 15.5px;
+      color: var(--ink-soft);
+      max-width: 600px;
+      line-height: 1.7;
+      margin: 0 0 46px;
+    }
+
+    /* ---------- HERO ---------- */
+    header.hero {
+      justify-content: center;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      color: var(--acc);
+      background: rgba(61, 242, 168, 0.06);
+      border: 1px solid rgba(61, 242, 168, 0.25);
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow .pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--acc);
+      box-shadow: 0 0 8px var(--acc);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .35;
+      }
+    }
+
+    header.hero h1 {
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 1.1;
+      margin: 0 0 22px;
+      max-width: 600px;
+      color: var(--ink);
+    }
+
+    header.hero h1 .grad {
+      background: linear-gradient(90deg, var(--acc), #7CF7C9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    header.hero p.lede {
+      font-size: 16.5px;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      max-width: 480px;
+      margin: 0 0 32px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .hero-tags span {
+      font-size: 11.5px;
+      font-family: var(--mono);
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      padding: 7px 12px;
+      border-radius: 5px;
+      background: var(--surface);
+    }
+
+    .hero-tags span b {
+      color: var(--acc);
+      font-weight: 500;
+    }
+
+    .hero-art {
+      position: relative;
+    }
+
+    .hero-art .term {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(61, 242, 168, 0.04), 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+    }
+
+    .term .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .term .term-bar span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--line);
+    }
+
+    .term .term-bar .label {
+      margin-left: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-dim);
+    }
+
+    .term .term-body {
+      padding: 18px 18px 22px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 2;
+      color: var(--ink-soft);
+    }
+
+    .term .term-body .c1 {
+      color: var(--acc);
+    }
+
+    .term .term-body .c2 {
+      color: var(--amber);
+    }
+
+    .term .term-body .c3 {
+      color: var(--ink-dim);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ink-dim);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scroll-hint .ln {
+      width: 1px;
+      height: 26px;
+      background: linear-gradient(var(--acc), transparent);
+      animation: flow 1.6s infinite;
+    }
+
+    @keyframes flow {
+      0% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* ---------- SHARED ANIMATIONS ---------- */
+    @keyframes terminal-line-in {
+      0% {
+        opacity: 0;
+        transform: translateX(-8px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .term-line {
+      animation: terminal-line-in .35s ease-out both;
+    }
+
+    .term-line:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .term-line:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    .term-line:nth-child(3) {
+      animation-delay: 0.8s;
+    }
+
+    .term-line:nth-child(4) {
+      animation-delay: 1.1s;
+    }
+
+    .term-line:nth-child(5) {
+      animation-delay: 1.4s;
+    }
+
+    .term-line:nth-child(6) {
+      animation-delay: 1.7s;
+    }
+
+    .term-line:nth-child(7) {
+      animation-delay: 2.0s;
+    }
+
+    @keyframes cursor-blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .term-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      background: var(--acc);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: cursor-blink 1s step-end infinite;
+    }
+
+    @keyframes arrow-pulse {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: translateX(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateX(4px);
+      }
+    }
+
+    .arrow-anim {
+      animation: arrow-pulse 1.4s ease-in-out infinite;
+    }
+
+    .arrow-anim:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .arrow-anim:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
+    .arrow-anim:nth-child(6) {
+      animation-delay: 0.6s;
+    }
+
+    .arrow-anim:nth-child(8) {
+      animation-delay: 0.8s;
+    }
+
+    @keyframes badge-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(61, 242, 168, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(61, 242, 168, 0);
+      }
+    }
+
+    .badge.final {
+      animation: badge-glow 2.2s ease-in-out infinite;
+    }
+
+    @keyframes circle-rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .iso-ring-1 {
+      animation: circle-rotate 30s linear infinite;
+      transform-origin: 160px 160px;
+    }
+
+    .iso-ring-2 {
+      animation: circle-rotate 22s linear reverse infinite;
+      transform-origin: 160px 160px;
+    }
+
+    .iso-ring-3 {
+      animation: circle-rotate 18s linear infinite;
+      transform-origin: 160px 160px;
+    }
+
+    @keyframes center-pulse {
+
+      0%,
+      100% {
+        r: 30;
+        opacity: 1;
+      }
+
+      50% {
+        r: 33;
+        opacity: 0.85;
+      }
+    }
+
+    .iso-center {
+      animation: center-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes x-strike {
+      0% {
+        stroke-dashoffset: 60;
+        opacity: 0;
+      }
+
+      60% {
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+
+    .x-strike-anim {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: x-strike 0.6s 0.5s ease-out forwards;
+    }
+
+    @keyframes icon-float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
+    .icon-float {
+      animation: icon-float 3s ease-in-out infinite;
+    }
+
+    .icon-float:nth-child(2) {
+      animation-delay: 0.8s;
+    }
+
+    .icon-float:nth-child(3) {
+      animation-delay: 1.6s;
+    }
+
+    .icon-float:nth-child(4) {
+      animation-delay: 2.4s;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .swatch-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .swatch-shimmer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.06) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes rule-icon-in {
+      0% {
+        transform: scale(0) rotate(-15deg);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.15) rotate(3deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .r-icon.anim-in {
+      animation: rule-icon-in .5s ease-out both;
+    }
+
+    .rules-side.dont .r-icon.anim-in {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes draw-arrow {
+      0% {
+        stroke-dashoffset: 100;
+      }
+
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .draw-arrow {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+
+    /* -- orbit: hero floating badges -- */
+    @keyframes orbit-spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .orbit-ring {
+      animation: orbit-spin 20s linear infinite;
+      transform-origin: 35px 35px;
+    }
+
+    @keyframes orbit-badge-float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+
+    .orbit-badge {
+      animation: orbit-badge-float 3s ease-in-out infinite;
+    }
+
+    .orbit-badge:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    .orbit-badge:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    .orbit-badge:nth-child(4) {
+      animation-delay: 1.5s;
+    }
+
+    /* -- tag float: hero tag pills -- */
+    @keyframes tag-float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+
+    .hero-tags span {
+      animation: tag-float 4s ease-in-out infinite;
+    }
+
+    .hero-tags span:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .hero-tags span:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .hero-tags span:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    .hero-tags span:nth-child(4) {
+      animation-delay: 0.9s;
+    }
+
+    /* -- badge pop: workflow step entrance -- */
+    @keyframes badge-pop {
+      0% {
+        transform: scale(0.6);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.08);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .badge-pop {
+      animation: badge-pop .5s ease-out both;
+    }
+
+    .flow-step:nth-child(1) .badge {
+      animation-delay: 0.1s;
+    }
+
+    .flow-step:nth-child(3) .badge {
+      animation-delay: 0.3s;
+    }
+
+    .flow-step:nth-child(5) .badge {
+      animation-delay: 0.5s;
+    }
+
+    .flow-step:nth-child(7) .badge {
+      animation-delay: 0.7s;
+    }
+
+    .flow-step:nth-child(9) .badge {
+      animation-delay: 0.9s;
+    }
+
+    /* -- pipeline arrow flow -- */
+    @keyframes pipe-flow {
+      0% {
+        stroke-dashoffset: 40;
+      }
+
+      100% {
+        stroke-dashoffset: -40;
+      }
+    }
+
+    .pipe-arrow {
+      stroke-dasharray: 8 32;
+      animation: pipe-flow 1.2s linear infinite;
+    }
+
+    .pipe-arrow:nth-of-type(2) {
+      animation-delay: 0.3s;
+    }
+
+    .pipe-arrow:nth-of-type(3) {
+      animation-delay: 0.6s;
+    }
+
+    /* -- bar rise: spacing bars -- */
+    @keyframes bar-rise {
+      0% {
+        transform: scaleY(0);
+      }
+
+      100% {
+        transform: scaleY(1);
+      }
+    }
+
+    .space-item .bar {
+      animation: bar-rise .6s ease-out both;
+      transform-origin: bottom;
+    }
+
+    .space-item:nth-child(1) .bar {
+      animation-delay: 0.05s;
+    }
+
+    .space-item:nth-child(2) .bar {
+      animation-delay: 0.1s;
+    }
+
+    .space-item:nth-child(3) .bar {
+      animation-delay: 0.15s;
+    }
+
+    .space-item:nth-child(4) .bar {
+      animation-delay: 0.2s;
+    }
+
+    .space-item:nth-child(5) .bar {
+      animation-delay: 0.25s;
+    }
+
+    .space-item:nth-child(6) .bar {
+      animation-delay: 0.3s;
+    }
+
+    .space-item:nth-child(7) .bar {
+      animation-delay: 0.35s;
+    }
+
+    .space-item:nth-child(8) .bar {
+      animation-delay: 0.4s;
+    }
+
+    .space-item:nth-child(9) .bar {
+      animation-delay: 0.45s;
+    }
+
+    /* -- type row reveal -- */
+    @keyframes type-row-in {
+      0% {
+        opacity: 0;
+        transform: translateX(-12px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .type-row {
+      animation: type-row-in .4s ease-out both;
+    }
+
+    .type-row:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+
+    .type-row:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .type-row:nth-child(3) {
+      animation-delay: 0.15s;
+    }
+
+    .type-row:nth-child(4) {
+      animation-delay: 0.2s;
+    }
+
+    .type-row:nth-child(5) {
+      animation-delay: 0.25s;
+    }
+
+    .type-row:nth-child(6) {
+      animation-delay: 0.3s;
+    }
+
+    .type-row:nth-child(7) {
+      animation-delay: 0.35s;
+    }
+
+    .type-row:nth-child(8) {
+      animation-delay: 0.4s;
+    }
+
+    .type-row:nth-child(9) {
+      animation-delay: 0.45s;
+    }
+
+    .type-row:nth-child(10) {
+      animation-delay: 0.5s;
+    }
+
+    /* -- swatch glow: all color chips -- */
+    @keyframes swatch-glow {
+
+      0%,
+      100% {
+        box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0);
+      }
+
+      50% {
+        box-shadow: inset 0 0 12px 2px rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .swatch .chip {
+      animation: swatch-glow 3s ease-in-out infinite;
+    }
+
+    .swatch:nth-child(2) .chip {
+      animation-delay: 0.2s;
+    }
+
+    .swatch:nth-child(3) .chip {
+      animation-delay: 0.4s;
+    }
+
+    .swatch:nth-child(4) .chip {
+      animation-delay: 0.6s;
+    }
+
+    .swatch:nth-child(5) .chip {
+      animation-delay: 0.8s;
+    }
+
+    .swatch:nth-child(6) .chip {
+      animation-delay: 1s;
+    }
+
+    .swatch:nth-child(7) .chip {
+      animation-delay: 1.2s;
+    }
+
+    .swatch:nth-child(8) .chip {
+      animation-delay: 1.4s;
+    }
+
+    .swatch:nth-child(9) .chip {
+      animation-delay: 1.6s;
+    }
+
+    .swatch:nth-child(10) .chip {
+      animation-delay: 1.8s;
+    }
+
+    .swatch:nth-child(11) .chip {
+      animation-delay: 2s;
+    }
+
+    /* -- comp icon bob -- */
+    @keyframes comp-icon-bob {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+
+    .comp-col .cat-icon {
+      animation: comp-icon-bob 4s ease-in-out infinite;
+    }
+
+    .comp-col:nth-child(2) .cat-icon {
+      animation-delay: 0.6s;
+    }
+
+    .comp-col:nth-child(3) .cat-icon {
+      animation-delay: 1.2s;
+    }
+
+    /* -- layer num beat -- */
+    @keyframes layer-num-beat {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    .layer-item .num {
+      animation: layer-num-beat 2.5s ease-in-out infinite;
+    }
+
+    .layer-item:nth-child(1) .num {
+      animation-delay: 0s;
+    }
+
+    .layer-item:nth-child(2) .num {
+      animation-delay: 0.3s;
+    }
+
+    .layer-item:nth-child(3) .num {
+      animation-delay: 0.6s;
+    }
+
+    .layer-item:nth-child(4) .num {
+      animation-delay: 0.9s;
+    }
+
+    .layer-item:nth-child(5) .num {
+      animation-delay: 1.2s;
+    }
+
+    /* -- bullet pop: rule bullets -- */
+    @keyframes bullet-pop {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .rule-item .r-bullet {
+      animation: bullet-pop .4s ease-out both;
+    }
+
+    .rule-item:nth-child(1) .r-bullet {
+      animation-delay: 0.1s;
+    }
+
+    .rule-item:nth-child(2) .r-bullet {
+      animation-delay: 0.2s;
+    }
+
+    .rule-item:nth-child(3) .r-bullet {
+      animation-delay: 0.3s;
+    }
+
+    .rule-item:nth-child(4) .r-bullet {
+      animation-delay: 0.4s;
+    }
+
+    /* -- rule item slide -- */
+    @keyframes rule-item-in {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .rule-item {
+      animation: rule-item-in .4s ease-out both;
+    }
+
+    .rule-item:nth-child(1) {
+      animation-delay: 0.15s;
+    }
+
+    .rule-item:nth-child(2) {
+      animation-delay: 0.25s;
+    }
+
+    .rule-item:nth-child(3) {
+      animation-delay: 0.35s;
+    }
+
+    .rule-item:nth-child(4) {
+      animation-delay: 0.45s;
+    }
+
+    /* -- pipeline box entrance -- */
+    @keyframes pipe-box-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .pipe-box rect {
+      animation: pipe-box-in .5s ease-out both;
+    }
+
+    .pipe-box rect:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .pipe-box rect:nth-child(2) {
+      animation-delay: 0.25s;
+    }
+
+    .pipe-box rect:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .pipe-box rect:nth-child(4) {
+      animation-delay: 0.55s;
+    }
+
+    .pipe-box rect:nth-child(5) {
+      animation-delay: 0.7s;
+    }
+
+    /* ---------- SLIDE 2: 4 PILLARS ---------- */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .pillar {
+      background: var(--surface);
+      padding: 28px 22px;
+      position: relative;
+      transition: background .2s;
+    }
+
+    .pillar:hover {
+      background: var(--surface-2);
+    }
+
+    .pillar .icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 20px;
+      color: var(--acc);
+    }
+
+    .pillar .label {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ink-dim);
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .pillar h3 {
+      font-size: 16px;
+      margin: 0 0 8px;
+      font-family: var(--disp);
+    }
+
+    .pillar p {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ---------- SLIDE 3: WORKFLOW ---------- */
+    .flow-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 30px 32px;
+      margin-bottom: 18px;
+    }
+
+    .flow-panel h3 {
+      font-size: 14px;
+      margin: 0 0 26px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-weight: 500;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .flow-panel h3 .n {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: var(--acc-dim);
+      color: #06120D;
+      font-family: var(--mono);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .flow-row {
+      display: grid;
+      align-items: start;
+      grid-template-columns: repeat(9, 1fr);
+    }
+
+    .flow-row.r5 {
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .flow-step {
+      text-align: center;
+      grid-column: span 1;
+    }
+
+    .flow-step.wide {
+      grid-column: span 2;
+    }
+
+    .flow-step .badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      color: var(--acc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .flow-step .badge svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .flow-step .badge.final {
+      background: var(--acc);
+      border-color: var(--acc);
+      color: #06120D;
+    }
+
+    .flow-step .t {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
+    .arrow-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    /* ---------- SLIDE 4: ISOLATION ---------- */
+    .isolate-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 54px;
+      align-items: center;
+    }
+
+    .layer-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .layer-item {
+      display: flex;
+      gap: 18px;
+      padding: 16px 0;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .layer-item:first-child {
+      border-top: none;
+    }
+
+    .layer-item .num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--acc);
+      width: 26px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .layer-item h4 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-family: var(--disp);
+      color: var(--ink);
+    }
+
+    .layer-item p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .isolate-art {
+      display: flex;
+      justify-content: center;
+    }
+
+    .isolate-art svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ---------- SLIDE 5: TOKENS ---------- */
+    .token-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .token-block h3 {
+      font-size: 11.5px;
+      font-family: var(--mono);
+      color: var(--ink-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0 0 18px;
+      font-weight: 500;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 64px;
+    }
+
+    .swatch .chip {
+      height: 46px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      margin-bottom: 6px;
+    }
+
+    .swatch .name {
+      font-size: 9.5px;
+      font-family: var(--mono);
+      color: var(--ink-dim);
+      text-align: center;
+    }
+
+    .type-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      border-bottom: 1px solid var(--line-soft);
+      padding-bottom: 10px;
+    }
+
+    .type-row .px {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--acc);
+      width: 48px;
+      flex-shrink: 0;
+    }
+
+    .type-row .sample {
+      font-family: var(--disp);
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .spacing-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .space-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .space-item .bar {
+      width: 12px;
+      background: linear-gradient(var(--acc), var(--acc-dim));
+      border-radius: 2px;
+    }
+
+    .space-item .lab {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--ink-dim);
+    }
+
+    /* ---------- SLIDE 6: COMPONENTS ---------- */
+    .comp-cols {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .comp-col {
+      background: var(--surface);
+      padding: 26px 24px;
+    }
+
+    .comp-col .cat-icon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 16px;
+      color: var(--acc);
+    }
+
+    .comp-col h3 {
+      font-size: 15px;
+      margin: 0 0 16px;
+      font-family: var(--disp);
+    }
+
+    .comp-col ul {
+      list-style: none;
+    }
+
+    .comp-col li {
+      font-size: 13px;
+      color: var(--ink-soft);
+      padding: 8px 0;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--mono);
+    }
+
+    .comp-col li:first-child {
+      border-top: none;
+    }
+
+    .comp-col li::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      background: var(--acc);
+      flex-shrink: 0;
+    }
+
+    .comp-foot {
+      margin-top: 20px;
+      font-size: 11.5px;
+      color: var(--ink-dim);
+      font-family: var(--mono);
+    }
+
+    /* ---------- SLIDE 7: DO/DONT ---------- */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .rules-side {
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+
+    .rules-side::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .rules-side.do {
+      border-color: rgba(61, 242, 168, 0.2);
+    }
+
+    .rules-side.do::before {
+      background: var(--acc);
+    }
+
+    .rules-side.dont {
+      border-color: rgba(242, 113, 94, 0.2);
+    }
+
+    .rules-side.dont::before {
+      background: var(--red);
+    }
+
+    .rules-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid var(--line-soft);
+      position: relative;
+      z-index: 1;
+    }
+
+    .rules-head .r-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .rules-side.do .r-icon {
+      background: rgba(61, 242, 168, 0.12);
+      color: var(--acc);
+      box-shadow: 0 0 20px rgba(61, 242, 168, 0.15);
+    }
+
+    .rules-side.dont .r-icon {
+      background: rgba(242, 113, 94, 0.12);
+      color: var(--red);
+      box-shadow: 0 0 20px rgba(242, 113, 94, 0.12);
+    }
+
+    .rules-head h3 {
+      margin: 0;
+      font-family: var(--disp);
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+
+    .rules-side.do .rules-head h3 {
+      color: var(--acc);
+    }
+
+    .rules-side.dont .rules-head h3 {
+      color: var(--red);
+    }
+
+    .rules-head .sub {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ink-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+
+    .rules-body {
+      padding: 6px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rule-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--line-soft);
+      transition: background .15s;
+    }
+
+    .rule-item:last-child {
+      border-bottom: none;
+    }
+
+    .rule-item:hover {
+      background: var(--bg-soft);
+    }
+
+    .rule-item .r-bullet {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .rules-side.do .r-bullet {
+      background: rgba(61, 242, 168, 0.1);
+      color: var(--acc);
+    }
+
+    .rules-side.dont .r-bullet {
+      background: rgba(242, 113, 94, 0.1);
+      color: var(--red);
+    }
+
+    .rule-item .r-text {
+      flex: 1;
+    }
+
+    .rule-item .r-label {
+      font-size: 13.5px;
+      color: var(--ink);
+      font-weight: 600;
+      margin: 0 0 4px;
+      line-height: 1.4;
+    }
+
+    .rule-item .r-code {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-dim);
+      background: var(--bg-soft);
+      padding: 5px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 6px;
+      border: 1px solid var(--line-soft);
+    }
+
+    .rules-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rules-divider .vs {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--disp);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink-dim);
+      letter-spacing: -0.02em;
+    }
+
+    @media(max-width:900px) {
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rules-divider {
+        display: none;
+      }
+    }
+
+    /* ---------- SLIDE: INSTALASI ---------- */
+    .install-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .install-step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .install-step {
+      display: flex;
+      gap: 20px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line-soft);
+      position: relative;
+    }
+
+    .install-step:first-child {
+      border-top: none;
+    }
+
+    .install-step .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: rgba(61, 242, 168, 0.08);
+      border: 1px solid rgba(61, 242, 168, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--acc);
+    }
+
+    .install-step .step-content h4 {
+      font-size: 14px;
+      font-family: var(--disp);
+      color: var(--ink);
+      margin: 0 0 6px;
+      line-height: 1.4;
+    }
+
+    .install-step .step-content p {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin: 0 0 10px;
+    }
+
+    .install-step .step-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .code-block {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--ink-soft);
+      overflow-x: auto;
+    }
+
+    .code-block .cmd {
+      color: var(--acc);
+    }
+
+    .code-block .cmt {
+      color: var(--ink-dim);
+    }
+
+    .code-block .kw {
+      color: var(--amber);
+    }
+
+    .code-block .str {
+      color: #7CF7C9;
+    }
+
+    .usage-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .usage-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+
+    .usage-card:hover {
+      border-color: rgba(61, 242, 168, 0.3);
+    }
+
+    .usage-card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--surface-2);
+    }
+
+    .usage-card-head .u-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      flex-shrink: 0;
+      background: rgba(61, 242, 168, 0.08);
+      border: 1px solid rgba(61, 242, 168, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .usage-card-head .u-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--acc);
+    }
+
+    .usage-card-head h4 {
+      font-size: 13px;
+      font-family: var(--disp);
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .usage-card-head .u-tag {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--acc-dim);
+      background: rgba(61, 242, 168, 0.06);
+      border: 1px solid rgba(61, 242, 168, 0.15);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .usage-card-body {
+      padding: 14px 20px;
+    }
+
+    .usage-card-body .code-block {
+      font-size: 11.5px;
+      padding: 10px 14px;
+    }
+
+    @keyframes step-num-in {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .install-step .step-num {
+      animation: step-num-in .4s ease-out both;
+    }
+
+    .install-step:nth-child(1) .step-num {
+      animation-delay: 0.1s;
+    }
+
+    .install-step:nth-child(2) .step-num {
+      animation-delay: 0.2s;
+    }
+
+    .install-step:nth-child(3) .step-num {
+      animation-delay: 0.3s;
+    }
+
+    .install-step:nth-child(4) .step-num {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes card-slide-in {
+      0% {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .usage-card {
+      animation: card-slide-in .4s ease-out both;
+    }
+
+    .usage-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .usage-card:nth-child(2) {
+      animation-delay: 0.22s;
+    }
+
+    .usage-card:nth-child(3) {
+      animation-delay: 0.34s;
+    }
+
+    @media(max-width:900px) {
+      .install-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---------- SLIDE: SCENARIO DETAIL ---------- */
+    .scenario-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .scenario-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 20px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .scenario-step:first-child {
+      border-top: none;
+    }
+
+    .sc-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: rgba(61, 242, 168, 0.08);
+      border: 1px solid rgba(61, 242, 168, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--acc);
+    }
+
+    .sc-body h4 {
+      font-size: 14px;
+      font-family: var(--disp);
+      color: var(--ink);
+      margin: 0 0 6px;
+    }
+
+    .sc-body p {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin: 0 0 10px;
+    }
+
+    .sc-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Figma-like panel */
+    .figma-panel {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .figma-panel .fp-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ink-dim);
+    }
+
+    .figma-panel .fp-bar .fp-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      flex-shrink: 0;
+    }
+
+    .figma-panel .fp-body {
+      padding: 12px 14px;
+    }
+
+    .figma-row {
+      display: grid;
+      grid-template-columns: 1fr 20px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--line-soft);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .figma-row:last-child {
+      border-bottom: none;
+    }
+
+    .figma-row .fv {
+      color: var(--amber);
+    }
+
+    .figma-row .fa {
+      color: var(--ink-dim);
+      text-align: center;
+    }
+
+    .figma-row .ft {
+      color: var(--acc);
+    }
+
+    /* Readiness mini-report */
+    .ready-report {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      line-height: 2;
+    }
+
+    .ready-report .rr-title {
+      color: var(--ink-dim);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .rr-ok {
+      color: var(--acc);
+    }
+
+    .rr-err {
+      color: var(--red);
+    }
+
+    .rr-warn {
+      color: var(--amber);
+    }
+
+    .rr-label {
+      color: var(--ink-soft);
+    }
+
+    /* Audit table */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .sc-body {
+      min-width: 0;
+    } /* Prevent grid blowout */
+
+    .audit-table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+    }
+
+    .audit-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      background: var(--surface-2);
+    }
+
+    .audit-table td {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      vertical-align: middle;
+    }
+
+    .audit-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .at-ok {
+      color: var(--acc);
+    }
+
+    .at-warn {
+      color: var(--amber);
+    }
+
+    .at-fix {
+      color: var(--ink);
+    }
+
+    .at-err {
+      color: var(--red);
+    }
+
+    .audit-table .at-prop {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* Fix priority pills */
+    .fix-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .fix-pill {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .fix-pill.p1 {
+      color: var(--acc);
+      border-color: rgba(61, 242, 168, 0.3);
+      background: rgba(61, 242, 168, 0.06);
+    }
+
+    .fix-pill.p2 {
+      color: var(--amber);
+      border-color: rgba(242, 184, 75, 0.3);
+      background: rgba(242, 184, 75, 0.06);
+    }
+
+    .fix-pill.p3 {
+      color: var(--ink-soft);
+      border-color: var(--line);
+      background: var(--surface);
+    }
+
+    .fix-pill .pn {
+      opacity: 0.5;
+      margin-right: 4px;
+    }
+
+    /* Token gap card */
+    .gap-card {
+      background: rgba(242, 113, 94, 0.04);
+      border: 1px solid rgba(242, 113, 94, 0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.9;
+    }
+
+    .gap-card .gc-title {
+      font-size: 9.5px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .gap-card .gc-item {
+      color: var(--ink-soft);
+    }
+
+    .gap-card .gc-item span {
+      color: var(--red);
+    }
+
+    @media(max-width:900px) {
+      .scenario-step {
+        grid-template-columns: 36px 1fr;
+        gap: 16px;
+      }
+
+      .figma-row {
+        grid-template-columns: 1fr 20px 1fr;
+      }
+
+      .usage-cards {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(6, 9, 10, 0.82);
+      backdrop-filter: blur(10px);
+      color: var(--ink-dim);
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      min-height: auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    footer .brand {
+      color: var(--ink-soft);
+      white-space: nowrap;
+    }
+
+    footer p {
+      font-size: 11px;
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+
+    .footer-credit {
+      gap: 2px !important;
+    }
+
+    @media(max-width:900px) {
+      html {
+        scroll-snap-type: none;
+      }
+
+      section,
+      header.hero {
+        scroll-snap-align: none;
+        min-height: auto;
+        padding: 64px 0 48px;
+      }
+
+      section:last-of-type {
+        padding-bottom: 84px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-art {
+        margin-top: 24px;
+      }
+
+      .pillars {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .isolate-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comp-cols {
+        grid-template-columns: 1fr;
+      }
+
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .token-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-row,
+      .flow-row.r5 {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 24px;
+      }
+
+      .arrow-cell {
+        display: none;
+      }
+
+      nav .links {
+        display: none;
+      }
+
+      .wrap {
+        padding: 0 24px;
+      }
+
+      section,
+      header.hero {
+        padding: 72px 0 48px;
+      }
+
+      footer {
+        padding: 10px 0;
+      }
+
+      footer .wrap {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+
+      footer .brand {
+        font-size: 11.5px;
+      }
+
+      footer p {
+        font-size: 10px;
+        white-space: normal;
+      }
+
+      .footer-credit {
+        align-items: center !important;
+      }
+    }
+
+    /* -- Tablet / small laptop -- */
+    @media(max-width:640px) {
+      .wrap {
+        padding: 0 18px;
+      }
+
+      section,
+      header.hero {
+        padding: 56px 0 40px;
+      }
+
+      section:last-of-type {
+        padding-bottom: 76px;
+      }
+
+      section h2,
+      header.hero h2 {
+        font-size: clamp(22px, 5vw, 28px);
+      }
+
+      .section-lede {
+        font-size: 14px;
+      }
+
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-art .term {
+        font-size: 11px;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .term .term-body {
+        font-size: 10.5px;
+        padding: 12px 14px 16px;
+        white-space: nowrap;
+      }
+
+      .token-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .swatch {
+        width: 52px;
+      }
+
+      .swatch .chip {
+        height: 36px;
+      }
+
+      .rules-head {
+        padding: 18px 20px 14px;
+      }
+
+      .rules-head .r-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+
+      .rule-item {
+        padding: 14px 20px;
+      }
+
+      footer {
+        padding: 8px 0;
+      }
+
+      footer .wrap {
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      footer .brand {
+        font-size: 10.5px;
+      }
+
+      footer p {
+        font-size: 9.5px;
+        white-space: normal;
+      }
+
+      .rail {
+        right: 12px;
+        gap: 10px;
+      }
+
+      .rail a {
+        width: 5px;
+        height: 5px;
+      }
+
+      .isolate-art svg {
+        max-width: 280px;
+      }
+
+      .scenario-step {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .sc-num {
+        margin-bottom: 4px;
+      }
+
+      .figma-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 10px 0;
+      }
+
+      .figma-row .fa {
+        display: none;
+      }
+
+      .figma-row .ft {
+        padding-left: 12px;
+        border-left: 2px solid var(--line);
+      }
+
+      /* Responsive Table as Cards */
+      .table-wrap {
+        border: none;
+        overflow: visible;
+        border-radius: 0;
+        background: transparent;
+      }
+
+      .audit-table {
+        min-width: 0;
+      }
+
+      .audit-table thead {
+        display: none;
+      }
+
+      .audit-table,
+      .audit-table tbody,
+      .audit-table tr,
+      .audit-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .audit-table tr {
+        margin-bottom: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface-2);
+      }
+
+      .audit-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+        text-align: right;
+        gap: 12px;
+      }
+
+      .audit-table td:last-child {
+        border-bottom: none !important;
+      }
+
+      .audit-table td::before {
+        color: var(--ink-dim);
+        font-size: 9.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        text-align: left;
+        content: attr(data-label);
+      }
+
+      .audit-table td:nth-child(1)::before {
+        content: "Komponen";
+      }
+
+      .audit-table td:nth-child(2)::before {
+        content: "Property";
+      }
+
+      .audit-table td:nth-child(3)::before {
+        content: "Figma";
+      }
+
+      .audit-table td:nth-child(4)::before {
+        content: "Kode Saat Ini";
+      }
+
+      .audit-table td:nth-child(5)::before {
+        content: "Status";
+      }
+
+      .audit-table td:nth-child(6)::before {
+        content: "Aksi";
+      }
+    }
+
+    /* -- Phone -- */
+    @media(max-width:480px) {
+      .wrap {
+        padding: 0 14px;
+      }
+
+      section,
+      header.hero {
+        padding: 44px 0 32px;
+      }
+
+      section:last-of-type {
+        padding-bottom: 72px;
+      }
+
+      header.hero h1 {
+        font-size: clamp(24px, 7vw, 32px);
+      }
+
+      .hero-tags span {
+        font-size: 10.5px;
+        padding: 5px 10px;
+      }
+
+      .hero-art .term {
+        font-size: 10px;
+      }
+
+      .term .term-body {
+        font-size: 9.5px;
+        padding: 10px 12px 12px;
+      }
+
+      .term .term-bar {
+        padding: 8px 12px;
+      }
+
+      .term .term-bar span {
+        width: 7px;
+        height: 7px;
+      }
+
+      .pillar {
+        padding: 20px 16px;
+      }
+
+      .pillar .icon {
+        width: 38px;
+        height: 38px;
+      }
+
+      .pillar h3 {
+        font-size: 14px;
+      }
+
+      .flow-panel {
+        padding: 18px 16px;
+      }
+
+      .flow-panel h3 {
+        font-size: 12px;
+      }
+
+      .flow-row,
+      .flow-row.r5 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .flow-step .badge {
+        width: 40px;
+        height: 40px;
+      }
+
+      .flow-step .badge svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .flow-step .t {
+        font-size: 10.5px;
+      }
+
+      .layer-item {
+        gap: 12px;
+        padding: 12px 0;
+      }
+
+      .layer-item h4 {
+        font-size: 13px;
+      }
+
+      .layer-item p {
+        font-size: 12px;
+      }
+
+      .swatches {
+        gap: 6px;
+      }
+
+      .swatch {
+        width: 44px;
+      }
+
+      .swatch .chip {
+        height: 32px;
+      }
+
+      .swatch .name {
+        font-size: 8px;
+      }
+
+      .spacing-row {
+        gap: 8px;
+      }
+
+      .space-item .bar {
+        width: 10px;
+      }
+
+      .type-row {
+        gap: 10px;
+      }
+
+      .type-row .px {
+        font-size: 9px;
+        width: 60px;
+      }
+
+      .type-row .sample {
+        font-size: 12px;
+      }
+
+      .comp-col {
+        padding: 18px 16px;
+      }
+
+      .comp-col h3 {
+        font-size: 14px;
+      }
+
+      .comp-col li {
+        font-size: 11.5px;
+      }
+
+      .rules-head {
+        padding: 14px 16px 12px;
+      }
+
+      .rules-head h3 {
+        font-size: 15px;
+      }
+
+      .rules-head .sub {
+        font-size: 9.5px;
+      }
+
+      .rule-item {
+        padding: 12px 16px;
+        gap: 12px;
+      }
+
+      .rule-item .r-label {
+        font-size: 12px;
+      }
+
+      .rule-item .r-code {
+        font-size: 9.5px;
+        padding: 3px 7px;
+      }
+
+      .rules-head .r-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+      }
+
+      .scroll-hint {
+        bottom: 8px;
+        font-size: 9px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        padding: 4px 10px;
+      }
+
+      .hero-tags {
+        gap: 6px;
+      }
+
+      .hero-tags span {
+        font-size: 10px;
+        padding: 5px 8px;
+      }
+
+      nav .brand {
+        font-size: 12px;
+      }
+
+      footer {
+        padding: 8px 0;
+      }
+
+      footer .brand {
+        font-size: 10px;
+      }
+
+      footer p {
+        font-size: 9px;
+      }
+
+      section:last-of-type {
+        padding-bottom: 85px;
+      }
+
+      .rail {
+        right: 8px;
+        gap: 8px;
+      }
+
+      .rail a {
+        width: 4px;
+        height: 4px;
+      }
+
+      .isolate-art svg {
+        max-width: 260px;
+      }
+
+      .fix-pills {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* -- Extra small -- */
+    @media(max-width:380px) {
+
+      .flow-row,
+      .flow-row.r5 {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-step {
+        grid-column: span 2;
+      }
+
+      .hero-tags {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-tags span {
+        width: 100%;
+      }
+
+      .term .term-body {
+        font-size: 8.5px;
+        padding: 8px 10px 10px;
+      }
+
+      .term-cursor {
+        width: 6px;
+        height: 12px;
+      }
+
+      .kicker {
+        font-size: 10px;
+      }
+
+      .spacing-row {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .swatches {
+        gap: 4px;
+      }
+
+      .swatch {
+        width: 38px;
+      }
+
+      .swatch .chip {
+        height: 28px;
+      }
+    }
+    /* --- Advanced SVG Micro-Animations --- */
+    /* Pillar 1: Scanner Beam */
+    @keyframes scanner-sweep {
+      0% { transform: translateY(-4px); opacity: 0; }
+      20% { opacity: 0.5; }
+      80% { opacity: 0.5; }
+      100% { transform: translateY(18px); opacity: 0; }
+    }
+    .scanner-beam { animation: scanner-sweep 2.5s ease-in-out infinite; }
+    @keyframes dot-pulse-fast {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.5); opacity: 1; }
+    }
+    .dot-pulse { animation: dot-pulse-fast 1.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    @keyframes draw-check {
+      0% { stroke-dashoffset: 20; opacity: 0; }
+      20% { opacity: 1; }
+      50%, 100% { stroke-dashoffset: 0; opacity: 1; }
+    }
+    .draw-check { stroke-dasharray: 20; stroke-dashoffset: 20; animation: draw-check 3s ease-out infinite; }
+
+    /* Pillar 2: Flow and Nodes */
+    @keyframes dash-flow {
+      0% { stroke-dashoffset: 10; }
+      100% { stroke-dashoffset: 0; }
+    }
+    .dash-flow { animation: dash-flow 1s linear infinite; }
+    @keyframes arrow-bob-h {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(3px); }
+    }
+    .arrow-bob { animation: arrow-bob-h 1.5s ease-in-out infinite; }
+    @keyframes token-glow-pop {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.3); filter: brightness(1.5); }
+    }
+    .token-glow { animation: token-glow-pop 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    /* Pillar 3: Vue Generator */
+    @keyframes draw-vue {
+      0% { stroke-dashoffset: 100; fill-opacity: 0; }
+      40% { stroke-dashoffset: 0; fill-opacity: 0; }
+      60%, 100% { stroke-dashoffset: 0; fill-opacity: 0.05; }
+    }
+    .draw-vue { stroke-dasharray: 100; stroke-dashoffset: 100; animation: draw-vue 4s ease-in-out infinite; }
+    @keyframes pulse-vue-inner {
+      0%, 100% { transform: scale(1); fill-opacity: 0.2; }
+      50% { transform: scale(1.1); fill-opacity: 0.4; }
+    }
+    .pulse-vue-inner { animation: pulse-vue-inner 2s ease-in-out infinite; transform-origin: 24px 28px; }
+    @keyframes brackets-pulse {
+      0%, 100% { transform: scaleX(1); opacity: 0.4; }
+      50% { transform: scaleX(1.1); opacity: 0.8; }
+    }
+    .brackets-pulse { animation: brackets-pulse 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    /* Pillar 4: Shield Layers */
+    @keyframes shield-outer-pulse {
+      0%, 100% { stroke-opacity: 0.4; filter: drop-shadow(0 0 0px transparent); }
+      50% { stroke-opacity: 0.8; filter: drop-shadow(0 0 6px rgba(61,242,168,0.3)); }
+    }
+    .shield-outer { animation: shield-outer-pulse 3s ease-in-out infinite; }
+    @keyframes shield-mid-rotate {
+      0%, 100% { transform: scale(1); fill-opacity: 0.05; }
+      50% { transform: scale(1.03); fill-opacity: 0.1; }
+    }
+    .shield-mid { animation: shield-mid-rotate 2.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    @keyframes shield-inner-glow {
+      0%, 100% { fill-opacity: 0.15; filter: drop-shadow(0 0 2px transparent); }
+      50% { fill-opacity: 0.3; filter: drop-shadow(0 0 8px #3DF2A8); }
+    }
+    .shield-inner { animation: shield-inner-glow 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+    /* Usage Cards SVGs */
+    .usage-card:hover .u-icon svg { animation: usage-icon-shake 0.5s ease-in-out; color: #7CF7C9; }
+    @keyframes usage-icon-shake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-10deg) scale(1.1); }
+      75% { transform: rotate(10deg) scale(1.1); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-grid"></div>
+
+  <nav>
+    <div class="wrap">
+      <div class="brand"><span class="dot"></span>gwind-skill-module</div>
+      <div class="links">
+        <a href="#pilar"><span>01</span>Pilar</a>
+        <a href="#greenfield"><span>02</span>Greenfield</a>
+        <a href="#audit"><span>03</span>Audit</a>
+        <a href="#instalasi"><span>04</span>Instalasi</a>
+        <a href="#penggunaan"><span>05</span>Penggunaan</a>
+        <a href="#isolasi"><span>06</span>Isolasi</a>
+        <a href="#token"><span>07</span>Tokens</a>
+        <a href="#komponen"><span>08</span>Komponen</a>
+        <a href="#aturan"><span>09</span>Aturan</a>
+      </div>
+    </div>
+    <div class="progress" id="navProgress"></div>
+  </nav>
+
+  <div class="rail" id="rail">
+    <a href="#top" class="active" data-target="top"></a>
+    <a href="#pilar" data-target="pilar"></a>
+    <a href="#greenfield" data-target="greenfield"></a>
+    <a href="#audit" data-target="audit"></a>
+    <a href="#instalasi" data-target="instalasi"></a>
+    <a href="#penggunaan" data-target="penggunaan"></a>
+    <a href="#isolasi" data-target="isolasi"></a>
+    <a href="#token" data-target="token"></a>
+    <a href="#komponen" data-target="komponen"></a>
+    <a href="#aturan" data-target="aturan"></a>
+  </div>
+
+  <header class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span>AI coding assistant · gwind-system-ui@1.0.1 · gwind-v2@0.2.1
+        </div>
+        <h1>Jembatan pintar antara <span class="grad">Figma</span> &amp; Vue.</h1>
+        <p class="lede">Gwind Skill Module mengubah asisten AI Anda menjadi ahli ekosistem Gwind. Ia membaca desain via
+          <strong style="color:var(--acc)">Figma MCP</strong>, lalu secara otomatis mengorkestrasi token
+          <code>gwind-v2</code>, CLI, dan komponen Vue 3 dalam satu alur kerja yang mulus.</p>
+        <div class="hero-tags">
+          <span><b>$</b> Figma Inspection</span>
+          <span><b>$</b> Env Readiness Check</span>
+          <span><b>$</b> Token Mapping</span>
+          <span><b>$</b> Vue 3 Generation</span>
+          <span><b>$</b> CSS Isolation</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="term">
+          <div class="term-bar"><span></span><span></span><span></span>
+            <div class="label">gwind-skill</div>
+          </div>
+          <div class="term-body">
+            <div class="term-line"><span class="c3">$</span> gwind-skill --inspect-figma<span
+                class="term-cursor"></span></div>
+            <div class="term-line"><span class="c1">✓</span> reading node "Card/Product"<span class="c3">...</span>
+            </div>
+            <div class="term-line"><span class="c1">✓</span> mapping variables to gwind-v2 tokens</div>
+            <div class="term-line"><span class="c2">!</span> token gap found: shadow/card-custom</div>
+            <div class="term-line"><span class="c1">✓</span> enforcing css-isolation: .gw-scope-news</div>
+            <div class="term-line"><span class="c1">✓</span> generating Vue 3 SFC <span class="c3">— done</span></div>
+          </div>
+        </div>
+        <!-- Floating decorative badges -->
+        <svg style="position:absolute;top:-18px;right:-22px;width:70px;height:70px;pointer-events:none;"
+          viewBox="0 0 70 70" fill="none">
+          <circle class="orbit-ring" cx="35" cy="35" r="32" stroke="rgba(61,242,168,0.15)" stroke-width="1"
+            stroke-dasharray="4 6" />
+          <circle class="orbit-badge" cx="35" cy="20" r="10" fill="rgba(61,242,168,0.08)" stroke="rgba(61,242,168,0.3)"
+            stroke-width="0.8" />
+          <text x="35" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
+            fill="var(--acc)">token</text>
+          <circle class="orbit-badge" cx="20" cy="42" r="10" fill="rgba(242,184,75,0.08)" stroke="rgba(242,184,75,0.3)"
+            stroke-width="0.8" />
+          <text x="20" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2B84B">css</text>
+          <circle class="orbit-badge" cx="50" cy="42" r="10" fill="rgba(242,113,94,0.06)" stroke="rgba(242,113,94,0.25)"
+            stroke-width="0.8" />
+          <text x="50" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2715E">vue</text>
+        </svg>
+      </div>
+    </div>
+    <div class="scroll-hint"><span>SCROLL</span><span class="ln"></span></div>
+  </header>
+
+  <!-- SLIDE 2: 4 PILLARS -->
+  <section id="pilar">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">01</span> Fondasi</p>
+      <h2>Kapabilitas Inti Skill Module</h2>
+      <p class="section-lede">Skill ini dirancang untuk tidak sekadar menulis kode secara acak, melainkan secara presisi
+        mengorkestrasi empat elemen fundamental dari Gwind Design System di setiap tugas yang ia kerjakan.</p>
+      <div class="pillars">
+        <div class="pillar">
+          <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
+            <rect x="5" y="6" width="38" height="36" rx="4" stroke="currentColor" stroke-width="1.5" />
+            <path d="M5 16h38" stroke="currentColor" stroke-width="1.5" opacity="0.3" class="scanner-beam" />
+            <circle cx="12" cy="11" r="2" fill="#F2715E" class="dot-pulse" style="animation-delay:0s;" />
+            <circle cx="18" cy="11" r="2" fill="#F2B84B" class="dot-pulse" style="animation-delay:0.2s;" />
+            <circle cx="24" cy="11" r="2" fill="#3DF2A8" class="dot-pulse" style="animation-delay:0.4s;" />
+            <path d="M12 24l3 3 6-6" stroke="#3DF2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="draw-check" />
+            <path d="M26 24h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
+            <path d="M12 34l3 3 6-6" stroke="#3DF2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="draw-check" style="animation-delay:0.4s;" />
+            <path d="M26 34h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
+          </svg>
+          <div class="label">// 01 PENGECEKAN</div>
+          <h3>Environment Readiness Check</h3>
+          <p>Sebelum satu baris kode pun ditulis, skill menjalankan 9 langkah pengecekan krusial: memverifikasi
+            instalasi <code>gwind.json</code>, eksistensi token <code>gwind-v2</code>, utilitas
+            <code>gwindTwMerge</code>, hingga pengaturan PostCSS.</p>
+        </div>
+        <div class="pillar">
+          <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
+            <rect x="4" y="10" width="18" height="28" rx="2" stroke="currentColor" stroke-width="1.5" opacity="0.4" />
+            <rect x="8" y="15" width="10" height="10" rx="1" fill="currentColor" opacity="0.1" class="pulse-vue-inner" />
+            <circle cx="13" cy="30" r="3" fill="#F2715E" class="dot-pulse" />
+            <path d="M24 24h6" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.6" class="dash-flow" />
+            <path d="M28 21l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" class="arrow-bob" />
+            <rect x="34" y="8" width="10" height="32" rx="5" stroke="#3DF2A8" stroke-width="1.5" />
+            <circle cx="39" cy="14" r="2" fill="#3DF2A8" class="token-glow" style="animation-delay:0s;" />
+            <circle cx="39" cy="24" r="2" fill="#3DF2A8" class="token-glow" style="animation-delay:0.3s;" />
+            <circle cx="39" cy="34" r="2" fill="#F2B84B" class="token-glow" style="animation-delay:0.6s;" />
+          </svg>
+          <div class="label">// 02 INSPEKSI</div>
+          <h3>Figma-to-Token Engine</h3>
+          <p>Membaca layer, property, dan variabel Figma langsung dari kanvas. Nilai ini kemudian dipetakan secara
+            akurat ke token resmi <code>gwind-v2</code>, atau dicatat sebagai <em>Token Gap</em> jika tidak tersedia.
+          </p>
+        </div>
+        <div class="pillar">
+          <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
+            <path d="M12 16L4 24l8 8M36 16l8 8-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4" class="brackets-pulse" />
+            <path d="M24 38L10 14h8l6 10 6-10h8L24 38z" fill="currentColor" fill-opacity="0.05" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="draw-vue" />
+            <path d="M24 28l-5-8.5h10L24 28z" fill="#3DF2A8" fill-opacity="0.2" stroke="#3DF2A8" stroke-width="1.5" stroke-linejoin="round" class="pulse-vue-inner" />
+          </svg>
+          <div class="label">// 03 IMPLEMENTASI</div>
+          <h3>Vue 3 Code Generator</h3>
+          <p>Merakit komponen <code>gwind-system-ui</code> (termasuk logika state Reka UI) menjadi Vue SFC yang utuh.
+            Skill juga memastikan label teks mematuhi aturan standar komponen Berbahasa Indonesia.</p>
+        </div>
+        <div class="pillar">
+          <svg class="icon icon-float" viewBox="0 0 48 48" fill="none">
+            <path d="M24 4L6 10v12c0 12.5 8 20.5 18 24 10-3.5 18-11.5 18-24V10L24 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.4" class="shield-outer" />
+            <path d="M24 10L10 14.5v8.5c0 9.5 6 15.5 14 18.5 8-3 14-9 14-18.5v-8.5L24 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="currentColor" fill-opacity="0.05" class="shield-mid" />
+            <path d="M24 16l-8 3v6c0 6.5 3.5 11 8 13 4.5-2 8-6.5 8-13v-6L24 16z" fill="#3DF2A8" fill-opacity="0.15" stroke="#3DF2A8" stroke-width="1.5" stroke-linejoin="round" class="shield-inner" />
+          </svg>
+          <div class="label">// 04 KEAMANAN</div>
+          <h3>CSS Isolation Enforcer</h3>
+          <p>Memastikan setiap komponen Vue yang dihasilkan selalu terbungkus dengan class isolasi. Skill menegakkan
+            arsitektur 5-lapis untuk mencegah kebocoran styling di Micro Frontend (Remote App).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE: GREENFIELD -->
+  <section id="greenfield">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">02</span> Skenario 1</p>
+      <h2>Mode Greenfield — Proyek Baru</h2>
+      <p class="section-lede">Membangun screen Vue 3 baru dari desain Figma. Skill membaca variabel dan CSS export Figma
+        MCP <em>sebelum</em> satu baris kode ditulis — lalu memetakannya ke token <code>gwind-v2</code> yang tepat.</p>
+
+      <div class="scenario-steps">
+
+        <!-- Step 1: Figma MCP -->
+        <div class="scenario-step">
+          <div class="sc-num">01</div>
+          <div class="sc-body">
+            <h4>Buka Figma MCP — Arahkan ke Frame Target</h4>
+            <p>Arahkan Figma MCP ke frame atau komponen yang akan diimplementasi. AI membaca seluruh node tree: nama
+              layer, properties, variables, dan constraints.</p>
+            <div class="figma-panel">
+              <div class="fp-bar"><span class="fp-dot"></span>Figma MCP — Node Inspector</div>
+              <div class="fp-body">
+                <div class="figma-row"><span class="fv">Frame: "Card/Product"</span><span class="fa"></span><span
+                    class="ft">// target node</span></div>
+                <div class="figma-row"><span class="fv">width: 360px, height: auto</span><span class="fa"></span><span
+                    class="ft">// layout bounds</span></div>
+                <div class="figma-row"><span class="fv">fill: color/primary</span><span class="fa">→</span><span
+                    class="ft">bg-primary</span></div>
+                <div class="figma-row"><span class="fv">gap: spacing/16</span><span class="fa">→</span><span
+                    class="ft">gap-gw-16</span></div>
+                <div class="figma-row"><span class="fv">padding: spacing/24 spacing/16</span><span
+                    class="fa">→</span><span class="ft">py-gw-24 px-gw-16</span></div>
+                <div class="figma-row"><span class="fv">border-radius: radius/lg</span><span class="fa">→</span><span
+                    class="ft">rounded-lg</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Environment Check -->
+        <div class="scenario-step">
+          <div class="sc-num">02</div>
+          <div class="sc-body">
+            <h4>Environment Readiness Check — 9 Langkah Wajib</h4>
+            <p>Skill menjalankan 9-step check sebelum menulis kode apapun: package manager, <code>gwind.json</code>,
+              <code>gwind-v2</code>, base deps, project structure, generated components, dan CSS isolation (remote app).
+            </p>
+            <div class="ready-report">
+              <div class="rr-title">GWIND ENVIRONMENT READINESS — remote-kita-news (30 Jun 2026)</div>
+              <div><span class="rr-label">gwind-system-ui init: </span><span class="rr-ok">✅ gwind.json • gwind.css
+                  imported</span></div>
+              <div><span class="rr-label">gwind-v2: </span><span class="rr-ok">✅ v0.2.1 installed • CSS entry
+                  found</span></div>
+              <div><span class="rr-label">base deps: </span><span class="rr-ok">✅ nunito-sans • clsx • tailwind-merge •
+                  reka-ui</span></div>
+              <div><span class="rr-label">utils.ts: </span><span class="rr-ok">✅ gwindTwMerge (12 scales) •
+                  GWIND_FONT_CLASS</span></div>
+              <div><span class="rr-label">CSS isolation: </span><span class="rr-ok">✅ postcss-prefix-selector • scope:
+                  .gw-scope-news</span></div>
+              <div><span class="rr-label">Status: </span><span class="rr-ok">✅ READY TO PROCEED</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Figma Inspection -->
+        <div class="scenario-step">
+          <div class="sc-num">03</div>
+          <div class="sc-body">
+            <h4>Figma Inspection — Variables Panel + CSS Export</h4>
+            <p>Skill membuka Dev Mode Figma, membaca Variables Panel untuk setiap warna/spacing/radius, lalu memvalidasi
+              lewat CSS Export. Hasilnya: peta token yang akurat sebelum implementasi.</p>
+            <div class="figma-panel">
+              <div class="fp-bar"><span class="fp-dot"></span>Figma Dev Mode — Variables Panel → Token Resolution</div>
+              <div class="fp-body">
+                <div class="figma-row"><span class="fv">color/primary</span><span class="fa">→</span><span
+                    class="ft">bg-primary / text-primary</span></div>
+                <div class="figma-row"><span class="fv">color/foreground</span><span class="fa">→</span><span
+                    class="ft">text-foreground</span></div>
+                <div class="figma-row"><span class="fv">color/muted</span><span class="fa">→</span><span
+                    class="ft">text-muted-foreground</span></div>
+                <div class="figma-row"><span class="fv">color/lime/500</span><span class="fa">→</span><span
+                    class="ft">bg-lime-500</span></div>
+                <div class="figma-row"><span class="fv">font-size: 16px / lh: 24px</span><span class="fa">→</span><span
+                    class="ft">text-omicron</span></div>
+                <div class="figma-row"><span class="fv">font-size: 14px / lh: 20px</span><span class="fa">→</span><span
+                    class="ft">text-sigma</span></div>
+                <div class="figma-row"><span class="fv">font-weight: 600</span><span class="fa">→</span><span
+                    class="ft">font-normal (GWind “regular” = 600)</span></div>
+                <div class="figma-row"><span class="fv" style="color:var(--red);">shadow/card-custom: 0 4px 20px
+                    rgba(0,0,0,0.12)</span><span class="fa">→</span><span class="ft" style="color:var(--amber);">TOKEN
+                    GAP — arbitrary, document</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Implement -->
+        <div class="scenario-step">
+          <div class="sc-num">04</div>
+          <div class="sc-body">
+            <h4>Implementasi — Token → Komponen Vue 3</h4>
+            <p>Skill generate kode Vue 3 menggunakan komponen dari <code>gwind-system-ui</code>, token gwind-v2, dan CSS
+              isolation wrapper. Semua state (default, hover, disabled, loading) direproduksi.</p>
+            <div class="code-block" style="margin-top:12px;">
+              <span class="cmt">&lt;!-- Hasil implementasi dari Figma MCP --&gt;</span>
+              <span class="kw">&lt;script</span> setup lang=<span class="str">"ts"</span><span class="kw">&gt;</span>
+              <span class="cmd">import</span> { SCOPE_CLASS } <span class="cmd">from</span> <span
+                class="str">"@/constants/css-scope"</span>
+              <span class="cmd">import</span> { Card } <span class="cmd">from</span> <span
+                class="str">"@/components/ui/card"</span>
+              <span class="kw">&lt;/script&gt;</span>
+              <span class="kw">&lt;template&gt;</span>
+              <span class="kw">&lt;div</span> :class=<span class="str">"SCOPE_CLASS"</span><span class="kw">&gt;</span>
+              <span class="cmt">&lt;!-- CSS isolation --&gt;</span>
+              <span class="kw">&lt;Card</span> class=<span class="str">"bg-primary rounded-lg py-gw-24 px-gw-16
+                gap-gw-16"</span><span class="kw">&gt;</span>
+              <span class="kw">&lt;p</span> class=<span class="str">"text-omicron font-normal
+                text-foreground"</span><span class="kw">&gt;</span>...<span class="kw">&lt;/p&gt;</span>
+              <span class="kw">&lt;/Card&gt;</span>
+              <span class="kw">&lt;/div&gt;</span>
+              <span class="kw">&lt;/template&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Verify -->
+        <div class="scenario-step">
+          <div class="sc-num">05</div>
+          <div class="sc-body">
+            <h4>Verifikasi — Visual Match vs Figma</h4>
+            <p>Skill membandingkan hasil implementasi dengan Figma: typecheck, lint, build, lalu visual check di
+              mobile/tablet/desktop. Khusus remote app, verifikasi CSS isolation di DevTools.</p>
+            <div class="code-block" style="margin-top:10px;">
+              <span class="cmt"># Verifikasi CSS isolation (remote app)</span>
+              <span class="cmd">grep</span> -c <span class="str">':root'</span> dist/style-*.css <span class="cmt">#
+                harus 0</span>
+              <span class="cmd">grep</span> -c <span class="str">'gw-scope-news'</span> dist/style-*.css <span
+                class="cmt"># harus &gt; 0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE: AUDIT MODE -->
+  <section id="audit">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">03</span> Skenario 2</p>
+      <h2>Mode Audit — Review &amp; Fix</h2>
+      <p class="section-lede">Komponen lama sudah ada tapi tidak sesuai Figma. Skill menjalankan 5 fase audit
+        sistematis: re-inspeksi Figma MCP, klasifikasi gap, perbaiki via token, dan laporan terstruktur.</p>
+
+      <div class="scenario-steps">
+
+        <!-- Phase 1 -->
+        <div class="scenario-step">
+          <div class="sc-num">P1</div>
+          <div class="sc-body">
+            <h4>Figma Baseline — Re-inspeksi per Komponen</h4>
+            <p>Setiap komponen dalam scope di-inspeksi ulang dari Figma MCP. Jangan gunakan data inspeksi lama — selalu
+              re-run sebelum audit dimulai.</p>
+            <div class="figma-panel">
+              <div class="fp-bar"><span class="fp-dot"></span>Figma MCP — Komponen: Badge</div>
+              <div class="fp-body">
+                <div class="figma-row"><span class="fv">fill: color/success</span><span class="fa">→</span><span
+                    class="ft">bg-success (expect: Badge variant=green)</span></div>
+                <div class="figma-row"><span class="fv">color: color/success-foreground</span><span
+                    class="fa">→</span><span class="ft">text-success-foreground</span></div>
+                <div class="figma-row"><span class="fv">padding: 2px 8px</span><span class="fa">→</span><span
+                    class="ft">size=sm (built-in prop)</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="scenario-step">
+          <div class="sc-num">P2</div>
+          <div class="sc-body">
+            <h4>Audit Table — Klasifikasi Setiap Property</h4>
+            <p>Setiap property dimasukkan ke tabel dengan status: <span style="color:var(--acc)">✅ match</span>, <span
+                style="color:var(--amber)">⚠️ close</span>, <span style="color:var(--ink)">🔧 fixable</span>, <span
+                style="color:var(--red)">❌ mismatch</span>. Token gap didokumentasikan sebelum perbaikan dimulai.</p>
+            <div class="table-wrap">
+              <table class="audit-table">
+                <thead>
+                  <tr>
+                    <th>Komponen</th>
+                    <th>Property</th>
+                    <th>Figma</th>
+                    <th>Kode Saat Ini</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="at-prop">Badge</td>
+                    <td>background</td>
+                    <td>color/success</td>
+                    <td class="at-err">#22C55E (hardcode)</td>
+                    <td class="at-err">❌</td>
+                    <td>variant=green</td>
+                  </tr>
+                  <tr>
+                    <td class="at-prop">Badge</td>
+                    <td>font-size</td>
+                    <td>12px / lh 18px</td>
+                    <td class="at-ok">text-omega</td>
+                    <td class="at-ok">✅</td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td class="at-prop">Card</td>
+                    <td>padding</td>
+                    <td>spacing/24</td>
+                    <td class="at-warn">p-[22px]</td>
+                    <td class="at-warn">⚠️</td>
+                    <td>p-gw-24</td>
+                  </tr>
+                  <tr>
+                    <td class="at-prop">Card</td>
+                    <td>shadow</td>
+                    <td>0 4px 20px rgba(0,0,0,0.12)</td>
+                    <td class="at-err">tidak ada</td>
+                    <td class="at-fix">🔧</td>
+                    <td>TOKEN GAP — doc + arbitrary</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="scenario-step">
+          <div class="sc-num">P3</div>
+          <div class="sc-body">
+            <h4>Fix Strategy — Prioritas Perbaikan</h4>
+            <p>Skill menentukan urutan perbaikan berdasarkan priority. Tidak boleh langsung edit source — coba dari yang
+              paling non-invasif dulu.</p>
+            <div class="fix-pills">
+              <div class="fix-pill p1"><span class="pn">1st</span>Ganti via props komponen</div>
+              <span style="color:var(--ink-dim);font-family:var(--mono);font-size:11px;">→</span>
+              <div class="fix-pill p2"><span class="pn">2nd</span>Custom styling via class prop</div>
+              <span style="color:var(--ink-dim);font-family:var(--mono);font-size:11px;">→</span>
+              <div class="fix-pill p3"><span class="pn">3rd</span>Edit generated source (last resort)</div>
+            </div>
+            <div class="code-block" style="margin-top:12px;">
+              <span class="cmt">&lt;!-- ❌ Salah: hardcode warna --&gt;</span>
+              <span class="kw">&lt;Badge</span> class=<span class="str">"bg-[#22C55E] text-white"</span><span
+                class="kw">/&gt;</span>
+
+              <span class="cmt">&lt;!-- ✅ Benar: gunakan prop variant --&gt;</span>
+              <span class="kw">&lt;Badge</span> variant=<span class="str">"green"</span><span class="kw">/&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="scenario-step">
+          <div class="sc-num">P4</div>
+          <div class="sc-body">
+            <h4>Apply Fixes — Token Check Sebelum Setiap Class</h4>
+            <p>Setiap perbaikan harus melacak rantai: <strong>Figma variable → gwind-v2 token → utility class</strong>.
+              Jika rantai tidak lengkap, dokumentasikan sebagai token gap dengan komentar.</p>
+            <div class="code-block" style="margin-top:10px;">
+              <span class="cmt">&lt;!-- Token gap terdokumentasi --&gt;</span>
+              <span class="cmd">&lt;!-- token gap: shadow/card-custom = 0 4px 20px rgba(0,0,0,0.12)</span>
+              <span class="cmd"> tidak ada di gwind-v2; using arbitrary --&gt;</span>
+              <span class="kw">&lt;Card</span> class=<span
+                class="str">"shadow-[0_4px_20px_rgba(0,0,0,0.12)]"</span><span class="kw">/&gt;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 5 -->
+        <div class="scenario-step">
+          <div class="sc-num">P5</div>
+          <div class="sc-body">
+            <h4>Laporan Audit — Token Gap Report</h4>
+            <p>Skill menghasilkan laporan audit sebelum sesi ditutup. Laporan berisi semua gap yang ditemukan, aksi yang
+              diambil, dan rekomendasi ke design system owner.</p>
+            <div class="gap-card">
+              <div class="gc-title">TOKEN GAPS — Card/Product (30 Jun 2026)</div>
+              <div class="gc-item"><span>- color/surface/overlay-scrim:</span> rgba(0,0,0,0.4) → no gwind-v2 eq; using
+                bg-black/40</div>
+              <div class="gc-item"><span>- shadow/card-elevated:</span> 0 4px 20px rgba(0,0,0,0.12) → not
+                drop-shadow-1/2; arbitrary</div>
+              <div class="gc-item"><span>- spacing/modal-inset:</span> 20px → between gw-16/gw-24; using gw-16 (confirm
+                design)</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE: INSTALASI SKILL -->
+  <section id="instalasi">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">04</span> Setup</p>
+      <h2>Cara Instalasi Skill</h2>
+      <p class="section-lede">Pasang Gwind Skill Module ke IDE Anda dalam empat langkah. Setelah selesai, asisten AI
+        siap memandu setiap baris kode sesuai standar Gwind Design System.</p>
+
+      <div class="install-step-list">
+
+        <div class="install-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Pastikan AI coding assistant aktif</h4>
+            <p>Skill ini berjalan di atas AI coding assistant yang mendukung custom skill. Pastikan asisten sudah
+              terpasang dan aktif di IDE pilihan Anda.</p>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>Salin file skill ke folder <code>.agents/skills/</code></h4>
+            <p>Unduh atau clone file skill, lalu letakkan di dalam folder <code>.agents/skills/gwind-skill/</code> di
+              root proyek Anda.</p>
+            <div class="code-block" style="margin-top:12px;">
+              <span class="cmt"># Struktur folder yang diharapkan</span>
+              <span class="cmd">your-project/</span>
+              <span class="cmd"> .agents/</span>
+              <span class="cmd"> skills/</span>
+              <span class="cmd"> gwind-skill/</span>
+              <span class="kw"> SKILL.md</span> <span class="cmt">← instruksi utama</span>
+              <span class="kw"> references/</span> <span class="cmt">← dokumentasi tambahan</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>Inisialisasi project dengan CLI</h4>
+            <p>Jalankan perintah berikut di root proyek Anda untuk menyiapkan fondasi Gwind — token, CSS layer, dan
+              konfigurasi Tailwind v4.</p>
+            <div class="code-block" style="margin-top:12px;">
+              <span class="cmt">$ </span><span class="cmd">npx gwind-system-ui init</span>
+              <span class="str">✓</span> scanning gwind-v2 tokens<span class="cmt">...</span>
+              <span class="str">✓</span> injecting gwind.css foundation
+              <span class="str">✓</span> applying Tailwind CSS v4
+              <span class="str">✓</span> init complete <span class="cmt">— gwind.json written</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>Verifikasi skill &amp; Figma MCP aktif</h4>
+            <p>Buka AI Chat di IDE Anda. Skill otomatis aktif saat mendeteksi folder
+              <code>.agents/skills/gwind-skill/</code>. Pastikan juga mengaktifkan <strong>Figma MCP</strong> sebagai
+              tool tambahan agar asisten dapat membaca desain.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE: CARA PENGGUNAAN -->
+  <section id="penggunaan">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">05</span> Figma → Kode</p>
+      <h2>Cara Kerja: Figma MCP + Skill</h2>
+      <p class="section-lede">Skill ini membaca output Figma MCP — node properties, variabel, dan layout — lalu
+        menerjemahkannya ke kode Vue 3 yang otomatis memakai token <code>gwind-v2</code> dan komponen dari
+        <code>gwind-system-ui</code>.</p>
+
+      <!-- Flow diagram: Figma → Skill → Code -->
+      <div
+        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 32px;margin-bottom:32px;">
+        <div
+          style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px;">
+          // Alur kerja</div>
+        <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:16px;">
+
+          <!-- Step 1: Figma -->
+          <div
+            style="flex:1;min-width:140px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:16px 18px;">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);letter-spacing:0.04em;margin-bottom:8px;">
+              STEP 01</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.6">
+                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
+                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
+                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
+                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
+                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">Figma MCP</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Inspeksi node di Figma — warna,
+              spacing, tipografi, komponen.</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
+              fill="none">
+              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+
+          <!-- Step 2: Skill -->
+          <div
+            style="flex:1;min-width:140px;background:rgba(61,242,168,0.04);border:1px solid rgba(61,242,168,0.25);border-radius:10px;padding:16px 18px;">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--acc-dim);letter-spacing:0.04em;margin-bottom:8px;">
+              STEP 02</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
+                <path
+                  d="M9.5 2A2.5 2.5 0 007 4.5v15A2.5 2.5 0 009.5 22h5a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0014.5 2h-5z" />
+                <path d="M9 7h6M9 11h6M9 15h4" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Gwind Skill</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Skill memetakan nilai Figma ke
+              token <code>gwind-v2</code> dan aturan Gwind Design System.</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
+              fill="none">
+              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+
+          <!-- Step 3: AI Chat -->
+          <div
+            style="flex:1;min-width:140px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:16px 18px;">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--ink-dim);letter-spacing:0.04em;margin-bottom:8px;">
+              STEP 03</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="1.6">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--ink);font-weight:600;">AI Chat</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Tanyakan ke asisten AI
+              menggunakan konteks Figma MCP yang sudah terbaca.</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-cell arrow-anim" style="flex:0 0 40px;"><svg width="22" height="22" viewBox="0 0 24 24"
+              fill="none">
+              <path d="M5 12h13M14 7l5 5-5 5" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+
+          <!-- Step 4: Output -->
+          <div
+            style="flex:1;min-width:140px;background:rgba(61,242,168,0.08);border:1px solid var(--acc);border-radius:10px;padding:16px 18px;">
+            <div
+              style="font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:0.04em;margin-bottom:8px;">
+              OUTPUT</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                <path d="M14 2v6h6M10 13l2 2 4-4" />
+              </svg>
+              <span style="font-family:var(--disp);font-size:13px;color:var(--acc);font-weight:600;">Vue 3 Code</span>
+            </div>
+            <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin:0;">Kode Vue 3 dengan token
+              gwind-v2, komponen gwind-system-ui, dan CSS isolation.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Two example cards -->
+      <div class="usage-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <div class="usage-card">
+          <div class="usage-card-head">
+            <div class="u-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M5 5.5A3.5 3.5 0 018.5 2H12v7H8.5A3.5 3.5 0 015 5.5z" />
+                <path d="M12 2h3.5a3.5 3.5 0 110 7H12V2z" />
+                <path d="M12 12.5a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" />
+                <path d="M5 19.5A3.5 3.5 0 018.5 16H12v3.5a3.5 3.5 0 01-7 0z" />
+                <path d="M5 12.5A3.5 3.5 0 018.5 9H12v7H8.5A3.5 3.5 0 015 12.5z" />
+              </svg>
+            </div>
+            <h4>Implementasi Screen Figma</h4>
+            <span class="u-tag">Figma MCP</span>
+          </div>
+          <div class="usage-card-body">
+            <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;">Arahkan Figma MCP ke
+              frame atau screen tertentu, lalu minta skill menerjemahkan layout, spacing, dan warna ke kode Vue 3 yang
+              sesuai token gwind-v2.</p>
+            <div class="code-block">
+              <span class="cmt">// Di AI Chat (Figma MCP aktif):</span>
+              <span class="str">"Implementasikan screen 'Dashboard Home'</span>
+              <span class="str"> dari Figma. Gunakan token gwind-v2 untuk</span>
+              <span class="str"> semua warna dan spacing, serta komponen</span>
+              <span class="str"> dari gwind-system-ui yang relevan."</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="usage-card">
+          <div class="usage-card-head">
+            <div class="u-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path
+                  d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+              </svg>
+            </div>
+            <h4>Mapping Token Figma → gwind-v2</h4>
+            <span class="u-tag">Figma MCP</span>
+          </div>
+          <div class="usage-card-body">
+            <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 12px;">Minta skill membaca
+              variabel warna atau spacing di node Figma dan memetakannya ke token semantik gwind-v2 yang tepat — tanpa
+              menebak-nebak nilai hex.</p>
+            <div class="code-block">
+              <span class="cmt">// Di AI Chat (Figma MCP aktif):</span>
+              <span class="str">"Baca node 'Card/Product' di Figma.</span>
+              <span class="str"> Petakan semua variabel warna dan spacing</span>
+              <span class="str"> ke token gwind-v2 yang setara, lalu</span>
+              <span class="str"> generate Vue SFC-nya."</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: ISOLATION -->
+  <section id="isolasi">
+    <div class="wrap isolate-grid">
+      <div>
+        <p class="kicker"><span class="ix">06</span> Fitur Anti-Bocor</p>
+        <h2>CSS Isolation — 5 Lapis Pertahanan</h2>
+        <p class="section-lede" style="margin-bottom:30px;">Untuk aplikasi Micro Frontend (Module Federation), Gwind
+          menjamin nol kebocoran CSS antar host dan remote. <strong>Setiap kali skill meng-generate kode dari Figma MCP,
+            layer isolasi ini otomatis diterapkan pada komponen Vue Anda.</strong></p>
+        <div class="layer-list">
+          <div class="layer-item">
+            <div class="num">01</div>
+            <div>
+              <h4>Scope &lt;div&gt; Unik</h4>
+              <p>Setiap view terbungkus scope selector turunan dari <code>package.json</code> → <code>gw-scope-*</code>.
+                Placeholder <code>.gw-scope</code> di-replace saat build.</p>
+            </div>
+          </div>
+          <div class="layer-item">
+            <div class="num">02</div>
+            <div>
+              <h4>postcss-prefix-selector</h4>
+              <p>Plugin PostCSS otomatis menambahkan prefix scope class ke setiap selector CSS, menjamin tidak ada rule
+                global yang bocor.</p>
+            </div>
+          </div>
+          <div class="layer-item">
+            <div class="num">03</div>
+            <div>
+              <h4>tailwindcss-mangle</h4>
+              <p>Utility class Tailwind di-hash/di-mangle sehingga nama class antar remote tidak mungkin bentrok.</p>
+            </div>
+          </div>
+          <div class="layer-item">
+            <div class="num">04</div>
+            <div>
+              <h4>Vue &lt;style scoped&gt;</h4>
+              <p>Isolasi per komponen Vue 3 dengan <code>data-v-*</code> attribute selector — komponen A tidak bisa
+                menyentuh komponen B.</p>
+            </div>
+          </div>
+          <div class="layer-item">
+            <div class="num">05</div>
+            <div>
+              <h4>@layer gw-base</h4>
+              <p>Cascade layer CSS memastikan aturan fondasi Gwind tidak bisa ditimpa secara tidak sengaja oleh kode di
+                layer lain.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="isolate-art">
+        <svg viewBox="0 0 320 320" fill="none">
+          <circle cx="160" cy="160" r="150" stroke="#172420" stroke-width="1" />
+          <circle class="iso-ring-1" cx="160" cy="160" r="120" stroke="#1F8A62" stroke-width="1"
+            stroke-dasharray="3 5" />
+          <circle class="iso-ring-2" cx="160" cy="160" r="90" stroke="#1F8A62" stroke-width="1"
+            stroke-dasharray="3 5" />
+          <circle class="iso-ring-3" cx="160" cy="160" r="60" stroke="#1F8A62" stroke-width="1"
+            stroke-dasharray="3 5" />
+          <circle class="iso-center" cx="160" cy="160" r="30" fill="#0E1513" stroke="#3DF2A8" stroke-width="1.3" />
+          <path d="M160 146l10 6v11l-10 6-10-6v-11z" stroke="#3DF2A8" stroke-width="1.4" fill="none" />
+          <text x="160" y="164" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
+            fill="#3DF2A8">gw-scope</text>
+          <rect x="20" y="20" width="76" height="48" rx="7" fill="#0E1513" stroke="#3DF2A8" />
+          <text x="58" y="44" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#3DF2A8">Remote
+            A</text>
+          <text x="58" y="57" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
+            fill="#8CA39A">.scope-news</text>
+          <rect x="224" y="252" width="76" height="48" rx="7" fill="#0E1513" stroke="#F2715E" />
+          <text x="262" y="276" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#F2715E">Remote
+            B</text>
+          <text x="262" y="289" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
+            fill="#8CA39A">.scope-event</text>
+          <path d="M96 44 L224 44" stroke="#F2715E" stroke-width="1.2" stroke-dasharray="2 4" />
+          <circle cx="160" cy="44" r="9" fill="#1A0F0D" stroke="#F2715E" />
+          <path class="x-strike-anim" d="M155 39l10 10M165 39l-10 10" stroke="#F2715E" stroke-width="1.5" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: TOKENS -->
+  <section id="token">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">07</span> Bahasa Visual Kita</p>
+      <h2>Design Tokens — gwind-v2</h2>
+      <p class="section-lede">Variabel CSS murni siap pakai di Tailwind v4. <strong>Saat membaca node dari Figma MCP,
+          skill tidak akan lagi menggunakan nilai HEX statis, melainkan langsung memetakannya ke 11 palette warna, 12
+          skala tipografi, dan 11 langkah spacing ini.</strong></p>
+
+      <div
+        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 28px;margin-bottom:40px;display:flex;align-items:center;justify-content:center;gap:0;">
+        <svg class="pipe-box" viewBox="0 0 800 60" style="width:100%;max-width:720px;height:auto;">
+          <!-- Figma source -->
+          <rect x="10" y="6" width="150" height="48" rx="8" fill="var(--bg-soft)" stroke="var(--line)"
+            stroke-width="1" />
+          <text x="85" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+            fill="var(--ink-dim)">Figma</text>
+          <text x="85" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
+            fill="var(--acc)">Variables</text>
+          <!-- Arrow 1 -->
+          <path class="pipe-arrow" d="M170 30h30M194 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <!-- CSS layer -->
+          <rect x="210" y="6" width="170" height="48" rx="8" fill="rgba(61,242,168,0.04)" stroke="rgba(61,242,168,0.25)"
+            stroke-width="1" />
+          <text x="295" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+            fill="var(--ink-soft)">gwind-v2</text>
+          <text x="295" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
+            fill="var(--acc)">--primary: var(--lime-500)</text>
+          <!-- Arrow 2 -->
+          <path class="pipe-arrow" d="M390 30h30M414 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Tailwind layer -->
+          <rect x="430" y="6" width="160" height="48" rx="8" fill="rgba(61,242,168,0.04)" stroke="rgba(61,242,168,0.25)"
+            stroke-width="1" />
+          <text x="510" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+            fill="var(--ink-soft)">Tailwind v4</text>
+          <text x="510" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="var(--acc)">@theme
+            mapping</text>
+          <!-- Arrow 3 -->
+          <path class="pipe-arrow" d="M600 30h30M624 24l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Result -->
+          <rect x="640" y="6" width="145" height="48" rx="8" fill="rgba(61,242,168,0.08)" stroke="#3DF2A8"
+            stroke-width="1.2" />
+          <text x="712" y="27" text-anchor="middle" font-family="JetBrains Mono" font-size="11"
+            fill="var(--acc)">bg-primary</text>
+          <text x="712" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
+            fill="var(--ink)">text-omicron</text>
+        </svg>
+      </div>
+
+      <div class="token-grid">
+        <div>
+          <div class="token-block" style="margin-bottom:34px;">
+            <h3>11 Palette Warna</h3>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="chip" style="background:hsl(172 100% 15.1%);"></div>
+                <div class="name">broccoli</div>
+              </div>
+              <div class="swatch swatch-shimmer">
+                <div class="chip" style="background:hsl(147 100% 33.5%);"></div>
+                <div class="name">lime</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(98 49% 50.8%);"></div>
+                <div class="name">pear</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(69 67.6% 51.6%);"></div>
+                <div class="name">kiwi</div>
+              </div>
+              <div class="swatch swatch-shimmer">
+                <div class="chip" style="background:hsl(358 70.6% 40%);"></div>
+                <div class="name">red</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(28 75% 51.4%);"></div>
+                <div class="name">orange</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(40 100% 65.5%);"></div>
+                <div class="name">yellow</div>
+              </div>
+              <div class="swatch swatch-shimmer">
+                <div class="chip" style="background:hsl(40 57.8% 63.7%);"></div>
+                <div class="name">gold</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(168 100% 33.7%);"></div>
+                <div class="name">turquoise</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(207 75.4% 38.2%);"></div>
+                <div class="name">blue</div>
+              </div>
+              <div class="swatch">
+                <div class="chip" style="background:hsl(301 55.1% 34.9%);"></div>
+                <div class="name">purple</div>
+              </div>
+            </div>
+          </div>
+          <div class="token-block">
+            <h3>Spacing (11 langkah)</h3>
+            <div class="spacing-row">
+              <div class="space-item">
+                <div class="bar" style="height:2px;"></div>
+                <div class="lab">gw-2</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:4px;"></div>
+                <div class="lab">gw-4</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:8px;"></div>
+                <div class="lab">gw-8</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:16px;"></div>
+                <div class="lab">gw-16</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:24px;"></div>
+                <div class="lab">gw-24</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:32px;"></div>
+                <div class="lab">gw-32</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:48px;"></div>
+                <div class="lab">gw-48</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:64px;"></div>
+                <div class="lab">gw-64</div>
+              </div>
+              <div class="space-item">
+                <div class="bar" style="height:96px;"></div>
+                <div class="lab">gw-120</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="token-block">
+          <h3>Tipografi — 12 Skala</h3>
+          <div class="type-scale">
+            <div class="type-row"><span class="px">text-alpha</span><span class="sample"
+                style="font-size:30px;font-weight:800;">4.5rem</span></div>
+            <div class="type-row"><span class="px">text-beta</span><span class="sample"
+                style="font-size:26px;font-weight:800;">3.75rem</span></div>
+            <div class="type-row"><span class="px">text-gamma</span><span class="sample"
+                style="font-size:22px;font-weight:800;">3rem</span></div>
+            <div class="type-row"><span class="px">text-delta</span><span class="sample"
+                style="font-size:20px;font-weight:800;">2.25rem</span></div>
+            <div class="type-row"><span class="px">text-epsilon</span><span class="sample"
+                style="font-size:18px;font-weight:800;">1.875rem</span></div>
+            <div class="type-row"><span class="px">text-zeta</span><span class="sample"
+                style="font-size:16px;font-weight:800;">1.5rem</span></div>
+            <div class="type-row"><span class="px">text-omicron</span><span class="sample"
+                style="font-size:14px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;">1rem — body</span>
+            </div>
+            <div class="type-row"><span class="px">text-sigma</span><span class="sample"
+                style="font-size:13px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;">0.875rem</span>
+            </div>
+            <div class="type-row"><span class="px">text-omega</span><span class="sample"
+                style="font-size:12px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;">0.75rem —
+                helper</span></div>
+            <div class="type-row"><span class="px">text-atom</span><span class="sample"
+                style="font-size:10px;font-weight:600;font-family:'Nunito Sans','Inter',sans-serif;color:var(--ink-soft);">0.625rem</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: COMPONENTS -->
+  <section id="komponen">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">08</span> 28 Komponen "Lego" Siap Pakai</p>
+      <h2>Source-code distribution — milik Anda sepenuhnya</h2>
+      <p class="section-lede">CLI meng-copy source code komponen langsung ke <code>src/components/ui/</code>.
+        <strong>Dalam workflow Figma MCP, skill tidak membuat komponen dari nol, melainkan akan otomatis merakit
+          komponen-komponen siap pakai ini untuk membangun screen yang Anda minta.</strong></p>
+
+      <div
+        style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;justify-content:center;">
+        <svg class="pipe-box" viewBox="0 0 760 64" style="width:100%;max-width:700px;height:auto;">
+          <!-- Registry -->
+          <rect x="5" y="7" width="140" height="50" rx="8" fill="var(--bg-soft)" stroke="var(--line)"
+            stroke-width="1" />
+          <rect x="13" y="14" width="36" height="14" rx="3" fill="rgba(242,184,75,0.15)" stroke="rgba(242,184,75,0.3)"
+            stroke-width="0.8" />
+          <text x="31" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
+            fill="#F2B84B">.json</text>
+          <rect x="53" y="14" width="36" height="14" rx="3" fill="rgba(61,242,168,0.12)" stroke="rgba(61,242,168,0.25)"
+            stroke-width="0.8" />
+          <text x="71" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8"
+            fill="var(--acc)">.vue</text>
+          <rect x="93" y="14" width="36" height="14" rx="3" fill="rgba(242,113,94,0.1)" stroke="rgba(242,113,94,0.2)"
+            stroke-width="0.8" />
+          <text x="111" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#F2715E">.ts</text>
+          <text x="75" y="48" text-anchor="middle" font-family="JetBrains Mono" font-size="10"
+            fill="var(--ink-dim)">Registry</text>
+          <!-- Arrow -->
+          <path class="pipe-arrow" d="M155 32h25M174 26l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <!-- CLI -->
+          <rect x="190" y="7" width="180" height="50" rx="8" fill="rgba(61,242,168,0.05)" stroke="rgba(61,242,168,0.25)"
+            stroke-width="1" />
+          <text x="216" y="27" font-family="JetBrains Mono" font-size="11" fill="var(--ink-dim)">$</text>
+          <text x="230" y="27" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">gwind-system-ui</text>
+          <text x="216" y="44" font-family="JetBrains Mono" font-size="10" fill="var(--ink-soft)">add button</text>
+          <circle cx="352" cy="43" r="3" fill="var(--acc)" opacity="0.5" />
+          <!-- Arrow -->
+          <path class="pipe-arrow" d="M380 32h25M399 26l6 6-6 6" stroke="var(--acc)" stroke-width="1.3"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Local project -->
+          <rect x="415" y="7" width="190" height="50" rx="8" fill="rgba(61,242,168,0.06)" stroke="var(--acc)"
+            stroke-width="1.2" />
+          <text x="445" y="27" font-family="JetBrains Mono" font-size="10" fill="var(--ink-dim)">src/</text>
+          <text x="470" y="27" font-family="JetBrains Mono" font-size="10" fill="var(--ink-soft)">components/ui/</text>
+          <text x="510" y="44" font-family="JetBrains Mono" font-size="11" fill="var(--acc)">button/</text>
+          <rect x="558" y="36" width="12" height="12" rx="2" fill="rgba(61,242,168,0.15)" stroke="var(--acc)"
+            stroke-width="0.6" />
+          <text x="564" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="7"
+            fill="var(--acc)">V</text>
+          <!-- Ownership banner -->
+          <rect x="620" y="14" width="125" height="36" rx="6" fill="rgba(61,242,168,0.08)" stroke="var(--acc)"
+            stroke-width="1" />
+          <text x="682" y="38" text-anchor="middle" font-family="var(--disp)" font-size="12" fill="var(--acc)"
+            font-weight="600">Milik Anda ✓</text>
+        </svg>
+      </div>
+      <div class="comp-cols">
+        <div class="comp-col">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18l-6-6 6-6M15 6l6 6-6 6" />
+          </svg>
+          <h3>Navigasi &amp; Struktur</h3>
+          <ul>
+            <li>accordion</li>
+            <li>breadcrumb</li>
+            <li>pagination</li>
+            <li>tabs</li>
+            <li>divider</li>
+          </ul>
+        </div>
+        <div class="comp-col">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 12l2 2 4-4M5 5h14v14H5z" />
+          </svg>
+          <h3>Input &amp; Aksi</h3>
+          <ul>
+            <li>button (12 varian)</li>
+            <li>checkbox &amp; switch</li>
+            <li>input &amp; input-rupiah</li>
+            <li>textarea &amp; select</li>
+            <li>combobox &amp; radio-group</li>
+          </ul>
+        </div>
+        <div class="comp-col">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="14" rx="2" />
+            <path d="M3 9h18M8 4v14" />
+          </svg>
+          <h3>Umpan Balik &amp; Overlay</h3>
+          <ul>
+            <li>table &amp; data-table</li>
+            <li>dialog &amp; popover</li>
+            <li>dropdown &amp; tooltip</li>
+            <li>toast, alert &amp; badge</li>
+            <li>card, avatar &amp; label</li>
+            <li>progress &amp; spinner</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comp-foot">// 28 komponen • 3 kategori • source-code distribution • teruji aksesibilitas</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: DO/DONT -->
+  <section id="aturan">
+    <div class="wrap">
+      <p class="kicker"><span class="ix">09</span> Konvensi Tim</p>
+      <h2>Do's &amp; Don'ts</h2>
+      <p class="section-lede">Konvensi wajib untuk menjaga konsistensi desain di seluruh remote app. <strong>Asisten AI
+          telah diprogram secara ketat lewat instruksi skill untuk selalu menegakkan aturan ini setiap kali
+          menerjemahkan desain dari Figma MCP.</strong></p>
+
+      <div class="rules-grid">
+        <!-- DO column -->
+        <div class="rules-side do">
+          <div class="rules-head">
+            <div class="r-icon anim-in">✓</div>
+            <div>
+              <h3>Yang Harus Dilakukan</h3>
+              <div class="sub">4 aturan wajib</div>
+            </div>
+          </div>
+          <div class="rules-body">
+            <div class="rule-item">
+              <div class="r-bullet">1</div>
+              <div class="r-text">
+                <div class="r-label">Semantic token dulu, palette belakangan</div>
+                <span class="r-code">bg-primary</span>&nbsp;<span class="r-code">text-foreground</span>&nbsp;<span
+                  class="r-code">border-border</span>
+              </div>
+            </div>
+            <div class="rule-item">
+              <div class="r-bullet">2</div>
+              <div class="r-text">
+                <div class="r-label">Semua state komponen wajib terdefinisi</div>
+                <span class="r-code">default</span>&nbsp;<span class="r-code">hover</span>&nbsp;<span
+                  class="r-code">active</span>&nbsp;<span class="r-code">focus-visible</span>&nbsp;<span
+                  class="r-code">disabled</span>&nbsp;<span class="r-code">loading</span>
+              </div>
+            </div>
+            <div class="rule-item">
+              <div class="r-bullet">3</div>
+              <div class="r-text">
+                <div class="r-label">Bahasa Indonesia untuk semua label pengguna</div>
+                <span class="r-code">Simpan</span>&nbsp;<span class="r-code">Batal</span>&nbsp;<span
+                  class="r-code">Lanjutkan</span>
+              </div>
+            </div>
+            <div class="rule-item">
+              <div class="r-bullet">4</div>
+              <div class="r-text">
+                <div class="r-label">Import dari family barrel lokal</div>
+                <span class="r-code">import { Button } from '@/components/ui/button'</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DON'T column -->
+        <div class="rules-side dont">
+          <div class="rules-head">
+            <div class="r-icon anim-in">✗</div>
+            <div>
+              <h3>Yang Dilarang</h3>
+              <div class="sub">3 pantangan</div>
+            </div>
+          </div>
+          <div class="rules-body">
+            <div class="rule-item">
+              <div class="r-bullet">1</div>
+              <div class="r-text">
+                <div class="r-label">Kode hex mentah atau piksel arbitrer</div>
+                <span class="r-code">#FF5733</span>&nbsp;<span class="r-code">17px</span>&nbsp;— mapping ke token Gwind
+              </div>
+            </div>
+            <div class="rule-item">
+              <div class="r-bullet">2</div>
+              <div class="r-text">
+                <div class="r-label">Override paksa: !important &amp; inline style</div>
+                <span class="r-code">style="color:red"</span>&nbsp;<span class="r-code">!important</span>
+              </div>
+            </div>
+            <div class="rule-item">
+              <div class="r-bullet">3</div>
+              <div class="r-text">
+                <div class="r-label">Package private @pegadaian — sudah deprecated</div>
+                <span class="r-code">@pegadaian/gwind-vue</span>&nbsp;<span class="r-code">@pegadaian/gwind-ui</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="brand mono"><span class="dot"
+          style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-right:8px;"></span>gwind-skill-module
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;" class="footer-credit">
+        <p>// gwind-system-ui + gwind-v2 — design system internal PT Pegadaian</p>
+        <p style="font-size:11px;color:var(--ink-soft);">by <span style="color:var(--acc);">Pegadaian Design</span> —
+          F.Imam.A.A</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var sections = document.querySelectorAll('section, header.hero');
+      var railLinks = document.querySelectorAll('.rail a');
+      var navProgress = document.getElementById('navProgress');
+      var isSnap = window.matchMedia('(min-width:901px)').matches;
+
+      // Detect if scroll-snap is active (desktop)
+      window.matchMedia('(min-width:901px)').addEventListener('change', function (e) {
+        isSnap = e.matches;
+      });
+
+      // Measure fixed bars height once
+      var navH = 60;
+      function footerH() {
+        var f = document.querySelector('footer');
+        return f ? f.offsetHeight : 56;
+      }
+
+      // Smooth scroll helper — works with or without scroll-snap
+      function scrollToSection(id) {
+        var target = document.getElementById(id);
+        if (!target) return;
+        if (isSnap) {
+          // With scroll-snap: scroll-padding handles nav + footer clearance
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          // Without scroll-snap (mobile): manual offset for nav + footer
+          var top = target.getBoundingClientRect().top + window.pageYOffset - navH;
+          // If scrolled near bottom, ensure footer clearance
+          var maxTop = document.body.scrollHeight - window.innerHeight + footerH();
+          if (top > maxTop) top = maxTop;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      }
+
+      // Intersection Observer — update rail dots
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.id;
+            railLinks.forEach(function (l) {
+              l.classList.toggle('active', l.dataset.target === id);
+            });
+          }
+        });
+      }, { threshold: 0.5 });
+
+      sections.forEach(function (s) { observer.observe(s); });
+
+      // Scroll progress bar
+      window.addEventListener('scroll', function () {
+        var h = document.documentElement;
+        var pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+        navProgress.style.width = Math.min(pct, 100) + '%';
+      }, { passive: true });
+
+      // Smooth-scroll nav links & rail dots
+      document.querySelectorAll('nav a[href^="#"], .rail a[href^="#"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          var id = this.getAttribute('href').slice(1);
+          scrollToSection(id);
+        });
+      });
+
+      // Handle hash navigation (direct URL access)
+      window.addEventListener('hashchange', function () {
+        var id = location.hash.slice(1);
+        if (id) scrollToSection(id);
+      });
+
+      // Handle initial hash on page load
+      if (location.hash) {
+        setTimeout(function () {
+          var id = location.hash.slice(1);
+          if (id) scrollToSection(id);
+        }, 100);
+      }
+    })();
+  </script>
 
 </body>
-</html> 
+
+</html>
